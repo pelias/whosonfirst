@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/pelias/whosonfirst/issues"
   },
-  "homepage": "https://github.com/pelias/whosonfirst#readme"
+  "homepage": "https://github.com/pelias/whosonfirst#readme",
+  "dependencies": {
+    "combined-stream": "^1.0.5",
+    "glob": "^5.0.15"
+  }
 }
