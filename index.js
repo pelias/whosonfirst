@@ -89,7 +89,7 @@ Object.keys(wofRecords).forEach(function(objectKey) {
   if (item.n) {
     wofDoc.setName('default', item.n);
   } else {
-    console.log('item ' + item.id + 'has no name');
+    console.log('item ' + item.id + ' has no name');
   }
   wofDoc.setCentroid({ lat: item.lat, lon: item.lon});
 
