@@ -3,6 +3,7 @@ var glob = require( 'glob' );
 var fs_extra = require('fs-extra');
 var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
+var through2 = require('through2');
 
 var directory = '../../whosonfirst-data/data/';
 
@@ -33,18 +34,16 @@ var object_map_function = function(wofRecord) {
   };
 }
 
-var map_fields_stream = map_stream.obj(object_map_function);
-
-var save_object_stream = map_stream.obj(function(obj) {
-  wofRecords[obj.id] = obj;
-  return obj;
+// have to use a full through2 stream to get on 'finish'
+var map_fields_stream = through2.obj(function(chunk, enc, callback) {
+  wofRecords[chunk.id] = object_map_function(chunk);
+  return callback();
 });
 
 filename_stream.pipe(filter_directory_stream)
 .pipe(json_parse_stream)
 .pipe(filter_bad_files_stream)
 .pipe(map_fields_stream)
-.pipe(save_object_stream)
 .on('finish', function() {
   console.log(Object.keys(wofRecords).length + ' records loaded');
 
