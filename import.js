@@ -40,19 +40,26 @@ files.forEach( function forEach( wofFile ) {
 
 console.log(Object.keys(wofRecords).length + ' records loaded');
 
-var Readable = require('stream').Readable;
-var rs = new Readable({objectMode: true});
-rs.pipe(createPeliasElasticsearchPipeline());
+var stream_array = require('stream-array');
+var map_stream = require('through2-map');
+var filter_stream = require('through2-filter');
 
-Object.keys(wofRecords).forEach(function(objectKey) {
-  var item = wofRecords[objectKey];
-  var wofDoc = new peliasModel.Document( 'whosonfirst', item.id );
-  if (item.n) {
-    wofDoc.setName('default', item.name);
-  }
-  wofDoc.setCentroid({ lat: item.lat, lon: item.lon});
+var id_stream = stream_array(Object.keys(wofRecords));
 
-  rs.push(wofDoc);
+var object_getter_stream = map_stream.obj(function(id) {
+  return wofRecords[id];
 });
 
-rs.push(null);
+var document_stream = map_stream.obj(function(record) {
+  var wofDoc = new peliasModel.Document( 'whosonfirst', record.id );
+  if (record.name) {
+    wofDoc.setName('default', record.name);
+  }
+  wofDoc.setCentroid({ lat: record.lat, lon: record.lon});
+
+  return wofDoc;
+});
+
+id_stream.pipe(object_getter_stream)
+.pipe(document_stream)
+.pipe(createPeliasElasticsearchPipeline());
