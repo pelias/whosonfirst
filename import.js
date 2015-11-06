@@ -12,10 +12,6 @@ console.log('importing ' + files.length + ' files');
 var wofRecords = {};
 
 files.forEach( function forEach( wofFile ) {
-  if (wofFile.indexOf('85633345.geojson') !== -1) {
-    return;
-  }
-
   var wofRecord = JSON.parse(fs.readFileSync(wofFile));
 
   var id = wofRecord.id;
