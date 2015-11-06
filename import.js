@@ -32,17 +32,12 @@ files.forEach( function forEach( wofFile ) {
     }
 
     wofRecords[id] = {
-      'id': id,
-      'n': wofRecord.properties['wof:name'],
-      'pr': wofRecord.properties['wof:parent_id'],
-      // 'pt': wofRecord.properties['wof:path'],
+      id: id,
+      name: wofRecord.properties['wof:name'],
       // 'h': wofRecord.properties['wof:hierarchy'],
-      // 'gh': wofRecord.properties['wof:geomhash'],
-      'lat': wofRecord.properties['geom:latitude'],
-      'lon': wofRecord.properties['geom:longitude'],
-      'pt': wofRecord.properties['wof:placetype'],
-      // 'bb': wofRecord.bbox,
-      // 'g': wofRecord.geometry
+      lat: wofRecord.properties['geom:latitude'],
+      lon: wofRecord.properties['geom:longitude'],
+      pt: wofRecord.properties['wof:placetype']
     }
   }
 });
@@ -58,7 +53,7 @@ Object.keys(wofRecords).forEach(function(objectKey) {
   var model_id = objectKey;
   var wofDoc = new peliasModel.Document( 'whosonfirst', model_id );
   if (item.n) {
-    wofDoc.setName('default', item.n);
+    wofDoc.setName('default', item.name);
   } else {
     console.log('item ' + item.id + ' has no name');
   }
