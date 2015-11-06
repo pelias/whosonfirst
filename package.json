@@ -18,6 +18,7 @@
   "homepage": "https://github.com/pelias/whosonfirst#readme",
   "dependencies": {
     "combined-stream": "^1.0.5",
+    "fs-extra": "^0.26.2",
     "glob": "^5.0.15",
     "pelias-config": "^1.0.3",
     "pelias-dbclient": "0.0.9",
