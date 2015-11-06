@@ -16,26 +16,26 @@ files.forEach( function forEach( wofFile ) {
 
   var id = wofRecord.id;
 
-  if (!wofRecord.hasOwnProperty('properties')) {
-    console.log(wofFile + ' has no properties');
+  if (!id) {
+    return;
   }
-  else if (!id) {
-    console.log(wofFile + ' has no id');
-  }
-  else {
-    if (wofRecords[id]) {
-      console.log(id + ' is a duplicate');
-    }
 
-    wofRecords[id] = {
-      id: id,
-      name: wofRecord.properties['wof:name'],
-      // 'h': wofRecord.properties['wof:hierarchy'],
-      lat: wofRecord.properties['geom:latitude'],
-      lon: wofRecord.properties['geom:longitude'],
-      pt: wofRecord.properties['wof:placetype']
-    }
+  if (!wofRecord.hasOwnProperty('properties')) {
+    return;
   }
+
+  if (wofRecords[id]) { // ignore duplicates
+    return;
+  }
+
+  wofRecords[id] = {
+    id: id,
+    name: wofRecord.properties['wof:name'],
+    // 'h': wofRecord.properties['wof:hierarchy'],
+    lat: wofRecord.properties['geom:latitude'],
+    lon: wofRecord.properties['geom:longitude'],
+    pt: wofRecord.properties['wof:placetype']
+  };
 });
 
 console.log(Object.keys(wofRecords).length + ' records loaded');
@@ -46,12 +46,9 @@ rs.pipe(createPeliasElasticsearchPipeline());
 
 Object.keys(wofRecords).forEach(function(objectKey) {
   var item = wofRecords[objectKey];
-  var model_id = objectKey;
-  var wofDoc = new peliasModel.Document( 'whosonfirst', model_id );
+  var wofDoc = new peliasModel.Document( 'whosonfirst', item.id );
   if (item.n) {
     wofDoc.setName('default', item.name);
-  } else {
-    console.log('item ' + item.id + ' has no name');
   }
   wofDoc.setCentroid({ lat: item.lat, lon: item.lon});
 
