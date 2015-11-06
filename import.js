@@ -1,9 +1,5 @@
 var fs = require( 'fs' );
-var util = require( 'util' );
 var glob = require( 'glob' );
-var peliasConfig = require( 'pelias-config' ).generate();
-var combinedStream = require( 'combined-stream' );
-var logger = require( 'pelias-logger' ).get( 'openaddresses' );
 var peliasDbclient = require( 'pelias-dbclient' );
 var through = require('through2');
 var peliasModel = require('pelias-model');
