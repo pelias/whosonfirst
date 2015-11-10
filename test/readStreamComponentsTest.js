@@ -1,6 +1,5 @@
 var tape = require('tape');
 var event_stream = require('event-stream');
-var stream_array = require('stream-array');
 
 var readStreamComponents = require('../src/readStreamComponents');
 
@@ -15,7 +14,7 @@ var readStreamComponents = require('../src/readStreamComponents');
  * Callback signature should be something like function callback(error, result)
  */
 function test_stream(input, testedStream, callback) {
-    var input_stream = stream_array(input);
+    var input_stream = event_stream.readArray(input);
     var destination_stream = event_stream.writeArray(callback);
 
     input_stream.pipe(testedStream).pipe(destination_stream);

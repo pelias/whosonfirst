@@ -1,4 +1,4 @@
-var stream_array = require('stream-array');
+var event_stream = require('event-stream');
 var map_stream = require('through2-map');
 
 var peliasModel = require('pelias-model');
@@ -6,7 +6,7 @@ var Document = require('pelias-model').Document;
 var createPeliasElasticsearchPipeline = require('./elasticsearchPipeline');
 
 function fullImport(records) {
-  var id_stream = stream_array(Object.keys(records));
+  var id_stream = event_stream.readArray(Object.keys(records));
 
   var object_getter_stream = map_stream.obj(function(id) {
     return records[id];

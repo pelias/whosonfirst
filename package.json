@@ -24,7 +24,6 @@
     "pelias-dbclient": "0.0.9",
     "pelias-logger": "0.0.8",
     "pelias-model": "^0.3.0",
-    "stream-array": "^1.1.1",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
     "through2-map": "^2.0.0"
