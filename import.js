@@ -1,7 +1,7 @@
 var readStream = require('./src/readStream');
 var importStream = require('./src/importStream');
 
-var directory = '../../whosonfirst-data/data/';
+var directory = '../../whosonfirst/whosonfirst-data/data/';
 
 var wofRecords = {};
 
