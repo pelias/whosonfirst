@@ -5,6 +5,8 @@ var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
 var through2 = require('through2');
 
+var supported_placetypes = ['neighbourhood', 'locality', 'county', 'region', 'country'];
+
 function readData(directory, wofRecords, callback) {
   var filename_stream = fs_extra.walk(directory);
 
@@ -20,14 +22,18 @@ function readData(directory, wofRecords, callback) {
     return json_object.id && json_object.hasOwnProperty('properties');
   });
 
+  var filter_unsupported_placetypes = filter_stream.obj(function(wofRecord) {
+    return supported_placetypes.indexOf(wofRecord.properties['wof:placetype']) !== -1;
+  });
+
   var object_map_function = function(wofRecord) {
     return {
       id: wofRecord.id,
       name: wofRecord.properties['wof:name'],
-      // 'h': wofRecord.properties['wof:hierarchy'],
+      hierarchy: wofRecord.properties['wof:hierarchy'][0],
       lat: wofRecord.properties['geom:latitude'],
       lon: wofRecord.properties['geom:longitude'],
-      pt: wofRecord.properties['wof:placetype']
+      placetype: wofRecord.properties['wof:placetype']
     };
   }
 
@@ -40,6 +46,7 @@ function readData(directory, wofRecords, callback) {
   filename_stream.pipe(filter_directory_stream)
   .pipe(json_parse_stream)
   .pipe(filter_bad_files_stream)
+  .pipe(filter_unsupported_placetypes)
   .pipe(map_fields_stream)
   .on('finish', callback);
 };
