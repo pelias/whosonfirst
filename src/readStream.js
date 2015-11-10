@@ -17,6 +17,6 @@ function readData(directory, wofRecords, callback) {
   .pipe(filter_unsupported_placetypes_stream)
   .pipe(map_fields_stream)
   .on('finish', callback);
-};
+}
 
 module.exports = readData;

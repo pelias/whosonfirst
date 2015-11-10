@@ -10,24 +10,25 @@ var filter_directory_stream = function create_filter_directory_stream() {
   return filter_stream.obj(function(stats_object) {
     return stats_object.stats.isFile();
   });
-}
+};
 
 var json_parse_stream = function create_json_parse_stream() {
   return map_stream.obj(function(stats_object) {
     return JSON.parse(fs.readFileSync(stats_object.path));
   });
-}
+};
 
 var filter_bad_files_stream = function create_filter_bad_files_stream() {
   return filter_stream.obj(function(json_object) {
     return json_object.id && json_object.hasOwnProperty('properties');
   });
-}
+};
+
 var filter_unsupported_placetypes_stream = function create_filter_unsupported_placetypes() {
   return filter_stream.obj(function(wofRecord) {
     return supported_placetypes.indexOf(wofRecord.properties['wof:placetype']) !== -1;
   });
-}
+};
 
 var object_map_function = function(wofRecord) {
   return {
@@ -38,7 +39,7 @@ var object_map_function = function(wofRecord) {
     lon: wofRecord.properties['geom:longitude'],
     placetype: wofRecord.properties['wof:placetype']
   };
-}
+};
 
 // have to use a full through2 stream to get on 'finish'
 var map_fields_stream = function create_map_fields_stream(wofRecords) {
@@ -46,7 +47,7 @@ var map_fields_stream = function create_map_fields_stream(wofRecords) {
     wofRecords[chunk.id] = object_map_function(chunk);
     return callback();
   });
-}
+};
 
 module.exports = {
   filter_directory_stream: filter_directory_stream,
