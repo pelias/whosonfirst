@@ -18,6 +18,11 @@
   "homepage": "https://github.com/pelias/whosonfirst#readme",
   "dependencies": {
     "combined-stream": "^1.0.5",
-    "glob": "^5.0.15"
+    "glob": "^5.0.15",
+    "pelias-config": "^1.0.3",
+    "pelias-dbclient": "0.0.9",
+    "pelias-logger": "0.0.8",
+    "pelias-model": "^0.3.0",
+    "through2": "^2.0.0"
   }
 }
