@@ -1,4 +1,3 @@
-var glob = require( 'glob' );
 var fs_extra = require('fs-extra');
 
 var readStreamComponents = require('./readStreamComponents');
