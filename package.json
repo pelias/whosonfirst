@@ -4,7 +4,9 @@
   "description": "Importer for Who's on First",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/test | tap-dot",
+    "lint": "jshint .",
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
@@ -24,9 +26,19 @@
     "pelias-dbclient": "0.0.9",
     "pelias-logger": "0.0.8",
     "pelias-model": "^0.3.0",
-    "stream-array": "^1.1.1",
+    "precommit-hook": "^3.0.0",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
     "through2-map": "^2.0.0"
-  }
+  },
+  "devDependencies": {
+    "event-stream": "^3.3.2",
+    "tap-dot": "^1.0.0",
+    "tape": "^4.2.2"
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }
