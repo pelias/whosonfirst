@@ -49,10 +49,10 @@ var map_fields_stream = function map_fields_stream() {
     return {
       id: json_object.id,
       name: json_object.properties['wof:name'],
-      hierarchy: json_object.properties['wof:hierarchy'][0],
+      place_type: json_object.properties['wof:placetype'],
+      parent_id: json_object.properties['wof:parent_id'],
       lat: json_object.properties['geom:latitude'],
-      lon: json_object.properties['geom:longitude'],
-      placetype: json_object.properties['wof:placetype']
+      lon: json_object.properties['geom:longitude']
     };
   })
 
