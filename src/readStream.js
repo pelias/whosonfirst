@@ -1,9 +1,5 @@
-var es = require('event-stream');
 var parse = require('csv-parse');
-var map = require('through2-map');
 var fs = require('fs');
-var spy = require('through2-spy');
-var filter = require('through2-filter');
 var batch = require('batchflow');
 var sink = require('through2-sink');
 

@@ -8,5 +8,5 @@ var wofRecords = {};
 readStream(directory, wofRecords, function() {
   console.log(Object.keys(wofRecords).length + ' records loaded');
 
-  importStream(wofRecords);
+  // importStream(wofRecords);
 });
