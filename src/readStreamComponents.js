@@ -2,57 +2,66 @@ var fs = require( 'fs' );
 
 var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
-var through2 = require('through2');
 
-var supported_placetypes = ['neighbourhood', 'locality', 'county', 'region', 'country'];
+/*
+  this regex is used to test/match strings from WOF meta files that can take
+  any of the forms:
+  - 856/338/13/85633813.geojson
+  - data/856/338/13/85633813.geojson
+  - /usr/local/mapzen/whosonfirst/data/856/338/13/85633813.geojson
 
-var filter_directory_stream = function create_filter_directory_stream() {
-  return filter_stream.obj(function(stats_object) {
-    return stats_object.stats.isFile();
+*/
+var validDataFilePath = /([0-9]+\/[0-9]+\/[0-9]+\/[0-9]+\.geojson)$/;
+
+/*
+  returns true if record.path is a valid dataFilePath
+*/
+var is_valid_data_file_path = function is_valid_data_file_path() {
+  return filter_stream.obj(function(record) {
+    return validDataFilePath.test(record.path);
+  });
+}
+
+/*
+  this function extracts the last portion of the path for a record, eg:
+  'data/856/338/13/85633813.geojson' returns '856/338/13/85633813.geojson'
+*/
+var normalize_file_path = function normalize_file_path() {
+  return map_stream.obj(function(record) {
+    return record.path.match(validDataFilePath)[1];
+  });
+}
+
+var json_parse_stream = function create_json_parse_stream(dataDirectory) {
+  return map_stream.obj(function(filename) {
+    return JSON.parse(fs.readFileSync(dataDirectory + filename));
   });
 };
 
-var json_parse_stream = function create_json_parse_stream() {
-  return map_stream.obj(function(stats_object) {
-    return JSON.parse(fs.readFileSync(stats_object.path));
-  });
-};
-
-var filter_bad_files_stream = function create_filter_bad_files_stream() {
+var filter_incomplete_files_stream = function create_filter_bad_files_stream() {
   return filter_stream.obj(function(json_object) {
     return json_object.id && json_object.hasOwnProperty('properties');
   });
 };
 
-var filter_unsupported_placetypes_stream = function create_filter_unsupported_placetypes() {
-  return filter_stream.obj(function(wofRecord) {
-    return supported_placetypes.indexOf(wofRecord.properties['wof:placetype']) !== -1;
-  });
-};
+var map_fields_stream = function map_fields_stream() {
+  return map_stream.obj(function(json_object) {
+    return {
+      id: json_object.id,
+      name: json_object.properties['wof:name'],
+      place_type: json_object.properties['wof:placetype'],
+      parent_id: json_object.properties['wof:parent_id'],
+      lat: json_object.properties['geom:latitude'],
+      lon: json_object.properties['geom:longitude']
+    };
+  })
 
-var object_map_function = function(wofRecord) {
-  return {
-    id: wofRecord.id,
-    name: wofRecord.properties['wof:name'],
-    hierarchy: wofRecord.properties['wof:hierarchy'][0],
-    lat: wofRecord.properties['geom:latitude'],
-    lon: wofRecord.properties['geom:longitude'],
-    placetype: wofRecord.properties['wof:placetype']
-  };
-};
-
-// have to use a full through2 stream to get on 'finish'
-var map_fields_stream = function create_map_fields_stream(wofRecords) {
-  return through2.obj(function(chunk, enc, callback) {
-    wofRecords[chunk.id] = object_map_function(chunk);
-    return callback();
-  });
 };
 
 module.exports = {
-  filter_directory_stream: filter_directory_stream,
+  is_valid_data_file_path: is_valid_data_file_path,
+  normalize_file_path: normalize_file_path,
   json_parse_stream: json_parse_stream,
-  filter_bad_files_stream: filter_bad_files_stream,
-  filter_unsupported_placetypes_stream: filter_unsupported_placetypes_stream,
+  filter_incomplete_files_stream: filter_incomplete_files_stream,
   map_fields_stream: map_fields_stream
 };

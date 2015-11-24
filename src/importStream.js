@@ -12,59 +12,34 @@ function fullImport(records) {
   });
 
   var document_stream = map_stream.obj(function(record) {
+    // console.log('starting ' + record.id + ': ' + record.name);
+
     var wofDoc = new Document( 'whosonfirst', record.id );
     if (record.name) {
       wofDoc.setName('default', record.name);
     }
-    wofDoc.setCentroid({ lat: record.lat, lon: record.lon});
+    wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
 
-    // it is possible for a WOF record to lack hierarchy, see:
-    //  https://whosonfirst.mapzen.com/spelunker/id/101747771/
-    //  https://whosonfirst.mapzen.com/spelunker/id/85687219/
-    if (!record.hierarchy) {
-      return wofDoc;
-    }
+    // walk up parent_id's, there's probably a more node-y way to do this
+    var parent_id = record.parent_id;
 
-    var country_id = record.hierarchy.country_id;
+    while (parent_id !== 0 && parent_id !== -1 && records[parent_id] !== undefined) {
+      var parent = records[parent_id];
 
-    if (records[country_id]) {
-      wofDoc.setAdmin( 'admin0', records[country_id].name);
-    }
-
-    if (record.placetype === 'neighbourhood') {
-      // set city, if available
-      if (hasProperty(records, record.hierarchy, 'locality_id')) {
-        wofDoc.setAdmin( 'locality', records[record.hierarchy.locality_id].name)
+      if (parent.placetype === 'locality') {
+        wofDoc.setAdmin( 'locality', parent.name)
+      }
+      else if (parent.placetype === 'county') {
+        wofDoc.setAdmin( 'admin2', parent.name)
+      }
+      else if (parent.placetype === 'region') {
+        wofDoc.setAdmin( 'admin1', parent.name)
+      }
+      else if (parent.placetype === 'country') {
+        wofDoc.setAdmin( 'admin0', parent.name)
       }
 
-      // set county, if available
-      if (hasProperty(records, record.hierarchy, 'county_id')) {
-        wofDoc.setAdmin( 'admin2', records[record.hierarchy.county_id].name)
-      }
-
-      // set region, if available
-      if (hasProperty(records, record.hierarchy, 'region_id')) {
-        wofDoc.setAdmin( 'admin1', records[record.hierarchy.region_id].name)
-      }
-
-    }
-    else if (record.placetype === 'locality') {
-      // set county, if available
-      if (hasProperty(records, record.hierarchy, 'county_id')) {
-        wofDoc.setAdmin( 'admin2', records[record.hierarchy.county_id].name)
-      }
-
-      // set region, if available
-      if (hasProperty(records, record.hierarchy, 'region_id')) {
-        wofDoc.setAdmin( 'admin1', records[record.hierarchy.region_id].name)
-      }
-
-    }
-    else if (record.placetype === 'county') {
-      // set region, if available
-      if (hasProperty(records, record.hierarchy, 'region_id')) {
-        wofDoc.setAdmin( 'admin1', records[record.hierarchy.region_id].name)
-      }
+      parent_id = parent.parent_id;
 
     }
 
@@ -74,12 +49,6 @@ function fullImport(records) {
   id_stream.pipe(object_getter_stream)
   .pipe(document_stream)
   .pipe(createPeliasElasticsearchPipeline());
-}
-
-function hasProperty(records, hierarchy, property) {
-  return hierarchy.hasOwnProperty(property) &&
-          records[hierarchy[property]] &&
-          records[hierarchy[property]].name;
 }
 
 module.exports = fullImport;
