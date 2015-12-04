@@ -4,27 +4,10 @@ var fs = require('fs-extra');
 
 var readStream = require('../src/readStream');
 
-/*
- * Test a stream with the following process:
- * 1. take input as array
- * 2. turn the array into a stream
- * 3. pipe through stream to be tested
- * 4. pass output of that stream to a callback function
- * 5. assertions can then be made in that callback
- *
- * Callback signature should be something like function callback(error, result)
- */
-function test_stream(input, testedStream, callback) {
-    var input_stream = event_stream.readArray(input);
-    var destination_stream = event_stream.writeArray(callback);
-
-    input_stream.pipe(testedStream).pipe(destination_stream);
-}
-
 tape('readStream', function(test) {
   /*
     this test is not terribly attractive, i'm not happy with it but setup wasn't
-    all that painful. 
+    all that painful.
   */
   test.test('readStream should return from all requested types and populate wofRecords', function(t) {
     // remove tmp directory if for some reason it's been hanging around from a previous run
