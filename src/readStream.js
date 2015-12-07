@@ -5,25 +5,7 @@ var sink = require('through2-sink');
 
 var readStreamComponents = require('./readStreamComponents');
 
-function readData(directory, wofRecords, callback) {
-  var types = [
-    'continent',
-    'country',
-    'county',
-    'dependency',
-    'disputed',
-    'empire',
-    'localadmin',
-    'locality',
-    'macrocounty',
-    'macrohood',
-    'macroregion',
-    'metroarea',
-    'microhood',
-    'neighbourhood',
-    'region'
-  ];
-
+function readData(directory, types, wofRecords, callback) {
   batch(types).parallel(2).each(function(idx, type, done) {
     var csv_parser = parse({ delimiter: ',', columns: true });
     var is_valid_data_file_path = readStreamComponents.is_valid_data_file_path();
