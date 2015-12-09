@@ -21,6 +21,7 @@
   "dependencies": {
     "batchflow": "^0.4.0",
     "csv-parse": "^1.0.0",
+    "fs-extra": "^0.26.2",
     "lodash": "^3.10.1",
     "pelias-config": "^1.0.3",
     "pelias-dbclient": "0.0.9",
