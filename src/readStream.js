@@ -46,7 +46,7 @@ function readData(directory, wofRecords, callback) {
 
   }).error(function(err) {
     console.error(err);
-  }).end(function(results) {
+  }).end(function() {
     callback();
   });
 

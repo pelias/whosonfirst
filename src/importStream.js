@@ -33,7 +33,7 @@ function fullImport(records) {
   // helper for filtering array of parents to just those with names
   var has_name = function(r) {
     return r.name;
-  }
+  };
 
   var document_stream = map_stream.obj(function(record) {
     var wofDoc = new Document( 'whosonfirst', record.id );
@@ -41,6 +41,22 @@ function fullImport(records) {
       wofDoc.setName('default', record.name);
     }
     wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
+
+    // WOF bbox is defined as:
+    // lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat
+    var parsedBoundingBox = record.bounding_box.split(',').map(parseFloat);
+    var marshaledBoundingBoxBox = {
+      upperLeft: {
+        lat: parsedBoundingBox[3],
+        lon: parsedBoundingBox[0]
+      },
+      lowerRight: {
+        lat: parsedBoundingBox[1],
+        lon: parsedBoundingBox[2]
+      }
+
+    };
+    wofDoc.setBoundingBox(marshaledBoundingBoxBox);
 
     // collect all the defined parents, starting with the current record
     var parents = [];
@@ -54,13 +70,13 @@ function fullImport(records) {
     // iterate parents, assigning fields appropriately
     parents.filter(has_name).forEach(function(parent) {
       if (parent.place_type === 'locality') {
-        wofDoc.setAdmin( 'locality', parent.name)
+        wofDoc.setAdmin( 'locality', parent.name);
       }
       else if (parent.place_type === 'county') {
-        wofDoc.setAdmin( 'admin2', parent.name)
+        wofDoc.setAdmin( 'admin2', parent.name);
       }
       else if (parent.place_type === 'region') {
-        wofDoc.setAdmin( 'admin1', parent.name)
+        wofDoc.setAdmin( 'admin1', parent.name);
       }
       else if (parent.place_type === 'country') {
         wofDoc.setAdmin( 'admin0', parent.name);
