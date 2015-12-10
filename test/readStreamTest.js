@@ -22,7 +22,8 @@ tape('readStream', function(test) {
         place_type: 'place type 1',
         parent_id: 2,
         lat: 12.121212,
-        lon: 21.212121
+        lon: 21.212121,
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886'
       }, 'id 4 should have been loaded');
 
       t.deepEqual(wofRecords[8], {
@@ -31,7 +32,8 @@ tape('readStream', function(test) {
         place_type: 'place type 2',
         parent_id: 3,
         lat: 13.131313,
-        lon: 31.313131
+        lon: 31.313131,
+        bounding_box: '-24.539906,34.815009,69.033946,81.85871'
       }, 'id 8 should have been loaded');
 
       t.end();
@@ -58,7 +60,8 @@ tape('readStream', function(test) {
         'wof:placetype': 'place type 1',
         'wof:parent_id': 2,
         'geom:latitude': 12.121212,
-        'geom:longitude': 21.212121
+        'geom:longitude': 21.212121,
+        'geom:bbox': '-13.691314,49.909613,1.771169,60.847886'
       }
     }));
 
@@ -72,7 +75,8 @@ tape('readStream', function(test) {
         'wof:placetype': 'place type 2',
         'wof:parent_id': 3,
         'geom:latitude': 13.131313,
-        'geom:longitude': 31.313131
+        'geom:longitude': 31.313131,
+        'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
       }
     }));
 
@@ -88,7 +92,8 @@ tape('readStream', function(test) {
         'wof:placetype': 'place type 3',
         'wof:parent_id': 4,
         'geom:latitude': 14.141414,
-        'geom:longitude': 41.414141
+        'geom:longitude': 41.414141,
+        'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
       }
     }));
 

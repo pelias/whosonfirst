@@ -40,6 +40,24 @@ function fullImport(records, destination_pipe, callback) {
     }
     wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
 
+    // WOF bbox is defined as:
+    // lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat
+    if (!_.isUndefined(record.bounding_box)) {
+      var parsedBoundingBox = record.bounding_box.split(',').map(parseFloat);
+      var marshaledBoundingBoxBox = {
+        upperLeft: {
+          lat: parsedBoundingBox[3],
+          lon: parsedBoundingBox[0]
+        },
+        lowerRight: {
+          lat: parsedBoundingBox[1],
+          lon: parsedBoundingBox[2]
+        }
+
+      };
+      wofDoc.setBoundingBox(marshaledBoundingBoxBox);
+    }
+
     // collect all the defined parents, starting with the current record
     var parents = [];
     var parent_id = record.id;

@@ -52,7 +52,8 @@ var map_fields_stream = function map_fields_stream() {
       place_type: json_object.properties['wof:placetype'],
       parent_id: json_object.properties['wof:parent_id'],
       lat: json_object.properties['geom:latitude'],
-      lon: json_object.properties['geom:longitude']
+      lon: json_object.properties['geom:longitude'],
+      bounding_box: json_object.properties['geom:bbox']
     };
   });
 
