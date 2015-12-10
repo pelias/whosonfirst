@@ -1,5 +1,6 @@
 var readStream = require('./src/readStream');
 var importStream = require('./src/importStream');
+var createPeliasElasticsearchPipeline = require('./src/elasticsearchPipeline');
 
 var directory = '../../whosonfirst/whosonfirst-data/';
 
@@ -26,5 +27,8 @@ var wofRecords = {};
 readStream(directory, types, wofRecords, function() {
   console.log(Object.keys(wofRecords).length + ' records loaded');
 
-  importStream(wofRecords);
+  importStream(wofRecords, createPeliasElasticsearchPipeline(), function() {
+      console.log('finished');
+  });
+
 });

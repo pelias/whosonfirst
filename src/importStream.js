@@ -5,9 +5,8 @@ var _ = require('lodash');
 
 var Document = require('pelias-model').Document;
 var peliasLogger = require( 'pelias-logger' );
-var createPeliasElasticsearchPipeline = require('./elasticsearchPipeline');
 
-function fullImport(records) {
+function fullImport(records, destination_pipe, callback) {
   var id_stream = event_stream.readArray(Object.keys(records));
 
   var logger = peliasLogger.get( 'whosonfirst', {
@@ -27,13 +26,12 @@ function fullImport(records) {
     if (_.isUndefined(wofDoc.getAdmin('admin0'))) {
       logger.warn(wofDoc.getId());
     }
-
   });
 
   // helper for filtering array of parents to just those with names
   var has_name = function(r) {
     return r.name;
-  }
+  };
 
   var document_stream = map_stream.obj(function(record) {
     var wofDoc = new Document( 'whosonfirst', record.id );
@@ -54,13 +52,13 @@ function fullImport(records) {
     // iterate parents, assigning fields appropriately
     parents.filter(has_name).forEach(function(parent) {
       if (parent.place_type === 'locality') {
-        wofDoc.setAdmin( 'locality', parent.name)
+        wofDoc.setAdmin( 'locality', parent.name);
       }
       else if (parent.place_type === 'county') {
-        wofDoc.setAdmin( 'admin2', parent.name)
+        wofDoc.setAdmin( 'admin2', parent.name);
       }
       else if (parent.place_type === 'region') {
-        wofDoc.setAdmin( 'admin1', parent.name)
+        wofDoc.setAdmin( 'admin1', parent.name);
       }
       else if (parent.place_type === 'country') {
         wofDoc.setAdmin( 'admin0', parent.name);
@@ -75,7 +73,8 @@ function fullImport(records) {
   id_stream.pipe(object_getter_stream)
   .pipe(document_stream)
   .pipe(has_country_validation_stream)
-  .pipe(createPeliasElasticsearchPipeline());
+  .pipe(destination_pipe)
+  .on('finish', callback);
 }
 
 module.exports = fullImport;
