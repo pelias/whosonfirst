@@ -20,7 +20,7 @@ var is_valid_data_file_path = function is_valid_data_file_path() {
   return filter_stream.obj(function(record) {
     return validDataFilePath.test(record.path);
   });
-}
+};
 
 /*
   this function extracts the last portion of the path for a record, eg:
@@ -30,7 +30,7 @@ var normalize_file_path = function normalize_file_path() {
   return map_stream.obj(function(record) {
     return record.path.match(validDataFilePath)[1];
   });
-}
+};
 
 var json_parse_stream = function create_json_parse_stream(dataDirectory) {
   return map_stream.obj(function(filename) {
@@ -52,9 +52,10 @@ var map_fields_stream = function map_fields_stream() {
       place_type: json_object.properties['wof:placetype'],
       parent_id: json_object.properties['wof:parent_id'],
       lat: json_object.properties['geom:latitude'],
-      lon: json_object.properties['geom:longitude']
+      lon: json_object.properties['geom:longitude'],
+      bounding_box: json_object.properties['geom:bbox']
     };
-  })
+  });
 
 };
 

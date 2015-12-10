@@ -38,6 +38,8 @@
   },
   "devDependencies": {
     "event-stream": "^3.3.2",
+    "precommit-hook": "^1.0.7",
+    "jshint": "^2.5.6",
     "tap-dot": "^1.0.0",
     "tape": "^4.2.2"
   },
