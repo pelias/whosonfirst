@@ -29,12 +29,18 @@ var wofRecords = {};
 readStream(directory, types, wofRecords, function() {
   console.log(Object.keys(wofRecords).length + ' records loaded');
 
+  // a stream of WOF records
   var recordStream = wofRecordStream.createWofRecordsStream(wofRecords);
+
+  // how to convert WOF records to Pelias Documents
   var documentGenerator = peliasDocGenerators.parent_id_walker(wofRecords);
+
+  // the final destination of Pelias Documents
   var elasticsearchPipeline = createPeliasElasticsearchPipeline();
 
+  // import WOF records into ES
   importStream(recordStream, documentGenerator, elasticsearchPipeline, function() {
-      console.log('import finished');
+    console.log('import finished');
   });
 
 });
