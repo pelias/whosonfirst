@@ -3,7 +3,7 @@ var _ = require('lodash');
 
 var peliasLogger = require( 'pelias-logger' );
 
-function fullImport(wofRecordStream, documentGenerator, destination_pipe, callback) {
+function fullImport(wof_record_stream, document_generator, destination_pipe, callback) {
   var logger = peliasLogger.get( 'whosonfirst', {
     transports: [
       new peliasLogger.winston.transports.File( {
@@ -19,8 +19,8 @@ function fullImport(wofRecordStream, documentGenerator, destination_pipe, callba
     }
   });
 
-  wofRecordStream
-    .pipe(documentGenerator)
+  wof_record_stream
+    .pipe(document_generator)
     .pipe(has_country_validation_stream)
     .pipe(destination_pipe)
     .on('finish', callback);
