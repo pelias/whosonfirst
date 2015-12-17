@@ -92,7 +92,8 @@ tape('readStream', function(test) {
         'wof:placetype': 'place type 3',
         'wof:parent_id': 4,
         'geom:latitude': 14.141414,
-        'geom:longitude': 41.414141
+        'geom:longitude': 41.414141,
+        'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
       }
     }));
 

@@ -26,7 +26,7 @@
     "pelias-config": "^1.0.3",
     "pelias-dbclient": "0.0.9",
     "pelias-logger": "0.0.8",
-    "pelias-model": "^0.3.0",
+    "pelias-model": "^0.4.0",
     "precommit-hook": "^3.0.0",
     "tap-dot": "^1.0.0",
     "tape": "^4.2.2",
