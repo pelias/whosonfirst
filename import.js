@@ -3,6 +3,7 @@ var importStream = require('./src/importStream');
 var createPeliasElasticsearchPipeline = require('./src/elasticsearchPipeline');
 var peliasDocGenerators = require('./src/peliasDocGenerators');
 var wofRecordStream = require('./src/wofRecordStream');
+var hierarchyFinder = require('./src/hierarchyFinder');
 
 var directory = '../../whosonfirst/whosonfirst-data/';
 
@@ -33,7 +34,8 @@ readStream(directory, types, wofRecords, function() {
   var recordStream = wofRecordStream.createWofRecordsStream(wofRecords);
 
   // how to convert WOF records to Pelias Documents
-  var documentGenerator = peliasDocGenerators.parent_id_walker(wofRecords);
+  var documentGenerator = peliasDocGenerators.createPeliasDocGenerator(
+    hierarchyFinder.hierarchies_walker(wofRecords));
 
   // the final destination of Pelias Documents
   var elasticsearchPipeline = createPeliasElasticsearchPipeline();

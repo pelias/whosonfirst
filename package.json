@@ -20,6 +20,7 @@
   "homepage": "https://github.com/pelias/whosonfirst#readme",
   "dependencies": {
     "batchflow": "^0.4.0",
+    "clone": "^1.0.2",
     "csv-parse": "^1.0.0",
     "fs-extra": "^0.26.2",
     "lodash": "^3.10.1",

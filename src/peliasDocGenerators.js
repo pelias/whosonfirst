@@ -4,7 +4,7 @@ var Document = require('pelias-model').Document;
 
 module.exports = {};
 
-module.exports.parent_id_walker = function(records) {
+module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
   return map_stream.obj(function(record) {
     var wofDoc = new Document( 'whosonfirst', record.id );
     if (record.name) {
@@ -14,6 +14,7 @@ module.exports.parent_id_walker = function(records) {
 
     // WOF bbox is defined as:
     // lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat
+    // so convert to what ES understands
     if (!_.isUndefined(record.bounding_box)) {
       var parsedBoundingBox = record.bounding_box.split(',').map(parseFloat);
       var marshaledBoundingBoxBox = {
@@ -30,30 +31,22 @@ module.exports.parent_id_walker = function(records) {
       wofDoc.setBoundingBox(marshaledBoundingBoxBox);
     }
 
-    // collect all the defined parents, starting with the current record
-    var parents = [];
-    var parent_id = record.id;
-    while (!_.isUndefined(records[parent_id])) {
-      var parent = records[parent_id];
-      parents.push(parent);
-      parent_id = parent.parent_id;
-    }
-
-    // iterate parents, assigning fields appropriately
-    parents.filter(function(r) { return r.name; } ).forEach(function(parent) {
-      if (parent.place_type === 'locality') {
-        wofDoc.setAdmin( 'locality', parent.name);
+    // iterate the hierarchy, assigning fields
+    hierarchy_finder(record).forEach(function(hierarchy_element) {
+      switch (hierarchy_element.place_type) {
+        case 'locality':
+          wofDoc.setAdmin( 'locality', hierarchy_element.name);
+          break;
+        case 'county':
+          wofDoc.setAdmin( 'admin2', hierarchy_element.name);
+          break;
+        case 'region':
+          wofDoc.setAdmin( 'admin1', hierarchy_element.name);
+          break;
+        case 'country':
+          wofDoc.setAdmin( 'admin0', hierarchy_element.name);
+          break;
       }
-      else if (parent.place_type === 'county') {
-        wofDoc.setAdmin( 'admin2', parent.name);
-      }
-      else if (parent.place_type === 'region') {
-        wofDoc.setAdmin( 'admin1', parent.name);
-      }
-      else if (parent.place_type === 'country') {
-        wofDoc.setAdmin( 'admin0', parent.name);
-      }
-
     });
 
     return wofDoc;
