@@ -43,7 +43,8 @@ tape('createPeliasDocGenerator', function(test) {
         lat: 15.151515,
         lon: 51.515151,
         place_type: 'locality',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847889'
+        bounding_box: '-13.691314,49.909613,1.771169,60.847889',
+        iso2: 'DE'
       }
     };
 
@@ -61,6 +62,7 @@ tape('createPeliasDocGenerator', function(test) {
         .setAdmin( 'admin2', 'name 3')
         .setAdmin( 'admin1', 'name 2')
         .setAdmin( 'admin0', 'name 1')
+        .setAlpha3( 'DEU' )
         .setBoundingBox({ upperLeft: { lat:60.847889, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
     ];
 
@@ -153,6 +155,87 @@ tape('createPeliasDocGenerator', function(test) {
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
+    });
+
+  });
+
+  test.test('record without iso2 should not set alpha3', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'name 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', '1')
+        .setName('default', 'name 1')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .setAdmin( 'admin0', 'name 1')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'there should be no alpha3');
+      t.end();
+    });
+
+  });
+
+  test.test('record with unknown iso2 should not set alpha3', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'name 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country',
+        iso2: 'this is not a known ISO2 country code'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', '1')
+        .setName('default', 'name 1')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .setAdmin( 'admin0', 'name 1')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'there should be no alpha3');
       t.end();
     });
 

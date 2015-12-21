@@ -1,5 +1,7 @@
 var map_stream = require('through2-map');
 var _ = require('lodash');
+var iso3166 = require('iso3166-1');
+
 var Document = require('pelias-model').Document;
 
 module.exports = {};
@@ -11,6 +13,10 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
       wofDoc.setName('default', record.name);
     }
     wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
+
+    if (iso3166.is2(record.iso2)) {
+      wofDoc.setAlpha3(iso3166.to3(record.iso2));
+    }
 
     // WOF bbox is defined as:
     // lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat

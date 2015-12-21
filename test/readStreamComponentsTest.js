@@ -109,6 +109,7 @@ tape('readStreamComponents', function(test) {
               'parent_id': 23456
             }
           ],
+          'iso:country': 'YZ',
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
@@ -127,6 +128,7 @@ tape('readStreamComponents', function(test) {
         parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
+        iso2: 'YZ',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
           'parent_id': 12345
@@ -139,6 +141,7 @@ tape('readStreamComponents', function(test) {
         parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
+        iso2: 'YZ',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
           'parent_id': 23456
@@ -151,6 +154,7 @@ tape('readStreamComponents', function(test) {
         parent_id: undefined,
         lat: undefined,
         lon: undefined,
+        iso2: undefined,
         bounding_box: undefined
       }
     ];
