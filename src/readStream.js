@@ -5,6 +5,10 @@ var sink = require('through2-sink');
 
 var readStreamComponents = require('./readStreamComponents');
 
+/*
+  This function finds all the `latest` files in `meta/`, CSV parses them,
+  extracts the required fields, and assigns to a big collection
+*/
 function readData(directory, types, wofRecords, callback) {
   batch(types).parallel(2).each(function(idx, type, done) {
     var csv_parser = parse({ delimiter: ',', columns: true });

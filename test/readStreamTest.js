@@ -23,6 +23,7 @@ tape('readStream', function(test) {
         parent_id: 2,
         lat: 12.121212,
         lon: 21.212121,
+        iso2: 'YZ',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886'
       }, 'id 4 should have been loaded');
 
@@ -33,6 +34,7 @@ tape('readStream', function(test) {
         parent_id: 3,
         lat: 13.131313,
         lon: 31.313131,
+        iso2: 'XZ',
         bounding_box: '-24.539906,34.815009,69.033946,81.85871'
       }, 'id 8 should have been loaded');
 
@@ -61,6 +63,7 @@ tape('readStream', function(test) {
         'wof:parent_id': 2,
         'geom:latitude': 12.121212,
         'geom:longitude': 21.212121,
+        'iso:country': 'YZ',
         'geom:bbox': '-13.691314,49.909613,1.771169,60.847886'
       }
     }));
@@ -76,6 +79,7 @@ tape('readStream', function(test) {
         'wof:parent_id': 3,
         'geom:latitude': 13.131313,
         'geom:longitude': 31.313131,
+        'iso:country': 'XZ',
         'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
       }
     }));

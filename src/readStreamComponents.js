@@ -1,7 +1,8 @@
 var fs = require( 'fs' );
-
+var through2 = require('through2');
 var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
+var _ = require('lodash');
 
 /*
   this regex is used to test/match strings from WOF meta files that can take
@@ -32,29 +33,59 @@ var normalize_file_path = function normalize_file_path() {
   });
 };
 
+/*
+  This function converts a file to an object (JSON-parsed)
+*/
 var json_parse_stream = function create_json_parse_stream(dataDirectory) {
   return map_stream.obj(function(filename) {
     return JSON.parse(fs.readFileSync(dataDirectory + filename));
   });
 };
 
+/*
+  This function filters out incomplete records
+*/
 var filter_incomplete_files_stream = function create_filter_bad_files_stream() {
   return filter_stream.obj(function(json_object) {
     return json_object.id && json_object.hasOwnProperty('properties');
   });
 };
 
+/*
+  This function extracts the fields from the json_object that we're interested
+  in for creating Pelias Document objects.  If there is no hierarchy then a
+  hierarchy-less object is added.  If there are multiple hierarchies for the
+  record then a record for each hierarchy is pushed onto the stream.
+*/
 var map_fields_stream = function map_fields_stream() {
-  return map_stream.obj(function(json_object) {
-    return {
+  return through2.obj(function(json_object, enc, callback) {
+    var base_record = {
       id: json_object.id,
       name: json_object.properties['wof:name'],
       place_type: json_object.properties['wof:placetype'],
       parent_id: json_object.properties['wof:parent_id'],
       lat: json_object.properties['geom:latitude'],
       lon: json_object.properties['geom:longitude'],
-      bounding_box: json_object.properties['geom:bbox']
+      bounding_box: json_object.properties['geom:bbox'],
+      iso2: json_object.properties['iso:country']
     };
+
+    // if there's no hierarchy then just add the base record
+    if (_.isUndefined(json_object.properties['wof:hierarchy'])) {
+      this.push(base_record);
+
+    } else {
+      // otherwise, clone the base record for each hierarchy in the list and push
+      json_object.properties['wof:hierarchy'].forEach(function(hierarchy) {
+        var clone = _.clone(base_record, true);
+        clone.hierarchy = hierarchy;
+        this.push(clone);
+      }, this);
+
+    }
+
+    return callback();
+
   });
 
 };
