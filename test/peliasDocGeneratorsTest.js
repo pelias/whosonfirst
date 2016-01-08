@@ -241,4 +241,211 @@ tape('createPeliasDocGenerator', function(test) {
 
   });
 
+  test.test('known US state name should be also set region_a in doc', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'United States',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country'
+      },
+      2: {
+        id: 2,
+        name: 'New York',
+        lat: 13.131313,
+        lon: 31.313131,
+        place_type: 'region'
+      },
+      3: {
+        id: 3,
+        name: 'Kings',
+        lat: 14.141414,
+        lon: 41.414141,
+        place_type: 'county'
+      },
+      4: {
+        id: 4,
+        name: 'New York City',
+        lat: 15.151515,
+        lon: 51.515151,
+        place_type: 'locality',
+        iso2: 'US'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['4']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', '4')
+        .setName('default', 'New York City')
+        .setCentroid({ lat: 15.151515, lon: 51.515151 })
+        .setAdmin( 'locality', 'New York City')
+        .setAdmin( 'admin2', 'Kings')
+        .setAdmin( 'admin1', 'New York')
+        .setAdmin( 'admin1_abbr', 'NY')
+        .setAdmin( 'admin0', 'United States')
+        .setAlpha3( 'USA' )
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['4'],
+        wofRecords['3'],
+        wofRecords['2'],
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
+      t.end();
+    });
+
+  });
+
+  test.test('unknown US state name should not set region_a in doc', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'United States',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country'
+      },
+      2: {
+        id: 2,
+        name: 'Unknown US State Name',
+        lat: 13.131313,
+        lon: 31.313131,
+        place_type: 'region'
+      },
+      3: {
+        id: 3,
+        name: 'Kings',
+        lat: 14.141414,
+        lon: 41.414141,
+        place_type: 'county'
+      },
+      4: {
+        id: 4,
+        name: 'New York City',
+        lat: 15.151515,
+        lon: 51.515151,
+        place_type: 'locality',
+        iso2: 'US'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['4']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', '4')
+        .setName('default', 'New York City')
+        .setCentroid({ lat: 15.151515, lon: 51.515151 })
+        .setAdmin( 'locality', 'New York City')
+        .setAdmin( 'admin2', 'Kings')
+        .setAdmin( 'admin1', 'Unknown US State Name')
+        .setAdmin( 'admin0', 'United States')
+        .setAlpha3( 'USA' )
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['4'],
+        wofRecords['3'],
+        wofRecords['2'],
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'admin1_abbr should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('known US state name but not ISO2=US should not set region_a in doc', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'United States',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country'
+      },
+      2: {
+        id: 2,
+        name: 'New York',
+        lat: 13.131313,
+        lon: 31.313131,
+        place_type: 'region'
+      },
+      3: {
+        id: 3,
+        name: 'Kings',
+        lat: 14.141414,
+        lon: 41.414141,
+        place_type: 'county'
+      },
+      4: {
+        id: 4,
+        name: 'New York City',
+        lat: 15.151515,
+        lon: 51.515151,
+        place_type: 'locality',
+        iso2: 'not US'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['4']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', '4')
+        .setName('default', 'New York City')
+        .setCentroid({ lat: 15.151515, lon: 51.515151 })
+        .setAdmin( 'locality', 'New York City')
+        .setAdmin( 'admin2', 'Kings')
+        .setAdmin( 'admin1', 'New York')
+        .setAdmin( 'admin0', 'United States')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['4'],
+        wofRecords['3'],
+        wofRecords['2'],
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'admin1_abbr should not be set');
+      t.end();
+    });
+
+  });
+
 });

@@ -4,6 +4,72 @@ var iso3166 = require('iso3166-1');
 
 var Document = require('pelias-model').Document;
 
+var supportedStates = {
+  'Alabama': 'AL',
+  'Alaska': 'AK',
+  'Arizona': 'AZ',
+  'Arkansas': 'AR',
+  'California': 'CA',
+  'Colorado': 'CO',
+  'Connecticut': 'CT',
+  'Delaware': 'DE',
+  'Florida': 'FL',
+  'Georgia': 'GA',
+  'Hawaii': 'HI',
+  'Idaho': 'ID',
+  'Illinois': 'IL',
+  'Indiana': 'IN',
+  'Iowa': 'IA',
+  'Kansas': 'KS',
+  'Kentucky': 'KY',
+  'Louisiana': 'LA',
+  'Maine': 'ME',
+  'Maryland': 'MD',
+  'Massachusetts': 'MA',
+  'Michigan': 'MI',
+  'Minnesota': 'MN',
+  'Mississippi': 'MS',
+  'Missouri': 'MO',
+  'Montana': 'MT',
+  'Nebraska': 'NE',
+  'Nevada': 'NV',
+  'New Hampshire': 'NH',
+  'New Jersey': 'NJ',
+  'New Mexico': 'NM',
+  'New York': 'NY',
+  'North Carolina': 'NC',
+  'North Dakota': 'ND',
+  'Ohio': 'OH',
+  'Oklahoma': 'OK',
+  'Oregon': 'OR',
+  'Pennsylvania': 'PA',
+  'Rhode Island': 'RI',
+  'South Carolina': 'SC',
+  'South Dakota': 'SD',
+  'Tennessee': 'TN',
+  'Texas': 'TX',
+  'Utah': 'UT',
+  'Vermont': 'VT',
+  'Virginia': 'VA',
+  'Washington': 'WA',
+  'Washington, D.C.': 'DC',
+  'West Virginia': 'WV',
+  'Wisconsin': 'WI',
+  'Wyoming': 'WY'
+};
+
+function isUS(record) {
+  return 'US' === record.iso2;
+}
+
+function isSupportedState(name) {
+  return supportedStates.hasOwnProperty(name);
+}
+
+function getStateAbbreviation(name) {
+  return supportedStates[name];
+}
+
 module.exports = {};
 
 module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
@@ -48,6 +114,9 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
           break;
         case 'region':
           wofDoc.setAdmin( 'admin1', hierarchy_element.name);
+          if (isUS(record) && isSupportedState(hierarchy_element.name)) {
+            wofDoc.setAdmin( 'admin1_abbr', getStateAbbreviation(hierarchy_element.name));
+          }
           break;
         case 'country':
           wofDoc.setAdmin( 'admin0', hierarchy_element.name);
