@@ -4,7 +4,7 @@ var iso3166 = require('iso3166-1');
 
 var Document = require('pelias-model').Document;
 
-var supportedStates = {
+var usStates = {
   'Alabama': 'AL',
   'Alaska': 'AK',
   'Arizona': 'AZ',
@@ -58,16 +58,16 @@ var supportedStates = {
   'Wyoming': 'WY'
 };
 
+usStates.isSupported = function(name) {
+  return this.hasOwnProperty(name);
+};
+
+usStates.getAbbreviation = function(name) {
+  return this[name];
+};
+
 function isUS(record) {
   return 'US' === record.iso2;
-}
-
-function isSupportedState(name) {
-  return supportedStates.hasOwnProperty(name);
-}
-
-function getStateAbbreviation(name) {
-  return supportedStates[name];
 }
 
 module.exports = {};
@@ -114,8 +114,8 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
           break;
         case 'region':
           wofDoc.setAdmin( 'admin1', hierarchy_element.name);
-          if (isUS(record) && isSupportedState(hierarchy_element.name)) {
-            wofDoc.setAdmin( 'admin1_abbr', getStateAbbreviation(hierarchy_element.name));
+          if (isUS(record) && usStates.isSupported(hierarchy_element.name)) {
+            wofDoc.setAdmin( 'admin1_abbr', usStates.getAbbreviation(hierarchy_element.name));
           }
           break;
         case 'country':
