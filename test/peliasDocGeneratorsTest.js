@@ -42,8 +42,16 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'name 4',
         lat: 15.151515,
         lon: 51.515151,
+        place_type: 'localadmin',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847889'
+      },
+      5: {
+        id: 5,
+        name: 'name 5',
+        lat: 16.161616,
+        lon: 61.616161,
         place_type: 'locality',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847889',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847890',
         iso2: 'DE'
       }
     };
@@ -51,23 +59,25 @@ tape('createPeliasDocGenerator', function(test) {
     // extract all the values from wofRecords to an array since that's how test_stream works
     // sure, this could be done with map, but this is clearer
     var input = [
-      wofRecords['4']
+      wofRecords['5']
     ];
 
     var expected = [
-      new Document( 'whosonfirst', '4')
-        .setName('default', 'name 4')
-        .setCentroid({ lat: 15.151515, lon: 51.515151 })
-        .setAdmin( 'locality', 'name 4')
+      new Document( 'whosonfirst', '5')
+        .setName('default', 'name 5')
+        .setCentroid({ lat: 16.161616, lon: 61.616161 })
+        .setAdmin( 'locality', 'name 5')
+        .setAdmin( 'local_admin', 'name 4')
         .setAdmin( 'admin2', 'name 3')
         .setAdmin( 'admin1', 'name 2')
         .setAdmin( 'admin0', 'name 1')
         .setAlpha3( 'DEU' )
-        .setBoundingBox({ upperLeft: { lat:60.847889, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
+        .setBoundingBox({ upperLeft: { lat:60.847890, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
     ];
 
     var hierarchies_finder = function() {
       return [
+        wofRecords['5'],
         wofRecords['4'],
         wofRecords['3'],
         wofRecords['2'],
@@ -255,7 +265,8 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'New York',
         lat: 13.131313,
         lon: 31.313131,
-        place_type: 'region'
+        place_type: 'region',
+        abbreviation: 'NY'
       },
       3: {
         id: 3,
@@ -311,7 +322,7 @@ tape('createPeliasDocGenerator', function(test) {
 
   });
 
-  test.test('unknown US state name should not set region_a in doc', function(t) {
+  test.test('undefined abbreviation should not set region_a in doc', function(t) {
     var wofRecords = {
       1: {
         id: 1,
@@ -322,7 +333,7 @@ tape('createPeliasDocGenerator', function(test) {
       },
       2: {
         id: 2,
-        name: 'Unknown US State Name',
+        name: 'New York',
         lat: 13.131313,
         lon: 31.313131,
         place_type: 'region'
@@ -356,7 +367,7 @@ tape('createPeliasDocGenerator', function(test) {
         .setCentroid({ lat: 15.151515, lon: 51.515151 })
         .setAdmin( 'locality', 'New York City')
         .setAdmin( 'admin2', 'Kings')
-        .setAdmin( 'admin1', 'Unknown US State Name')
+        .setAdmin( 'admin1', 'New York')
         .setAdmin( 'admin0', 'United States')
         .setAlpha3( 'USA' )
     ];
@@ -374,75 +385,7 @@ tape('createPeliasDocGenerator', function(test) {
     var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
-      t.deepEqual(actual, expected, 'admin1_abbr should not be set');
-      t.end();
-    });
-
-  });
-
-  test.test('known US state name but not ISO2=US should not set region_a in doc', function(t) {
-    var wofRecords = {
-      1: {
-        id: 1,
-        name: 'United States',
-        lat: 12.121212,
-        lon: 21.212121,
-        place_type: 'country'
-      },
-      2: {
-        id: 2,
-        name: 'New York',
-        lat: 13.131313,
-        lon: 31.313131,
-        place_type: 'region'
-      },
-      3: {
-        id: 3,
-        name: 'Kings',
-        lat: 14.141414,
-        lon: 41.414141,
-        place_type: 'county'
-      },
-      4: {
-        id: 4,
-        name: 'New York City',
-        lat: 15.151515,
-        lon: 51.515151,
-        place_type: 'locality',
-        iso2: 'not US'
-      }
-    };
-
-    // extract all the values from wofRecords to an array since that's how test_stream works
-    // sure, this could be done with map, but this is clearer
-    var input = [
-      wofRecords['4']
-    ];
-
-    var expected = [
-      new Document( 'whosonfirst', '4')
-        .setName('default', 'New York City')
-        .setCentroid({ lat: 15.151515, lon: 51.515151 })
-        .setAdmin( 'locality', 'New York City')
-        .setAdmin( 'admin2', 'Kings')
-        .setAdmin( 'admin1', 'New York')
-        .setAdmin( 'admin0', 'United States')
-    ];
-
-    var hierarchies_finder = function() {
-      return [
-        wofRecords['4'],
-        wofRecords['3'],
-        wofRecords['2'],
-        wofRecords['1']
-      ];
-    };
-
-    // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
-
-    test_stream(input, docGenerator, function(err, actual) {
-      t.deepEqual(actual, expected, 'admin1_abbr should not be set');
+      t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
       t.end();
     });
 

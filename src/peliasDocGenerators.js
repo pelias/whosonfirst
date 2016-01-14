@@ -4,72 +4,6 @@ var iso3166 = require('iso3166-1');
 
 var Document = require('pelias-model').Document;
 
-var usStates = {
-  'Alabama': 'AL',
-  'Alaska': 'AK',
-  'Arizona': 'AZ',
-  'Arkansas': 'AR',
-  'California': 'CA',
-  'Colorado': 'CO',
-  'Connecticut': 'CT',
-  'Delaware': 'DE',
-  'Florida': 'FL',
-  'Georgia': 'GA',
-  'Hawaii': 'HI',
-  'Idaho': 'ID',
-  'Illinois': 'IL',
-  'Indiana': 'IN',
-  'Iowa': 'IA',
-  'Kansas': 'KS',
-  'Kentucky': 'KY',
-  'Louisiana': 'LA',
-  'Maine': 'ME',
-  'Maryland': 'MD',
-  'Massachusetts': 'MA',
-  'Michigan': 'MI',
-  'Minnesota': 'MN',
-  'Mississippi': 'MS',
-  'Missouri': 'MO',
-  'Montana': 'MT',
-  'Nebraska': 'NE',
-  'Nevada': 'NV',
-  'New Hampshire': 'NH',
-  'New Jersey': 'NJ',
-  'New Mexico': 'NM',
-  'New York': 'NY',
-  'North Carolina': 'NC',
-  'North Dakota': 'ND',
-  'Ohio': 'OH',
-  'Oklahoma': 'OK',
-  'Oregon': 'OR',
-  'Pennsylvania': 'PA',
-  'Rhode Island': 'RI',
-  'South Carolina': 'SC',
-  'South Dakota': 'SD',
-  'Tennessee': 'TN',
-  'Texas': 'TX',
-  'Utah': 'UT',
-  'Vermont': 'VT',
-  'Virginia': 'VA',
-  'Washington': 'WA',
-  'Washington, D.C.': 'DC',
-  'West Virginia': 'WV',
-  'Wisconsin': 'WI',
-  'Wyoming': 'WY'
-};
-
-usStates.isSupported = function(name) {
-  return this.hasOwnProperty(name);
-};
-
-usStates.getAbbreviation = function(name) {
-  return this[name];
-};
-
-function isUS(record) {
-  return 'US' === record.iso2;
-}
-
 module.exports = {};
 
 module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
@@ -109,13 +43,16 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
         case 'locality':
           wofDoc.setAdmin( 'locality', hierarchy_element.name);
           break;
+        case 'localadmin':
+          wofDoc.setAdmin( 'local_admin', hierarchy_element.name);
+          break;
         case 'county':
           wofDoc.setAdmin( 'admin2', hierarchy_element.name);
           break;
         case 'region':
           wofDoc.setAdmin( 'admin1', hierarchy_element.name);
-          if (isUS(record) && usStates.isSupported(hierarchy_element.name)) {
-            wofDoc.setAdmin( 'admin1_abbr', usStates.getAbbreviation(hierarchy_element.name));
+          if (hierarchy_element.hasOwnProperty('abbreviation')) {
+            wofDoc.setAdmin( 'admin1_abbr', hierarchy_element.abbreviation );
           }
           break;
         case 'country':

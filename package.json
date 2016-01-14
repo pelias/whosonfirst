@@ -4,16 +4,14 @@
   "description": "Importer for Who's on First",
   "main": "index.js",
   "scripts": {
-    "test": "node test/test | tap-dot",
-    "lint": "jshint .",
-    "validate": "npm ls"
+    "test": "node test/test | tap-dot"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pelias/whosonfirst.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/pelias/whosonfirst/issues"
   },
@@ -22,16 +20,13 @@
     "batchflow": "^0.4.0",
     "clone": "^1.0.2",
     "csv-parse": "^1.0.0",
-    "fs-extra": "^0.26.2",
+    "fs-extra": "^0.26.4",
     "iso3166-1": "^0.2.5",
     "lodash": "^3.10.1",
     "pelias-config": "^1.0.3",
     "pelias-dbclient": "0.0.9",
     "pelias-logger": "0.0.8",
     "pelias-model": "^0.4.0",
-    "precommit-hook": "^3.0.0",
-    "tap-dot": "^1.0.0",
-    "tape": "^4.2.2",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
     "through2-map": "^2.0.0",
