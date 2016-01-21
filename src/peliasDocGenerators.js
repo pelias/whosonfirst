@@ -55,7 +55,7 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
           break;
         case 'region':
           wofDoc.setAdmin( 'admin1', hierarchy_element.name);
-          if (hierarchy_element.hasOwnProperty('abbreviation')) {
+          if (!_.isUndefined(hierarchy_element.abbreviation)) {
             wofDoc.setAdmin( 'admin1_abbr', hierarchy_element.abbreviation );
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
           } else {
