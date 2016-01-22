@@ -25,19 +25,19 @@ if (directory.slice(-1) !== '/') {
 var types = [
   'continent',
   'country',
-  // 'county',
-  // 'dependency',
-  // 'disputed',
-  // 'empire',
-  // 'localadmin',
-  // 'locality',
-  // 'macrocounty',
-  // 'macrohood',
-  // 'macroregion',
-  // 'metroarea',
-  // 'microhood',
-  // 'neighbourhood',
-  // 'region'
+  'county',
+  'dependency',
+  'disputed',
+  'empire',
+  'localadmin',
+  'locality',
+  'macrocounty',
+  'macrohood',
+  'macroregion',
+  'metroarea',
+  'microhood',
+  'neighbourhood',
+  'region'
 ];
 
 var wofRecords = {};
