@@ -4,6 +4,7 @@
   "description": "Importer for Who's on First",
   "main": "index.js",
   "scripts": {
+    "import": "node import.js",
     "test": "node test/test | tap-dot"
   },
   "repository": {
