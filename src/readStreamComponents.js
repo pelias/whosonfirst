@@ -62,6 +62,7 @@ var map_fields_stream = function map_fields_stream() {
     var base_record = {
       id: json_object.id,
       name: json_object.properties['wof:name'],
+      abbreviation: json_object.properties['wof:abbreviation'],
       place_type: json_object.properties['wof:placetype'],
       parent_id: json_object.properties['wof:parent_id'],
       lat: json_object.properties['geom:latitude'],

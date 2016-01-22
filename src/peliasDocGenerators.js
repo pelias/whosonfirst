@@ -43,11 +43,17 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
         case 'locality':
           wofDoc.setAdmin( 'locality', hierarchy_element.name);
           break;
+        case 'localadmin':
+          wofDoc.setAdmin( 'local_admin', hierarchy_element.name);
+          break;
         case 'county':
           wofDoc.setAdmin( 'admin2', hierarchy_element.name);
           break;
         case 'region':
           wofDoc.setAdmin( 'admin1', hierarchy_element.name);
+          if (hierarchy_element.hasOwnProperty('abbreviation')) {
+            wofDoc.setAdmin( 'admin1_abbr', hierarchy_element.abbreviation );
+          }
           break;
         case 'country':
           wofDoc.setAdmin( 'admin0', hierarchy_element.name);

@@ -24,6 +24,7 @@ tape('readStream', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
+        abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886'
       }, 'id 4 should have been loaded');
 
@@ -35,6 +36,7 @@ tape('readStream', function(test) {
         lat: 13.131313,
         lon: 31.313131,
         iso2: 'XZ',
+        abbreviation: 'XY',
         bounding_box: '-24.539906,34.815009,69.033946,81.85871'
       }, 'id 8 should have been loaded');
 
@@ -64,6 +66,7 @@ tape('readStream', function(test) {
         'geom:latitude': 12.121212,
         'geom:longitude': 21.212121,
         'iso:country': 'YZ',
+        'wof:abbreviation': 'XY',
         'geom:bbox': '-13.691314,49.909613,1.771169,60.847886'
       }
     }));
@@ -80,6 +83,7 @@ tape('readStream', function(test) {
         'geom:latitude': 13.131313,
         'geom:longitude': 31.313131,
         'iso:country': 'XZ',
+        'wof:abbreviation': 'XY',
         'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
       }
     }));
