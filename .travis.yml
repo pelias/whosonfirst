@@ -1,5 +1,5 @@
 language: node_js
-script: "npm run unit"
+script: "npm test"
 node_js:
   - "0.10"
   - "0.12"
