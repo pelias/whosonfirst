@@ -1,3 +1,4 @@
+var peliasConfig = require( 'pelias-config' ).generate();
 var readStream = require('./src/readStream');
 var importStream = require('./src/importStream');
 var createPeliasElasticsearchPipeline = require('./src/elasticsearchPipeline');
@@ -5,7 +6,21 @@ var peliasDocGenerators = require('./src/peliasDocGenerators');
 var wofRecordStream = require('./src/wofRecordStream');
 var hierarchyFinder = require('./src/hierarchyFinder');
 
-var directory = '../../whosonfirst/whosonfirst-data/';
+function hasDataDirectory() {
+  return peliasConfig.imports.hasOwnProperty('whosonfirst') &&
+          peliasConfig.imports.whosonfirst.hasOwnProperty('datapath');
+}
+
+if (!hasDataDirectory()) {
+  console.error('Could not find whosonfirst data directory in configuration');
+  process.exit( 2 );
+}
+
+var directory = peliasConfig.imports.whosonfirst.datapath;
+
+if (directory.slice(-1) !== '/') {
+  directory = directory + '/';
+}
 
 var types = [
   'continent',

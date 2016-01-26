@@ -8,7 +8,8 @@ module.exports = {};
 
 module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
   return map_stream.obj(function(record) {
-    var wofDoc = new Document( 'whosonfirst', record.id );
+    var wofDoc = new Document( 'whosonfirst', record.place_type, record.id );
+
     if (record.name) {
       wofDoc.setName('default', record.name);
     }
@@ -42,21 +43,28 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
       switch (hierarchy_element.place_type) {
         case 'locality':
           wofDoc.setAdmin( 'locality', hierarchy_element.name);
+          wofDoc.addParent('locality', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'localadmin':
           wofDoc.setAdmin( 'local_admin', hierarchy_element.name);
+          wofDoc.addParent('localadmin', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'county':
           wofDoc.setAdmin( 'admin2', hierarchy_element.name);
+          wofDoc.addParent('county', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'region':
           wofDoc.setAdmin( 'admin1', hierarchy_element.name);
-          if (hierarchy_element.hasOwnProperty('abbreviation')) {
+          if (hierarchy_element.abbreviation) {
             wofDoc.setAdmin( 'admin1_abbr', hierarchy_element.abbreviation );
+            wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
+          } else {
+            wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString());
           }
           break;
         case 'country':
           wofDoc.setAdmin( 'admin0', hierarchy_element.name);
+          wofDoc.addParent('country', hierarchy_element.name, hierarchy_element.id.toString());
           break;
       }
     });

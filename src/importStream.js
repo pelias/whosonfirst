@@ -16,7 +16,7 @@ function fullImport(wof_record_stream, document_generator, destination_pipe, cal
   var logger = peliasLogger.get( 'whosonfirst', {
     transports: [
       new peliasLogger.winston.transports.File( {
-        filename: 'missing_countries.txt',
+        filename: 'missing_countries.log',
         timestamp: false
       })
     ]

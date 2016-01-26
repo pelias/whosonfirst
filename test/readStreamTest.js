@@ -9,6 +9,70 @@ tape('readStream', function(test) {
     all that painful.
   */
   test.test('readStream should return from all requested types and populate wofRecords', function(t) {
+    function setupTestEnvironment() {
+      // remove tmp directory if for some reason it's been hanging around from a previous run
+      fs.removeSync('tmp');
+
+      fs.mkdirsSync('tmp/meta');
+
+      // write out first meta and data files
+      fs.writeFileSync('tmp/meta/wof-type1-latest.csv', 'path\n1/2/3/4.geojson\n');
+      fs.mkdirsSync('tmp/data/1/2/3');
+      fs.writeFileSync('tmp/data/1/2/3/4.geojson', JSON.stringify({
+        id: 4,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 2,
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY',
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886'
+        }
+      }));
+
+      // write out second meta and data files
+      fs.writeFileSync('tmp/meta/wof-type2-latest.csv', 'path\n5/6/7/8.geojson\n');
+      fs.mkdirsSync('tmp/data/5/6/7');
+      fs.writeFileSync('tmp/data/5/6/7/8.geojson', JSON.stringify({
+        id: 8,
+        properties: {
+          'wof:name': 'name 2',
+          'wof:placetype': 'place type 2',
+          'wof:parent_id': 3,
+          'geom:latitude': 13.131313,
+          'geom:longitude': 31.313131,
+          'iso:country': 'XZ',
+          'wof:abbreviation': 'XY',
+          'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
+        }
+      }));
+
+      // write out third meta and data files that are ignored
+      // it will be ignored since 'type3' is not passed as a supported type
+      // this shows that types are supported instead of all files being globbed
+      fs.writeFileSync('tmp/meta/wof-type3-latest.csv', 'path\n9/10/11/12.geojson\n');
+      fs.mkdirsSync('tmp/data/9/10/11');
+      fs.writeFileSync('tmp/data/9/10/11/12.geojson', JSON.stringify({
+        id: 12,
+        properties: {
+          'wof:name': 'name 3',
+          'wof:placetype': 'place type 3',
+          'wof:parent_id': 4,
+          'geom:latitude': 14.141414,
+          'geom:longitude': 41.414141,
+          'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
+        }
+      }));
+
+    }
+
+    function cleanupTestEnvironment() {
+      fs.removeSync('tmp');
+
+    }
+
     setupTestEnvironment();
 
     var wofRecords = {};
@@ -47,69 +111,5 @@ tape('readStream', function(test) {
     });
 
   });
-
-  function setupTestEnvironment() {
-    // remove tmp directory if for some reason it's been hanging around from a previous run
-    fs.removeSync('tmp');
-
-    fs.mkdirsSync('tmp/meta');
-
-    // write out first meta and data files
-    fs.writeFileSync('tmp/meta/wof-type1-latest.csv', 'path\n1/2/3/4.geojson\n');
-    fs.mkdirsSync('tmp/data/1/2/3');
-    fs.writeFileSync('tmp/data/1/2/3/4.geojson', JSON.stringify({
-      id: 4,
-      properties: {
-        'wof:name': 'name 1',
-        'wof:placetype': 'place type 1',
-        'wof:parent_id': 2,
-        'geom:latitude': 12.121212,
-        'geom:longitude': 21.212121,
-        'iso:country': 'YZ',
-        'wof:abbreviation': 'XY',
-        'geom:bbox': '-13.691314,49.909613,1.771169,60.847886'
-      }
-    }));
-
-    // write out second meta and data files
-    fs.writeFileSync('tmp/meta/wof-type2-latest.csv', 'path\n5/6/7/8.geojson\n');
-    fs.mkdirsSync('tmp/data/5/6/7');
-    fs.writeFileSync('tmp/data/5/6/7/8.geojson', JSON.stringify({
-      id: 8,
-      properties: {
-        'wof:name': 'name 2',
-        'wof:placetype': 'place type 2',
-        'wof:parent_id': 3,
-        'geom:latitude': 13.131313,
-        'geom:longitude': 31.313131,
-        'iso:country': 'XZ',
-        'wof:abbreviation': 'XY',
-        'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
-      }
-    }));
-
-    // write out third meta and data files that are ignored
-    // it will be ignored since 'type3' is not passed as a supported type
-    // this shows that types are supported instead of all files being globbed
-    fs.writeFileSync('tmp/meta/wof-type3-latest.csv', 'path\n9/10/11/12.geojson\n');
-    fs.mkdirsSync('tmp/data/9/10/11');
-    fs.writeFileSync('tmp/data/9/10/11/12.geojson', JSON.stringify({
-      id: 12,
-      properties: {
-        'wof:name': 'name 3',
-        'wof:placetype': 'place type 3',
-        'wof:parent_id': 4,
-        'geom:latitude': 14.141414,
-        'geom:longitude': 41.414141,
-        'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
-      }
-    }));
-
-  }
-
-  function cleanupTestEnvironment() {
-    fs.removeSync('tmp');
-
-  }
 
 });
