@@ -35,7 +35,7 @@ var normalize_file_path = function normalize_file_path() {
 };
 
 /*
-  this funciton verifies that a file exists and is readable
+  this function verifies that a file exists and is readable, logs an error otherwise
 */
 var file_is_readable = function file_is_readable(dataDirectory) {
   return filter_stream.obj(function(filename) {
