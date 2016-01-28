@@ -3,6 +3,7 @@ var through2 = require('through2');
 var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
 var _ = require('lodash');
+var util = require('util');
 
 /*
   this regex is used to test/match strings from WOF meta files that can take
@@ -30,6 +31,22 @@ var is_valid_data_file_path = function is_valid_data_file_path() {
 var normalize_file_path = function normalize_file_path() {
   return map_stream.obj(function(record) {
     return record.path.match(validDataFilePath)[1];
+  });
+};
+
+/*
+  this function verifies that a file exists and is readable, logs an error otherwise
+*/
+var file_is_readable = function file_is_readable(dataDirectory) {
+  return filter_stream.obj(function(filename) {
+    try {
+      fs.accessSync(dataDirectory + filename, fs.R_OK);
+      return true;
+    }
+    catch (err) {
+      console.error(util.format('data file cannot be read: %s', dataDirectory + filename));
+      return false;
+    }
   });
 };
 
@@ -94,6 +111,7 @@ var map_fields_stream = function map_fields_stream() {
 module.exports = {
   is_valid_data_file_path: is_valid_data_file_path,
   normalize_file_path: normalize_file_path,
+  file_is_readable: file_is_readable,
   json_parse_stream: json_parse_stream,
   filter_incomplete_files_stream: filter_incomplete_files_stream,
   map_fields_stream: map_fields_stream

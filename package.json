@@ -1,6 +1,9 @@
 {
   "name": "whosonfirst",
   "version": "1.0.0",
+  "engines": {
+    "node": "0.12"
+  },
   "description": "Importer for Who's on First",
   "main": "index.js",
   "scripts": {
@@ -27,7 +30,7 @@
     "pelias-config": "^1.0.3",
     "pelias-dbclient": "0.0.9",
     "pelias-logger": "0.0.8",
-    "pelias-model": "pelias/model#5069438126ed2bf06d6223f41446deeec7db917a",
+    "pelias-model": "^1.0.0",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
     "through2-map": "^2.0.0",
