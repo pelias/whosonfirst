@@ -72,7 +72,9 @@ tape('readStreamComponents', function(test) {
       'does_not_exist.txt'
     ];
 
-    var expected = ['test.txt'];
+    var expected = [
+      'test.txt'
+    ];
 
     var file_is_readable = readStreamComponents.file_is_readable('./');
 
