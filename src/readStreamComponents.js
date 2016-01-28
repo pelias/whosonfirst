@@ -3,7 +3,7 @@ var through2 = require('through2');
 var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
 var _ = require('lodash');
-// var util = require('util');
+var util = require('util');
 
 /*
   this regex is used to test/match strings from WOF meta files that can take
@@ -44,7 +44,7 @@ var file_is_readable = function file_is_readable(dataDirectory) {
       return true;
     }
     catch (err) {
-      // console.error(util.format('data file cannot be read: %s', dataDirectory + filename));
+      console.error(util.format('data file cannot be read: %s', dataDirectory + filename));
       return false;
     }
   });
