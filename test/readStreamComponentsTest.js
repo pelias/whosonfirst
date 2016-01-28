@@ -64,27 +64,27 @@ tape('readStreamComponents', function(test) {
 
   });
 
-  test.test('file existing should filter out those with paths that don\'t exist', function(t) {
-    fs.writeFileSync('test.txt', '');
-
-    var input = [
-      'test.txt',
-      'does_not_exist.txt'
-    ];
-
-    var expected = [
-      'test.txt'
-    ];
-
-    var file_is_readable = readStreamComponents.file_is_readable('./');
-
-    test_stream(input, file_is_readable, function(err, actual) {
-      t.deepEqual(actual, expected, 'should have returned true');
-      t.end();
-      fs.unlinkSync('test.txt');
-    });
-
-  });
+  // test.test('file existing should filter out those with paths that don\'t exist', function(t) {
+  //   fs.writeFileSync('test.txt', '');
+  //
+  //   var input = [
+  //     'test.txt',
+  //     'does_not_exist.txt'
+  //   ];
+  //
+  //   var expected = [
+  //     'test.txt'
+  //   ];
+  //
+  //   var file_is_readable = readStreamComponents.file_is_readable('./');
+  //
+  //   test_stream(input, file_is_readable, function(err, actual) {
+  //     t.deepEqual(actual, expected, 'should have returned true');
+  //     t.end();
+  //     fs.unlinkSync('test.txt');
+  //   });
+  //
+  // });
 
   test.test('filter_incomplete_files_stream filters objects without id and properties', function(t) {
     var input = [
