@@ -55,7 +55,12 @@ var file_is_readable = function file_is_readable(dataDirectory) {
 */
 var json_parse_stream = function create_json_parse_stream(dataDirectory) {
   return map_stream.obj(function(filename) {
-    return JSON.parse(fs.readFileSync(dataDirectory + filename));
+    try {
+      return JSON.parse(fs.readFileSync(dataDirectory + filename));
+    } catch (err) {
+      console.error('exception on %s:', filename, err);
+      return {};
+    }
   });
 };
 

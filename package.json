@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "event-stream": "^3.3.2",
+    "intercept-stdout": "^0.1.2",
     "precommit-hook": "^1.0.7",
     "jshint": "^2.5.6",
     "tap-dot": "^1.0.0",

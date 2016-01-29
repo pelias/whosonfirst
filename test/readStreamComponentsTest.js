@@ -1,6 +1,7 @@
 var tape = require('tape');
 var event_stream = require('event-stream');
 var fs = require('fs');
+var intercept = require('intercept-stdout');
 
 var readStreamComponents = require('../src/readStreamComponents');
 
@@ -78,8 +79,18 @@ tape('readStreamComponents', function(test) {
 
     var file_is_readable = readStreamComponents.file_is_readable('./');
 
+    var stderr = '';
+
+    // intercept/swallow stderr
+    var unhook_intercept = intercept(
+      function() { },
+      function(txt) { stderr += txt; return ''; }
+    );
+
     test_stream(input, file_is_readable, function(err, actual) {
+      unhook_intercept();
       t.deepEqual(actual, expected, 'should have returned true');
+      t.equal(stderr, 'data file cannot be read: ./does_not_exist.txt\n');
       t.end();
       fs.unlinkSync('test.txt');
     });
@@ -189,6 +200,32 @@ tape('readStreamComponents', function(test) {
     test_stream(input, map_fields_stream, function(err, actual) {
       t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
       t.end();
+    });
+
+  });
+
+  test.test('json_parse_stream should return an empty object if the file is not json', function(t) {
+    var input = ['this_is_not_json.json'];
+    var expected = [{}];
+
+    var stderr = '';
+
+    // intercept/swallow stderr
+    var unhook_intercept = intercept(
+      function() { },
+      function(txt) { stderr += txt; return ''; }
+    );
+
+    fs.writeFileSync(input[0], 'this is not JSON');
+
+    var json_parse_stream = readStreamComponents.json_parse_stream('./');
+
+    test_stream(input, json_parse_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'an empty object should have been returned');
+      t.equal(stderr, 'exception on this_is_not_json.json: [SyntaxError: Unexpected token h]\n');
+      t.end();
+      unhook_intercept();
+      fs.unlinkSync(input[0]);
     });
 
   });
