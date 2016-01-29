@@ -34,7 +34,6 @@ var types = [
   'macrocounty',
   'macrohood',
   'macroregion',
-  'metroarea',
   'microhood',
   'neighbourhood',
   'region'
