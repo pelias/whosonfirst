@@ -30,6 +30,8 @@ var types = [
   'disputed',
   'localadmin',
   'locality',
+  'macrocounty',
+  'macroregion',
   'neighbourhood',
   'region'
 ];
