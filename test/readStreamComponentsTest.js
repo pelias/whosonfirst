@@ -75,7 +75,6 @@ tape('readStreamComponents', function(test) {
 
     var basename = path.basename(filename);
     var dirname = path.dirname(filename);
-    console.log(dirname);
 
     var input = [
       basename,
@@ -154,6 +153,7 @@ tape('readStreamComponents', function(test) {
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'gn:population': 98765,
+          'misc:photo_sum': 87654,
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
@@ -174,6 +174,7 @@ tape('readStreamComponents', function(test) {
         lon: 21.212121,
         iso2: 'YZ',
         population: 98765,
+        popularity: 87654,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
@@ -189,6 +190,7 @@ tape('readStreamComponents', function(test) {
         lon: 21.212121,
         iso2: 'YZ',
         population: 98765,
+        popularity: 87654,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
@@ -204,6 +206,7 @@ tape('readStreamComponents', function(test) {
         lon: undefined,
         iso2: undefined,
         population: undefined,
+        popularity: undefined,
         abbreviation: undefined,
         bounding_box: undefined
       }
@@ -217,7 +220,7 @@ tape('readStreamComponents', function(test) {
 
   });
 
-  test.test('gn:population not found should not include popluation', function(t) {
+  test.test('gn:population not found should not include population', function(t) {
     var input = [
       {
         id: 12345,
@@ -244,6 +247,7 @@ tape('readStreamComponents', function(test) {
         lon: 21.212121,
         iso2: 'YZ',
         population: undefined,
+        popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
       }
@@ -251,7 +255,48 @@ tape('readStreamComponents', function(test) {
     var map_fields_stream = readStreamComponents.map_fields_stream();
 
     test_stream(input, map_fields_stream, function(err, actual) {
-      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('misc:photo_sum not found should not include popularity', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: undefined,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+    var map_fields_stream = readStreamComponents.map_fields_stream();
+
+    test_stream(input, map_fields_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'popularity should not be set');
       t.end();
     });
 

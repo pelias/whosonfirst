@@ -554,4 +554,91 @@ tape('createPeliasDocGenerator', function(test) {
 
   });
 
+  test.test('undefined population should not set population in doc', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'United States',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country',
+        iso2: 'US',
+        popularity: undefined
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'country', '1')
+        .setName('default', 'United States')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAlpha3( 'USA' )
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('defined population should set population in doc', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'United States',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country',
+        iso2: 'US',
+        popularity: 87654
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'country', '1')
+        .setName('default', 'United States')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAlpha3( 'USA' )
+        .setPopularity(87654)
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
 });

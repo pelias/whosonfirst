@@ -29,7 +29,8 @@ tape('readStream', function(test) {
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'gn:population': 98765
+          'gn:population': 98765,
+          'misc:photo_sum': 87654
         }
       }));
 
@@ -91,7 +92,8 @@ tape('readStream', function(test) {
         iso2: 'YZ',
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
-        population: 98765
+        population: 98765,
+        popularity: 87654
       }, 'id 4 should have been loaded');
 
       t.deepEqual(wofRecords[8], {
@@ -104,7 +106,8 @@ tape('readStream', function(test) {
         iso2: 'XZ',
         abbreviation: 'XY',
         bounding_box: '-24.539906,34.815009,69.033946,81.85871',
-        population: undefined
+        population: undefined,
+        popularity: undefined
       }, 'id 8 should have been loaded');
 
       t.end();
