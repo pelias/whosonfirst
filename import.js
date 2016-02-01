@@ -28,13 +28,8 @@ var types = [
   'county',
   'dependency',
   'disputed',
-  'empire',
   'localadmin',
   'locality',
-  'macrocounty',
-  'macrohood',
-  'macroregion',
-  'microhood',
   'neighbourhood',
   'region'
 ];
