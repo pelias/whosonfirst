@@ -2,6 +2,8 @@ var tape = require('tape');
 var event_stream = require('event-stream');
 var fs = require('fs');
 var intercept = require('intercept-stdout');
+var temp = require('temp');
+var path = require('path');
 
 var readStreamComponents = require('../src/readStreamComponents');
 
@@ -66,18 +68,25 @@ tape('readStreamComponents', function(test) {
   });
 
   test.test('file existing should filter out those with paths that don\'t exist', function(t) {
-    fs.writeFileSync('test.txt', '');
+    temp.track();
+
+    var filename = temp.path();
+    fs.writeFileSync(filename, '');
+
+    var basename = path.basename(filename);
+    var dirname = path.dirname(filename);
+    console.log(dirname);
 
     var input = [
-      'test.txt',
+      basename,
       'does_not_exist.txt'
     ];
 
     var expected = [
-      'test.txt'
+      basename
     ];
 
-    var file_is_readable = readStreamComponents.file_is_readable('./');
+    var file_is_readable = readStreamComponents.file_is_readable(dirname);
 
     var stderr = '';
 
@@ -88,11 +97,11 @@ tape('readStreamComponents', function(test) {
     );
 
     test_stream(input, file_is_readable, function(err, actual) {
+      temp.cleanupSync();
       unhook_intercept();
       t.deepEqual(actual, expected, 'should have returned true');
-      t.equal(stderr, 'data file cannot be read: ./does_not_exist.txt\n');
+      t.equal(stderr, 'data file cannot be read: ' + dirname + '/does_not_exist.txt\n');
       t.end();
-      fs.unlinkSync('test.txt');
     });
 
   });

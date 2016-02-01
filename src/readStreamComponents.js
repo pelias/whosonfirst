@@ -40,11 +40,11 @@ var normalize_file_path = function normalize_file_path() {
 var file_is_readable = function file_is_readable(dataDirectory) {
   return filter_stream.obj(function(filename) {
     try {
-      fs.accessSync(dataDirectory + filename, fs.R_OK);
+      fs.accessSync(dataDirectory + '/' + filename, fs.R_OK);
       return true;
     }
     catch (err) {
-      console.error(util.format('data file cannot be read: %s', dataDirectory + filename));
+      console.error(util.format('data file cannot be read: %s', dataDirectory + '/' + filename));
       return false;
     }
   });
