@@ -19,6 +19,16 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
       wofDoc.setAlpha3(iso3166.to3(record.iso2));
     }
 
+    // only set population if available
+    if (record.population) {
+      wofDoc.setPopulation(record.population);
+    }
+
+    // only set popularity if available
+    if (record.popularity) {
+      wofDoc.setPopularity(record.popularity);
+    }
+
     // WOF bbox is defined as:
     // lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat
     // so convert to what ES understands

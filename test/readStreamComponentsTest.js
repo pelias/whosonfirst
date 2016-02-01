@@ -2,6 +2,8 @@ var tape = require('tape');
 var event_stream = require('event-stream');
 var fs = require('fs');
 var intercept = require('intercept-stdout');
+var temp = require('temp');
+var path = require('path');
 
 var readStreamComponents = require('../src/readStreamComponents');
 
@@ -66,18 +68,24 @@ tape('readStreamComponents', function(test) {
   });
 
   test.test('file existing should filter out those with paths that don\'t exist', function(t) {
-    fs.writeFileSync('test.txt', '');
+    temp.track();
+
+    var filename = temp.path();
+    fs.writeFileSync(filename, '');
+
+    var basename = path.basename(filename);
+    var dirname = path.dirname(filename);
 
     var input = [
-      'test.txt',
+      basename,
       'does_not_exist.txt'
     ];
 
     var expected = [
-      'test.txt'
+      basename
     ];
 
-    var file_is_readable = readStreamComponents.file_is_readable('./');
+    var file_is_readable = readStreamComponents.file_is_readable(dirname);
 
     var stderr = '';
 
@@ -88,11 +96,11 @@ tape('readStreamComponents', function(test) {
     );
 
     test_stream(input, file_is_readable, function(err, actual) {
+      temp.cleanupSync();
       unhook_intercept();
       t.deepEqual(actual, expected, 'should have returned true');
-      t.equal(stderr, 'data file cannot be read: ./does_not_exist.txt\n');
+      t.equal(stderr, 'data file cannot be read: ' + dirname + path.sep + 'does_not_exist.txt\n');
       t.end();
-      fs.unlinkSync('test.txt');
     });
 
   });
@@ -144,6 +152,8 @@ tape('readStreamComponents', function(test) {
           ],
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
+          'gn:population': 98765,
+          'misc:photo_sum': 87654,
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
@@ -163,6 +173,8 @@ tape('readStreamComponents', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
+        population: 98765,
+        popularity: 87654,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
@@ -177,6 +189,8 @@ tape('readStreamComponents', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
+        population: 98765,
+        popularity: 87654,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
@@ -191,6 +205,8 @@ tape('readStreamComponents', function(test) {
         lat: undefined,
         lon: undefined,
         iso2: undefined,
+        population: undefined,
+        popularity: undefined,
         abbreviation: undefined,
         bounding_box: undefined
       }
@@ -199,6 +215,88 @@ tape('readStreamComponents', function(test) {
 
     test_stream(input, map_fields_stream, function(err, actual) {
       t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
+  test.test('gn:population not found should not include population', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: undefined,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+    var map_fields_stream = readStreamComponents.map_fields_stream();
+
+    test_stream(input, map_fields_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('misc:photo_sum not found should not include popularity', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: undefined,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+    var map_fields_stream = readStreamComponents.map_fields_stream();
+
+    test_stream(input, map_fields_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'popularity should not be set');
       t.end();
     });
 

@@ -43,7 +43,8 @@
     "precommit-hook": "^1.0.7",
     "jshint": "^2.5.6",
     "tap-dot": "^1.0.0",
-    "tape": "^4.2.2"
+    "tape": "^4.2.2",
+    "temp": "^0.8.3"
   },
   "pre-commit": [
     "lint",
