@@ -99,7 +99,7 @@ tape('readStreamComponents', function(test) {
       temp.cleanupSync();
       unhook_intercept();
       t.deepEqual(actual, expected, 'should have returned true');
-      t.equal(stderr, 'data file cannot be read: ' + dirname + '/does_not_exist.txt\n');
+      t.equal(stderr, 'data file cannot be read: ' + dirname + path.sep + 'does_not_exist.txt\n');
       t.end();
     });
 
