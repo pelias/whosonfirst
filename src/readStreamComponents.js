@@ -90,7 +90,8 @@ var map_fields_stream = function map_fields_stream() {
       lat: json_object.properties['geom:latitude'],
       lon: json_object.properties['geom:longitude'],
       bounding_box: json_object.properties['geom:bbox'],
-      iso2: json_object.properties['iso:country']
+      iso2: json_object.properties['iso:country'],
+      population: json_object.properties['gn:population']
     };
 
     // if there's no hierarchy then just add the base record

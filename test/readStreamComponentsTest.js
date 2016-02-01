@@ -144,6 +144,7 @@ tape('readStreamComponents', function(test) {
           ],
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
+          'gn:population': 98765,
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
@@ -163,6 +164,7 @@ tape('readStreamComponents', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
+        population: 98765,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
@@ -177,6 +179,7 @@ tape('readStreamComponents', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
+        population: 98765,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: {
@@ -191,8 +194,49 @@ tape('readStreamComponents', function(test) {
         lat: undefined,
         lon: undefined,
         iso2: undefined,
+        population: undefined,
         abbreviation: undefined,
         bounding_box: undefined
+      }
+    ];
+    var map_fields_stream = readStreamComponents.map_fields_stream();
+
+    test_stream(input, map_fields_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
+  test.test('gn:population not found should not include popluation', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
       }
     ];
     var map_fields_stream = readStreamComponents.map_fields_stream();
