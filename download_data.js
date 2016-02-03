@@ -62,16 +62,16 @@ function handleType(type) {
 
 [
   'continent',
-  // 'country',
-  // 'county',
-  // 'dependency',
-  // 'disputed',
-  // 'localadmin',
-  // 'locality',
-  // 'macrocounty',
-  // 'macroregion',
-  // 'neighbourhood',
-  // 'region'
+  'country',
+  'county',
+  'dependency',
+  'disputed',
+  'localadmin',
+  'locality',
+  'macrocounty',
+  'macroregion',
+  'neighbourhood',
+  'region'
 ].forEach(function(type) {
   handleType(type);
 });
