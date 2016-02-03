@@ -1,6 +1,6 @@
-# whosonfirst
+# Who's on First Data Importer
 
-whosonfirst is a tool used for importing [Who's On First data]() from local files into a Pelias ElasticSearch repository.
+whosonfirst is a tool used for importing [Who's On First data](https://whosonfirst.mapzen.com/) from local files into a Pelias ElasticSearch repository.
 
 # Usage
 
@@ -10,7 +10,7 @@ $> npm start
 
 # Types
 
-Currently, the only supported types are:
+Currently, the supported types are:
 
 - continent
 - country
