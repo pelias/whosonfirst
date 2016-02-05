@@ -27,12 +27,15 @@ tape('importStream', function(test) {
     });
 
     importStream(recordStream, documentGenerator, destination_pipe, function() {
-      t.deepEqual(docs, [
+      var expected = [
         new Document( 'whosonfirst', 'placetype 1', '1' ).setName('default', 'name 1'),
         new Document( 'whosonfirst', 'placetype 2', '2' ).setName('default', 'name 2'),
         new Document( 'whosonfirst', 'placetype 3', '3' ).setName('default', 'name 3'),
         new Document( 'whosonfirst', 'placetype 4', '4' ).setName('default', 'name 4')
-      ]);
+      ].map(function(doc) {
+        return doc.toESDocument();
+      });
+      t.deepEqual(docs, expected, 'documents map correctly to import stream results');
       t.end();
 
     });

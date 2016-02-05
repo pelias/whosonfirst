@@ -1,6 +1,7 @@
 var spy_stream = require('through2-spy');
 var _ = require('lodash');
 
+var peliasModel = require( 'pelias-model' );
 var peliasLogger = require( 'pelias-logger' );
 
 /*
@@ -31,6 +32,7 @@ function fullImport(wof_record_stream, document_generator, destination_pipe, cal
   wof_record_stream
     .pipe(document_generator)
     .pipe(has_country_validation_stream)
+    .pipe(peliasModel.createDocumentMapperStream())
     .pipe(destination_pipe)
     .on('finish', callback);
 

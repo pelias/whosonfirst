@@ -1,7 +1,7 @@
 var peliasConfig = require( 'pelias-config' ).generate();
 var readStream = require('./src/readStream');
 var importStream = require('./src/importStream');
-var createPeliasElasticsearchPipeline = require('./src/elasticsearchPipeline');
+var peliasDbclient = require( 'pelias-dbclient' );
 var peliasDocGenerators = require('./src/peliasDocGenerators');
 var wofRecordStream = require('./src/wofRecordStream');
 var hierarchyFinder = require('./src/hierarchyFinder');
@@ -49,10 +49,10 @@ readStream(directory, types, wofRecords, function() {
     hierarchyFinder.hierarchies_walker(wofRecords));
 
   // the final destination of Pelias Documents
-  var elasticsearchPipeline = createPeliasElasticsearchPipeline();
+  var dbClientStream = peliasDbclient();
 
   // import WOF records into ES
-  importStream(recordStream, documentGenerator, elasticsearchPipeline, function() {
+  importStream(recordStream, documentGenerator, dbClientStream, function() {
     console.log('import finished');
   });
 
