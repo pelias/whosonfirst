@@ -2,6 +2,10 @@
 
 whosonfirst is a tool used for importing [Who's On First data](https://whosonfirst.mapzen.com/) from local files into a Pelias ElasticSearch store.
 
+# Requirements
+
+Node 0.12 or higher is required
+
 # Usage
 
 ```bash
