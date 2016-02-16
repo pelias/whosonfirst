@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node import.js",
+    "download": "node download_data.js",
     "test": "node test/test | tap-dot"
   },
   "repository": {
