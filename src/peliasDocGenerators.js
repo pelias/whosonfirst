@@ -1,4 +1,4 @@
-var map_stream = require('through2-map');
+var through2 = require('through2');
 var _ = require('lodash');
 var iso3166 = require('iso3166-1');
 
@@ -6,50 +6,49 @@ var Document = require('pelias-model').Document;
 
 module.exports = {};
 
-module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
-  return map_stream.obj(function(record) {
-    var wofDoc = new Document( 'whosonfirst', record.place_type, record.id );
+function setupDocument(record, hierarchy) {
+  var wofDoc = new Document( 'whosonfirst', record.place_type, record.id );
 
-    if (record.name) {
-      wofDoc.setName('default', record.name);
-    }
-    wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
+  if (record.name) {
+    wofDoc.setName('default', record.name);
+  }
+  wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
 
-    if (iso3166.is2(record.iso2)) {
-      wofDoc.setAlpha3(iso3166.to3(record.iso2));
-    }
+  if (iso3166.is2(record.iso2)) {
+    wofDoc.setAlpha3(iso3166.to3(record.iso2));
+  }
 
-    // only set population if available
-    if (record.population) {
-      wofDoc.setPopulation(record.population);
-    }
+  // only set population if available
+  if (record.population) {
+    wofDoc.setPopulation(record.population);
+  }
 
-    // only set popularity if available
-    if (record.popularity) {
-      wofDoc.setPopularity(record.popularity);
-    }
+  // only set popularity if available
+  if (record.popularity) {
+    wofDoc.setPopularity(record.popularity);
+  }
 
-    // WOF bbox is defined as:
-    // lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat
-    // so convert to what ES understands
-    if (!_.isUndefined(record.bounding_box)) {
-      var parsedBoundingBox = record.bounding_box.split(',').map(parseFloat);
-      var marshaledBoundingBoxBox = {
-        upperLeft: {
-          lat: parsedBoundingBox[3],
-          lon: parsedBoundingBox[0]
-        },
-        lowerRight: {
-          lat: parsedBoundingBox[1],
-          lon: parsedBoundingBox[2]
-        }
+  // WOF bbox is defined as:
+  // lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat
+  // so convert to what ES understands
+  if (!_.isUndefined(record.bounding_box)) {
+    var parsedBoundingBox = record.bounding_box.split(',').map(parseFloat);
+    var marshaledBoundingBoxBox = {
+      upperLeft: {
+        lat: parsedBoundingBox[3],
+        lon: parsedBoundingBox[0]
+      },
+      lowerRight: {
+        lat: parsedBoundingBox[1],
+        lon: parsedBoundingBox[2]
+      }
 
-      };
-      wofDoc.setBoundingBox(marshaledBoundingBoxBox);
-    }
+    };
+    wofDoc.setBoundingBox(marshaledBoundingBoxBox);
+  }
 
-    // iterate the hierarchy, assigning fields
-    hierarchy_finder(record).forEach(function(hierarchy_element) {
+  if (!_.isUndefined(hierarchy)) {
+    hierarchy.forEach(function(hierarchy_element) {
       switch (hierarchy_element.place_type) {
         case 'locality':
           wofDoc.setAdmin( 'locality', hierarchy_element.name);
@@ -79,7 +78,28 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
       }
     });
 
-    return wofDoc;
+  }
+
+  return wofDoc;
+
+}
+
+module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
+  return through2.obj(function(record, enc, next) {
+    // if there are no hierarchies, then just return the doc as-is
+    var hierarchies = hierarchy_finder(record);
+
+    if (hierarchies && hierarchies.length > 0) {
+      for (var i = 0; i < hierarchies.length; i++) {
+        this.push(setupDocument(record, hierarchies[i]));
+      }
+
+    } else {
+      this.push(setupDocument(record));
+
+    }
+
+    next();
 
   });
 

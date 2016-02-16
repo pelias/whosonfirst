@@ -2,7 +2,6 @@ var fs = require( 'fs' );
 var through2 = require('through2');
 var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
-var _ = require('lodash');
 var util = require('util');
 var sep = require('path').sep;
 
@@ -82,7 +81,8 @@ var filter_incomplete_files_stream = function create_filter_bad_files_stream() {
 */
 var map_fields_stream = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
-    var base_record = {
+    // setup a base record, ensuring that hierarchies is at least an empty array
+    var record = {
       id: json_object.id,
       name: json_object.properties['wof:name'],
       abbreviation: json_object.properties['wof:abbreviation'],
@@ -93,24 +93,18 @@ var map_fields_stream = function map_fields_stream() {
       bounding_box: json_object.properties['geom:bbox'],
       iso2: json_object.properties['iso:country'],
       population: json_object.properties['gn:population'],
-      popularity: json_object.properties['misc:photo_sum']
+      popularity: json_object.properties['misc:photo_sum'],
+      hierarchies: []
     };
 
-    // if there's no hierarchy then just add the base record
-    if (_.isUndefined(json_object.properties['wof:hierarchy'])) {
-      this.push(base_record);
-
-    } else {
-      // otherwise, clone the base record for each hierarchy in the list and push
+    // add all the hierarchies
+    if (json_object.properties['wof:hierarchy']) {
       json_object.properties['wof:hierarchy'].forEach(function(hierarchy) {
-        var clone = _.clone(base_record, true);
-        clone.hierarchy = hierarchy;
-        this.push(clone);
-      }, this);
-
+        record.hierarchies.push(hierarchy);
+      });
     }
 
-    return callback();
+    return callback(null, record);
 
   });
 

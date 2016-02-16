@@ -72,16 +72,29 @@ tape('createPeliasDocGenerator', function(test) {
         .setAdmin( 'admin1', 'name 2').addParent( 'region', 'name 2', '2')
         .setAdmin( 'admin0', 'name 1').addParent( 'country', 'name 1', '1')
         .setAlpha3( 'DEU' )
+        .setBoundingBox({ upperLeft: { lat:60.847890, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }}),
+      new Document( 'whosonfirst', 'locality', '5')
+        .setName('default', 'name 5')
+        .setCentroid({ lat: 16.161616, lon: 61.616161 })
+        .setAdmin( 'locality', 'name 5').addParent( 'locality', 'name 5', '5')
+        .setAdmin( 'admin0', 'name 1').addParent( 'country', 'name 1', '1')
+        .setAlpha3( 'DEU' )
         .setBoundingBox({ upperLeft: { lat:60.847890, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
     ];
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['5'],
-        wofRecords['4'],
-        wofRecords['3'],
-        wofRecords['2'],
-        wofRecords['1']
+        [
+          wofRecords['5'],
+          wofRecords['4'],
+          wofRecords['3'],
+          wofRecords['2'],
+          wofRecords['1']
+        ],
+        [
+          wofRecords['5'],
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -197,7 +210,9 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -239,7 +254,9 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -311,10 +328,12 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['4'],
-        wofRecords['3'],
-        wofRecords['2'],
-        wofRecords['1']
+        [
+          wofRecords['4'],
+          wofRecords['3'],
+          wofRecords['2'],
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -380,10 +399,12 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['4'],
-        wofRecords['3'],
-        wofRecords['2'],
-        wofRecords['1']
+        [
+          wofRecords['4'],
+          wofRecords['3'],
+          wofRecords['2'],
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -450,10 +471,12 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['4'],
-        wofRecords['3'],
-        wofRecords['2'],
-        wofRecords['1']
+        [
+          wofRecords['4'],
+          wofRecords['3'],
+          wofRecords['2'],
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -496,7 +519,9 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -540,7 +565,9 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -554,7 +581,7 @@ tape('createPeliasDocGenerator', function(test) {
 
   });
 
-  test.test('undefined population should not set population in doc', function(t) {
+  test.test('undefined popularity should not set population in doc', function(t) {
     var wofRecords = {
       1: {
         id: 1,
@@ -583,7 +610,9 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
@@ -627,7 +656,9 @@ tape('createPeliasDocGenerator', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 

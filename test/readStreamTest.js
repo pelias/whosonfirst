@@ -93,7 +93,8 @@ tape('readStream', function(test) {
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         population: 98765,
-        popularity: 87654
+        popularity: 87654,
+        hierarchies: []
       }, 'id 4 should have been loaded');
 
       t.deepEqual(wofRecords[8], {
@@ -107,7 +108,8 @@ tape('readStream', function(test) {
         abbreviation: 'XY',
         bounding_box: '-24.539906,34.815009,69.033946,81.85871',
         population: undefined,
-        popularity: undefined
+        popularity: undefined,
+        hierarchies: []
       }, 'id 8 should have been loaded');
 
       t.end();

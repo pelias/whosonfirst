@@ -27,7 +27,9 @@ module.exports.parent_id_walker = function(wofRecords) {
       parent_id = parent.parent_id;
     }
 
-    return parents.filter(hasName);
+    // return an array since the hierarchies_walker can return an array
+    //  even though the concept doesn't make sense for parent_id's
+    return [parents.filter(hasName)];
 
   };
 
@@ -53,10 +55,21 @@ module.exports.parent_id_walker = function(wofRecords) {
   lastly, filter out any hierarchy elements that are undefined or w/o a name
 
 */
+function resolveHierarchy(wofRecords, hierarchy) {
+  return Object.keys(hierarchy).map(function(key) {
+    return wofRecords[hierarchy[key]];
+  }).filter(isDefined).filter(hasName);
+}
+
 module.exports.hierarchies_walker = function(wofRecords) {
   return function(wofRecord) {
-    return Object.keys(wofRecord.hierarchy).map(function(key) {
-      return wofRecords[wofRecord.hierarchy[key]];
-    }).filter(isDefined).filter(hasName);
+    var resolvedHierarchies = [];
+
+    wofRecord.hierarchies.forEach(function(hierarchy) {
+      resolvedHierarchies.push(resolveHierarchy(wofRecords, hierarchy));
+    });
+
+    return resolvedHierarchies;
+
   };
 };
