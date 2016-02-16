@@ -81,7 +81,7 @@ var filter_incomplete_files_stream = function create_filter_bad_files_stream() {
 */
 var map_fields_stream = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
-    // setup a base record, ensuring that hierarchies is at least an empty array
+    // setup a base record
     var record = {
       id: json_object.id,
       name: json_object.properties['wof:name'],
@@ -94,6 +94,7 @@ var map_fields_stream = function map_fields_stream() {
       iso2: json_object.properties['iso:country'],
       population: json_object.properties['gn:population'],
       popularity: json_object.properties['misc:photo_sum'],
+      // hierarchies should initially be an empty array
       hierarchies: []
     };
 
