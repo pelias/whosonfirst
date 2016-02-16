@@ -61,15 +61,17 @@ function resolveHierarchy(wofRecords, hierarchy) {
   }).filter(isDefined).filter(hasName);
 }
 
+/*
+  This function returns all the resolved hierarchies for a wofRecord.  Each
+  wofRecord can have multiple hierarchies, so resolve them by looking up the
+  referenced wofRecord in the big collection of wofRecords.  
+*/
 module.exports.hierarchies_walker = function(wofRecords) {
   return function(wofRecord) {
-    var resolvedHierarchies = [];
-
-    wofRecord.hierarchies.forEach(function(hierarchy) {
+    return wofRecord.hierarchies.reduce(function(resolvedHierarchies, hierarchy) {
       resolvedHierarchies.push(resolveHierarchy(wofRecords, hierarchy));
-    });
-
-    return resolvedHierarchies;
+      return resolvedHierarchies;
+    }, []);
 
   };
 };
