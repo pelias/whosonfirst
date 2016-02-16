@@ -100,9 +100,9 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
     var hierarchies = hierarchy_finder(record);
 
     if (hierarchies && hierarchies.length > 0) {
-      for (var i = 0; i < hierarchies.length; i++) {
-        this.push(setupDocument(record, hierarchies[i]));
-      }
+      hierarchies.forEach(function(hierarchy) {
+        this.push(setupDocument(record, hierarchy));
+      }, this);
 
     } else {
       this.push(setupDocument(record));

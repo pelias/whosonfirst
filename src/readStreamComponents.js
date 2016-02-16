@@ -2,6 +2,7 @@ var fs = require( 'fs' );
 var through2 = require('through2');
 var map_stream = require('through2-map');
 var filter_stream = require('through2-filter');
+var _ = require('lodash');
 var util = require('util');
 var sep = require('path').sep;
 
@@ -77,7 +78,8 @@ var filter_incomplete_files_stream = function create_filter_bad_files_stream() {
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
   hierarchy-less object is added.  If there are multiple hierarchies for the
-  record then a record for each hierarchy is pushed onto the stream.
+  record then a record for each hierarchy is pushed onto the stream.  Default
+  hierarchies to an empty array.
 */
 var map_fields_stream = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
@@ -94,16 +96,8 @@ var map_fields_stream = function map_fields_stream() {
       iso2: json_object.properties['iso:country'],
       population: json_object.properties['gn:population'],
       popularity: json_object.properties['misc:photo_sum'],
-      // hierarchies should initially be an empty array
-      hierarchies: []
+      hierarchies: _.get(json_object, 'properties.wof:hierarchy', [])
     };
-
-    // add all the hierarchies
-    if (json_object.properties['wof:hierarchy']) {
-      json_object.properties['wof:hierarchy'].forEach(function(hierarchy) {
-        record.hierarchies.push(hierarchy);
-      });
-    }
 
     return callback(null, record);
 
