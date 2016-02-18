@@ -4,3 +4,4 @@ coverage
 *.log
 reports
 pids
+wof_data
