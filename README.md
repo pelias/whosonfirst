@@ -8,7 +8,10 @@ Node 0.12 or higher is required
 
 # Usage
 
+To install the required node module dependencies and execute the importer, run:
+
 ```bash
+$> npm i
 $> npm start
 ```
 
@@ -34,9 +37,10 @@ Other types may be included in the future.
 
 There are multiple ways to download Who's On First data
 
-* The enclosed script `download_data.js` will download the required bundles and place the data into `./wof_data` in the required directory layout.  To run the download script:
+* The enclosed script `download_data.js` will download the required bundles and place the data into `./wof_data` in the required directory layout.  To install the required node module dependencies and run the download script:
 
 ```bash
+npm i
 npm run download
 ```
 
