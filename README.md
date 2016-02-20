@@ -37,7 +37,7 @@ There are multiple ways to download Who's On First data
 * The enclosed script `download_data.js` will download the required bundles and place the data into `./wof_data` in the required directory layout.  To run the download script:
 
 ```bash
-npm run download_data
+npm run download
 ```
 
 Alternatively, the download can be achieved by performing 
