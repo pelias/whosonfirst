@@ -78,11 +78,13 @@ var filter_incomplete_files_stream = function create_filter_bad_files_stream() {
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
   hierarchy-less object is added.  If there are multiple hierarchies for the
-  record then a record for each hierarchy is pushed onto the stream.
+  record then a record for each hierarchy is pushed onto the stream.  Default
+  hierarchies to an empty array.
 */
 var map_fields_stream = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
-    var base_record = {
+    // setup a base record
+    var record = {
       id: json_object.id,
       name: json_object.properties['wof:name'],
       abbreviation: json_object.properties['wof:abbreviation'],
@@ -93,24 +95,11 @@ var map_fields_stream = function map_fields_stream() {
       bounding_box: json_object.properties['geom:bbox'],
       iso2: json_object.properties['iso:country'],
       population: json_object.properties['gn:population'],
-      popularity: json_object.properties['misc:photo_sum']
+      popularity: json_object.properties['misc:photo_sum'],
+      hierarchies: _.get(json_object, 'properties.wof:hierarchy', [])
     };
 
-    // if there's no hierarchy then just add the base record
-    if (_.isUndefined(json_object.properties['wof:hierarchy'])) {
-      this.push(base_record);
-
-    } else {
-      // otherwise, clone the base record for each hierarchy in the list and push
-      json_object.properties['wof:hierarchy'].forEach(function(hierarchy) {
-        var clone = _.clone(base_record, true);
-        clone.hierarchy = hierarchy;
-        this.push(clone);
-      }, this);
-
-    }
-
-    return callback();
+    return callback(null, record);
 
   });
 

@@ -30,12 +30,12 @@ tape('parent_id_walker tests', function(test) {
 
     var hierarchies = parent_id_walker(wofRecords['4']);
 
-    t.deepEqual(hierarchies, [
+    t.deepEqual(hierarchies, [[
       wofRecords['4'],
       wofRecords['3'],
       wofRecords['2'],
       wofRecords['1']
-    ]);
+    ]]);
     t.end();
 
   });
@@ -67,10 +67,10 @@ tape('parent_id_walker tests', function(test) {
 
     var hierarchies = parent_id_walker(wofRecords['4']);
 
-    t.deepEqual(hierarchies, [
+    t.deepEqual(hierarchies, [[
       wofRecords['4'],
       wofRecords['1']
-    ]);
+    ]]);
     t.end();
 
   });
@@ -92,12 +92,18 @@ tape('hierarchies_walker tests', function(test) {
       },
       4: {
         name: 'name 4',
-        hierarchy: { // keys don't matter
-          'first arbitrary level': 4,
-          'second arbitrary level': 3,
-          'third arbitrary level': 2,
-          'fourth arbitrary level': 1
-        }
+        hierarchies: [
+          { // keys don't matter
+            'first arbitrary level': 4,
+            'second arbitrary level': 3,
+            'third arbitrary level': 2,
+            'fourth arbitrary level': 1
+          },
+          {
+            'fifth arbitrary level': 4,
+            'sixth arbitrary level': 2
+          }
+        ]
       }
     };
 
@@ -107,10 +113,16 @@ tape('hierarchies_walker tests', function(test) {
     var hierarchies = hierarchies_walker(wofRecords['4']);
 
     t.deepEqual(hierarchies, [
-      wofRecords['4'],
-      wofRecords['3'],
-      wofRecords['2'],
-      wofRecords['1']
+      [
+        wofRecords['4'],
+        wofRecords['3'],
+        wofRecords['2'],
+        wofRecords['1']
+      ],
+      [
+        wofRecords['4'],
+        wofRecords['2']
+      ]
     ]);
     t.end();
 
@@ -130,12 +142,12 @@ tape('hierarchies_walker tests', function(test) {
       },
       4: {
         name: 'name 4',
-        hierarchy: { // keys don't matter
+        hierarchies: [{ // keys don't matter
           'first arbitrary level': 4,
           'second arbitrary level': 3, // no name, will be excluded
           'third arbitrary level': 2,
           'fourth arbitrary level': 1
-        }
+        }]
       }
     };
 
@@ -144,11 +156,11 @@ tape('hierarchies_walker tests', function(test) {
 
     var hierarchies = hierarchies_walker(wofRecords['4']);
 
-    t.deepEqual(hierarchies, [
+    t.deepEqual(hierarchies, [[
       wofRecords['4'],
       wofRecords['2'],
       wofRecords['1']
-    ]);
+    ]]);
     t.end();
 
   });
@@ -164,12 +176,12 @@ tape('hierarchies_walker tests', function(test) {
       },
       4: {
         name: 'name 4',
-        hierarchy: { // keys don't matter
+        hierarchies: [{ // keys don't matter
           'first arbitrary level': 4,
           'second arbitrary level': 3,
           'third arbitrary level': 2, // this will be undefined
           'fourth arbitrary level': 1
-        }
+        }]
       }
     };
 
@@ -179,9 +191,11 @@ tape('hierarchies_walker tests', function(test) {
     var hierarchy = hierarchies_walker(wofRecords['4']);
 
     t.deepEqual(hierarchy, [
-      wofRecords['4'],
-      wofRecords['3'],
-      wofRecords['1']
+      [
+        wofRecords['4'],
+        wofRecords['3'],
+        wofRecords['1']
+      ]
     ]);
     t.end();
 
