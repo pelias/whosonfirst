@@ -15,10 +15,6 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
     }
     wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
 
-    if (iso3166.is2(record.iso2)) {
-      wofDoc.setAlpha3(iso3166.to3(record.iso2));
-    }
-
     // only set population if available
     if (record.population) {
       wofDoc.setPopulation(record.population);
@@ -75,6 +71,12 @@ module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
         case 'country':
           wofDoc.setAdmin( 'admin0', hierarchy_element.name);
           wofDoc.addParent('country', hierarchy_element.name, hierarchy_element.id.toString());
+
+          // this is placetype=country, so lookup and set the iso3 from iso2
+          if (iso3166.is2(hierarchy_element.iso2)) {
+            wofDoc.setAlpha3(iso3166.to3(hierarchy_element.iso2));
+          }
+
           break;
       }
     });
