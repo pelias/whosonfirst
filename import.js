@@ -45,7 +45,7 @@ readStream(directory, types, wofRecords, function() {
   var recordStream = wofRecordStream.createWofRecordsStream(wofRecords);
 
   // how to convert WOF records to Pelias Documents
-  var documentGenerator = peliasDocGenerators.createPeliasDocGenerator(
+  var documentGenerator = peliasDocGenerators.create(
     hierarchyFinder.hierarchies_walker(wofRecords));
 
   // the final destination of Pelias Documents

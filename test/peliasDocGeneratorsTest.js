@@ -10,7 +10,7 @@ function test_stream(input, testedStream, callback) {
     input_stream.pipe(testedStream).pipe(destination_stream);
 }
 
-tape('createPeliasDocGenerator', function(test) {
+tape('create', function(test) {
   test.test('wofRecords at all place_type levels should be returned as Document objects', function(t) {
     var wofRecords = {
       1: {
@@ -19,7 +19,8 @@ tape('createPeliasDocGenerator', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         place_type: 'country',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847886'
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        iso2: 'DE'
       },
       2: {
         id: 2,
@@ -52,7 +53,7 @@ tape('createPeliasDocGenerator', function(test) {
         lon: 61.616161,
         place_type: 'locality',
         bounding_box: '-13.691314,49.909613,1.771169,60.847890',
-        iso2: 'DE'
+        iso2: 'this will be ignored'
       }
     };
 
@@ -86,7 +87,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
@@ -123,7 +124,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
@@ -161,7 +162,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
@@ -202,7 +203,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'there should be no alpha3');
@@ -244,7 +245,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'there should be no alpha3');
@@ -260,7 +261,8 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'United States',
         lat: 12.121212,
         lon: 21.212121,
-        place_type: 'country'
+        place_type: 'country',
+        iso2: 'US'
       },
       2: {
         id: 2,
@@ -282,8 +284,7 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'New York City',
         lat: 15.151515,
         lon: 51.515151,
-        place_type: 'locality',
-        iso2: 'US'
+        place_type: 'locality'
       }
     };
 
@@ -319,7 +320,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
@@ -335,7 +336,8 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'United States',
         lat: 12.121212,
         lon: 21.212121,
-        place_type: 'country'
+        place_type: 'country',
+        iso2: 'US'
       },
       2: {
         id: 2,
@@ -356,8 +358,7 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'New York City',
         lat: 15.151515,
         lon: 51.515151,
-        place_type: 'locality',
-        iso2: 'US'
+        place_type: 'locality'
       }
     };
 
@@ -388,7 +389,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
@@ -404,7 +405,8 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'United States',
         lat: 12.121212,
         lon: 21.212121,
-        place_type: 'country'
+        place_type: 'country',
+        iso2: 'US'
       },
       2: {
         id: 2,
@@ -426,8 +428,7 @@ tape('createPeliasDocGenerator', function(test) {
         name: 'New York City',
         lat: 15.151515,
         lon: 51.515151,
-        place_type: 'locality',
-        iso2: 'US'
+        place_type: 'locality'
       }
     };
 
@@ -458,7 +459,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
@@ -501,7 +502,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
@@ -545,7 +546,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
@@ -588,7 +589,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
@@ -632,7 +633,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
