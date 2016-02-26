@@ -6,7 +6,7 @@ var Document = require('pelias-model').Document;
 
 module.exports = {};
 
-module.exports.createPeliasDocGenerator = function(hierarchy_finder) {
+module.exports.create = function(hierarchy_finder) {
   return map_stream.obj(function(record) {
     var wofDoc = new Document( 'whosonfirst', record.place_type, record.id );
 

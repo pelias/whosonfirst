@@ -10,7 +10,7 @@ function test_stream(input, testedStream, callback) {
     input_stream.pipe(testedStream).pipe(destination_stream);
 }
 
-tape('createPeliasDocGenerator', function(test) {
+tape('create', function(test) {
   test.test('wofRecords at all place_type levels should be returned as Document objects', function(t) {
     var wofRecords = {
       1: {
@@ -87,7 +87,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
@@ -124,7 +124,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
@@ -162,7 +162,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
@@ -203,7 +203,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'there should be no alpha3');
@@ -245,7 +245,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'there should be no alpha3');
@@ -320,7 +320,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
@@ -389,7 +389,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
@@ -459,7 +459,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'admin1_abbr should be set to the corresponding abbreviation');
@@ -502,7 +502,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
@@ -546,7 +546,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
@@ -589,7 +589,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
@@ -633,7 +633,7 @@ tape('createPeliasDocGenerator', function(test) {
     };
 
     // seed the parent_id_walker with wofRecords
-    var docGenerator = peliasDocGenerators.createPeliasDocGenerator(hierarchies_finder);
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
