@@ -74,6 +74,13 @@ var filter_incomplete_files_stream = function create_filter_bad_files_stream() {
   });
 };
 
+// this function is used to verify that a US county QS altname is available
+function isUsCounty(base_record, qs_a2_alt) {
+  return 'US' === base_record.iso2 &&
+          'county' === base_record.place_type &&
+          !_.isUndefined(qs_a2_alt);
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -95,6 +102,11 @@ var map_fields_stream = function map_fields_stream() {
       population: json_object.properties['gn:population'],
       popularity: json_object.properties['misc:photo_sum']
     };
+
+    // use the QS altname if US county and available
+    if (isUsCounty(base_record, json_object.properties['qs:a2_alt'])) {
+      base_record.name = json_object.properties['qs:a2_alt'];
+    }
 
     // if there's no hierarchy then just add the base record
     if (_.isUndefined(json_object.properties['wof:hierarchy'])) {
