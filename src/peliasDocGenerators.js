@@ -70,11 +70,17 @@ module.exports.create = function(hierarchy_finder) {
           break;
         case 'country':
           wofDoc.setAdmin( 'admin0', hierarchy_element.name);
-          wofDoc.addParent('country', hierarchy_element.name, hierarchy_element.id.toString());
 
           // this is placetype=country, so lookup and set the iso3 from iso2
           if (iso3166.is2(hierarchy_element.iso2)) {
-            wofDoc.setAlpha3(iso3166.to3(hierarchy_element.iso2));
+            var iso3 = iso3166.to3(hierarchy_element.iso2);
+
+            wofDoc.setAlpha3(iso3);
+            wofDoc.addParent('country', hierarchy_element.name, hierarchy_element.id.toString(), iso3);
+
+          } else {
+            wofDoc.addParent('country', hierarchy_element.name, hierarchy_element.id.toString());
+
           }
 
           break;

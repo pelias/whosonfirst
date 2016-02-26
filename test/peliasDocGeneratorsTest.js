@@ -71,7 +71,7 @@ tape('create', function(test) {
         .setAdmin( 'local_admin', 'name 4').addParent( 'localadmin', 'name 4', '4')
         .setAdmin( 'admin2', 'name 3').addParent( 'county', 'name 3', '3')
         .setAdmin( 'admin1', 'name 2').addParent( 'region', 'name 2', '2')
-        .setAdmin( 'admin0', 'name 1').addParent( 'country', 'name 1', '1')
+        .setAdmin( 'admin0', 'name 1').addParent( 'country', 'name 1', '1', 'DEU')
         .setAlpha3( 'DEU' )
         .setBoundingBox({ upperLeft: { lat:60.847890, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
     ];
@@ -306,7 +306,7 @@ tape('create', function(test) {
         .setAdmin( 'admin1_abbr', 'NY')
         .addParent('region', 'New York', '2', 'NY')
         .setAdmin( 'admin0', 'United States')
-        .addParent('country', 'United States', '1')
+        .addParent('country', 'United States', '1', 'USA')
         .setAlpha3( 'USA' )
     ];
 
@@ -375,7 +375,7 @@ tape('create', function(test) {
         .setAdmin( 'locality', 'New York City').addParent('locality', 'New York City', '4')
         .setAdmin( 'admin2', 'Kings').addParent('county', 'Kings', '3')
         .setAdmin( 'admin1', 'New York').addParent('region', 'New York', '2')
-        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1', 'USA')
         .setAlpha3( 'USA' )
     ];
 
@@ -445,7 +445,7 @@ tape('create', function(test) {
         .setAdmin( 'locality', 'New York City').addParent('locality', 'New York City', '4')
         .setAdmin( 'admin2', 'Kings').addParent('county', 'Kings', '3')
         .setAdmin( 'admin1', 'New York').addParent('region', 'New York', '2')
-        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1', 'USA')
         .setAlpha3( 'USA' )
     ];
 
@@ -491,7 +491,7 @@ tape('create', function(test) {
       new Document( 'whosonfirst', 'country', '1')
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1', 'USA')
         .setAlpha3( 'USA' )
     ];
 
@@ -534,7 +534,7 @@ tape('create', function(test) {
       new Document( 'whosonfirst', 'country', '1')
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1', 'USA')
         .setAlpha3( 'USA' )
         .setPopulation(98765)
     ];
@@ -578,7 +578,7 @@ tape('create', function(test) {
       new Document( 'whosonfirst', 'country', '1')
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1', 'USA')
         .setAlpha3( 'USA' )
     ];
 
@@ -621,7 +621,7 @@ tape('create', function(test) {
       new Document( 'whosonfirst', 'country', '1')
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1')
+        .setAdmin( 'admin0', 'United States').addParent('country', 'United States', '1', 'USA')
         .setAlpha3( 'USA' )
         .setPopularity(87654)
     ];
