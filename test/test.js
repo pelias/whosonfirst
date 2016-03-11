@@ -4,3 +4,4 @@ require ('./importStreamTest.js');
 require ('./peliasDocGeneratorsTest.js');
 require ('./wofRecordStreamTest.js');
 require ('./hierarchyFinderTest.js');
+require ('./components/filterOutNamelessRecordsTest.js');
