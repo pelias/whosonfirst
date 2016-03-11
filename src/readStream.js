@@ -4,6 +4,7 @@ var batch = require('batchflow');
 var sink = require('through2-sink');
 
 var readStreamComponents = require('./readStreamComponents');
+var filterOutNamelessRecords = require('./components/filterOutNamelessRecords');
 
 /*
   This function finds all the `latest` files in `meta/`, CSV parses them,
@@ -18,6 +19,7 @@ function readData(directory, types, wofRecords, callback) {
     var json_parse_stream = readStreamComponents.json_parse_stream(directory + 'data/');
     var filter_incomplete_files_stream = readStreamComponents.filter_incomplete_files_stream();
     var map_fields_stream = readStreamComponents.map_fields_stream();
+    var filter_out_nameless_records = filterOutNamelessRecords.create();
 
     fs.createReadStream(directory + 'meta/wof-' + type + '-latest.csv')
     .pipe(csv_parser)
@@ -27,6 +29,7 @@ function readData(directory, types, wofRecords, callback) {
     .pipe(json_parse_stream)
     .pipe(filter_incomplete_files_stream)
     .pipe(map_fields_stream)
+    .pipe(filter_out_nameless_records)
     .pipe(sink.obj(function(wofRecord) {
       wofRecords[wofRecord.id] = wofRecord;
     }))
