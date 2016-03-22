@@ -5,4 +5,4 @@ require ('./peliasDocGeneratorsTest.js');
 require ('./wofRecordStreamTest.js');
 require ('./hierarchyFinderTest.js');
 require ('./components/filterOutNamelessRecordsTest.js');
-// require ('./components/filterOutDeprecatedRecordsTest.js');
+require ('./components/filterOutDeprecatedRecordsTest.js');
