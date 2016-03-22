@@ -5,6 +5,7 @@ var sink = require('through2-sink');
 
 var readStreamComponents = require('./readStreamComponents');
 var filterOutNamelessRecords = require('./components/filterOutNamelessRecords');
+var filterOutDeprecatedRecords = require('./components/filterOutDeprecatedRecords');
 
 /*
   This function finds all the `latest` files in `meta/`, CSV parses them,
@@ -28,6 +29,7 @@ function readData(directory, types, wofRecords, callback) {
     .pipe(file_is_readable)
     .pipe(json_parse_stream)
     .pipe(filter_incomplete_files_stream)
+    .pipe(filterOutDeprecatedRecords.create())
     .pipe(map_fields_stream)
     .pipe(filter_out_nameless_records)
     .pipe(sink.obj(function(wofRecord) {
