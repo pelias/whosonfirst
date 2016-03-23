@@ -9,7 +9,9 @@
   "scripts": {
     "start": "node import.js",
     "download": "node download_data.js",
-    "test": "node test/test | tap-dot"
+    "test": "node test/test | tap-dot",
+    "lint": "jshint .",
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
