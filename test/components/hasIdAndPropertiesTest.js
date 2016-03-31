@@ -18,7 +18,11 @@ tape('hasIdAndProperties', function(test) {
         properties: {}
       },
       {
-        not_id: 6
+        not_id: 6,
+        properties: {}
+      },
+      {
+        id: 7
       }
     ];
     var expected = [
