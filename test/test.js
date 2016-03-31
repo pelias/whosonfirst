@@ -1,11 +1,11 @@
 require ('./components/calculateFilePathTest.js');
 require ('./components/extractFieldsTest.js');
-require ('./components/recordHasIdAndPropertiesTest.js');
-require ('./components/recordHasNameTest.js');
 require ('./components/fileIsReadableTest.js');
 require ('./components/isActiveRecordTest.js');
 require ('./components/isValidIdTest.js');
 require ('./components/loadJSONTest.js');
+require ('./components/recordHasIdAndPropertiesTest.js');
+require ('./components/recordHasNameTest.js');
 require ('./hierarchyFinderTest.js');
 require ('./importStreamTest.js');
 require ('./peliasDocGeneratorsTest.js');
