@@ -7,7 +7,7 @@ var isValidId = require('./components/isValidId');
 var calculateFilePath = require('./components/calculateFilePath');
 var filterOutUnreadableFiles = require('./components/filterOutUnreadableFiles');
 var loadJSON = require('./components/loadJSON');
-var hasIdAndProperties = require('./components/hasIdAndProperties');
+var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
 var isNotDeprecatedRecord = require('./components/isNotDeprecatedRecord');
 var extractFields = require('./components/extractFields');
 var recordHasName = require('./components/recordHasName');
@@ -24,7 +24,7 @@ function readData(directory, types, wofRecords, callback) {
       .pipe(calculateFilePath.create())
       .pipe(filterOutUnreadableFiles.create(directory + 'data/'))
       .pipe(loadJSON.create(directory + 'data/'))
-      .pipe(hasIdAndProperties.create())
+      .pipe(recordHasIdAndProperties.create())
       .pipe(isNotDeprecatedRecord.create())
       .pipe(extractFields.create())
       .pipe(recordHasName.create())
