@@ -8,7 +8,7 @@ var calculateFilePath = require('./components/calculateFilePath');
 var fileIsReadable = require('./components/fileIsReadable');
 var loadJSON = require('./components/loadJSON');
 var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
-var isNotDeprecatedRecord = require('./components/isNotDeprecatedRecord');
+var isActiveRecord = require('./components/isActiveRecord');
 var extractFields = require('./components/extractFields');
 var recordHasName = require('./components/recordHasName');
 
@@ -25,7 +25,7 @@ function readData(directory, types, wofRecords, callback) {
       .pipe(fileIsReadable.create(directory + 'data/'))
       .pipe(loadJSON.create(directory + 'data/'))
       .pipe(recordHasIdAndProperties.create())
-      .pipe(isNotDeprecatedRecord.create())
+      .pipe(isActiveRecord.create())
       .pipe(extractFields.create())
       .pipe(recordHasName.create())
       .pipe(sink.obj(function(wofRecord) {

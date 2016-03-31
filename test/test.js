@@ -3,7 +3,7 @@ require ('./components/extractFieldsTest.js');
 require ('./components/recordHasIdAndPropertiesTest.js');
 require ('./components/recordHasNameTest.js');
 require ('./components/fileIsReadableTest.js');
-require ('./components/isNotDeprecatedRecordTest.js');
+require ('./components/isActiveRecordTest.js');
 require ('./components/isValidIdTest.js');
 require ('./components/loadJSONTest.js');
 require ('./hierarchyFinderTest.js');
