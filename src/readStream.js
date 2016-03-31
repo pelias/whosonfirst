@@ -10,7 +10,7 @@ var loadJSON = require('./components/loadJSON');
 var hasIdAndProperties = require('./components/hasIdAndProperties');
 var isNotDeprecatedRecord = require('./components/isNotDeprecatedRecord');
 var extractFields = require('./components/extractFields');
-var filterOutNamelessRecords = require('./components/filterOutNamelessRecords');
+var recordHasName = require('./components/recordHasName');
 
 /*
   This function finds all the `latest` files in `meta/`, CSV parses them,
@@ -27,7 +27,7 @@ function readData(directory, types, wofRecords, callback) {
       .pipe(hasIdAndProperties.create())
       .pipe(isNotDeprecatedRecord.create())
       .pipe(extractFields.create())
-      .pipe(filterOutNamelessRecords.create())
+      .pipe(recordHasName.create())
       .pipe(sink.obj(function(wofRecord) {
         wofRecords[wofRecord.id] = wofRecord;
       }))
