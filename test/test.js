@@ -1,6 +1,6 @@
 require ('./components/calculateFilePathTest.js');
 require ('./components/extractFieldsTest.js');
-require ('./components/filterOutIncompleteRecordsTest.js');
+require ('./components/hasIdAndPropertiesTest.js');
 require ('./components/filterOutNamelessRecordsTest.js');
 require ('./components/filterOutUnreadableFilesTest.js');
 require ('./components/isNotDeprecatedRecordTest.js');

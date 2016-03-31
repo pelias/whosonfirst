@@ -1,7 +1,7 @@
 var tape = require('tape');
 var event_stream = require('event-stream');
 
-var filterOutIncompleteRecords = require('../../src/components/filterOutIncompleteRecords');
+var hasIdAndProperties = require('../../src/components/hasIdAndProperties');
 
 function test_stream(input, testedStream, callback) {
     var input_stream = event_stream.readArray(input);
@@ -10,8 +10,8 @@ function test_stream(input, testedStream, callback) {
     input_stream.pipe(testedStream).pipe(destination_stream);
 }
 
-tape('filterOutIncompleteRecords', function(test) {
-  test.test('filterOutIncompleteRecords filters objects without id and properties', function(t) {
+tape('hasIdAndProperties', function(test) {
+  test.test('hasIdAndProperties filters objects without id and properties', function(t) {
     var input = [
       {
         id: 5,
@@ -28,7 +28,7 @@ tape('filterOutIncompleteRecords', function(test) {
       }
     ];
 
-    test_stream(input, filterOutIncompleteRecords.create(), function(err, actual) {
+    test_stream(input, hasIdAndProperties.create(), function(err, actual) {
       t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
       t.end();
     });
