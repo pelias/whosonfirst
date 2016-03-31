@@ -2,7 +2,7 @@ require ('./components/calculateFilePathTest.js');
 require ('./components/extractFieldsTest.js');
 require ('./components/recordHasIdAndPropertiesTest.js');
 require ('./components/recordHasNameTest.js');
-require ('./components/filterOutUnreadableFilesTest.js');
+require ('./components/fileIsReadableTest.js');
 require ('./components/isNotDeprecatedRecordTest.js');
 require ('./components/isValidIdTest.js');
 require ('./components/loadJSONTest.js');

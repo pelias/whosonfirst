@@ -5,7 +5,7 @@ var intercept = require('intercept-stdout');
 var temp = require('temp');
 var path = require('path');
 
-var filterOutUnreadableFiles = require('../../src/components/filterOutUnreadableFiles');
+var fileIsReadable = require('../../src/components/fileIsReadable');
 
 function test_stream(input, testedStream, callback) {
     var input_stream = event_stream.readArray(input);
@@ -41,7 +41,7 @@ tape('filterOutUnreadableFiles', function(test) {
       function(txt) { stderr += txt; return ''; }
     );
 
-    test_stream(input, filterOutUnreadableFiles.create(dirname), function(err, actual) {
+    test_stream(input, fileIsReadable.create(dirname), function(err, actual) {
       temp.cleanupSync();
       unhook_intercept();
       t.deepEqual(actual, expected, 'should have returned true');

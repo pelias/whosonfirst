@@ -5,7 +5,7 @@ var sink = require('through2-sink');
 
 var isValidId = require('./components/isValidId');
 var calculateFilePath = require('./components/calculateFilePath');
-var filterOutUnreadableFiles = require('./components/filterOutUnreadableFiles');
+var fileIsReadable = require('./components/fileIsReadable');
 var loadJSON = require('./components/loadJSON');
 var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
 var isNotDeprecatedRecord = require('./components/isNotDeprecatedRecord');
@@ -22,7 +22,7 @@ function readData(directory, types, wofRecords, callback) {
       .pipe(parse({ delimiter: ',', columns: true }))
       .pipe(isValidId.create())
       .pipe(calculateFilePath.create())
-      .pipe(filterOutUnreadableFiles.create(directory + 'data/'))
+      .pipe(fileIsReadable.create(directory + 'data/'))
       .pipe(loadJSON.create(directory + 'data/'))
       .pipe(recordHasIdAndProperties.create())
       .pipe(isNotDeprecatedRecord.create())
