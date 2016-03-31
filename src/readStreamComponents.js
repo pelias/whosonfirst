@@ -81,6 +81,17 @@ function isUsCounty(base_record, qs_a2_alt) {
           !_.isUndefined(qs_a2_alt);
 }
 
+// this function favors gn:population when available, falling back to zs:pop10
+//  when available and > 0
+function getPopulation(properties) {
+  if (properties['gn:population']) {
+    return properties['gn:population'];
+  } else if (properties['zs:pop10']) {
+    return properties['zs:pop10'];
+  }
+
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -99,7 +110,7 @@ var map_fields_stream = function map_fields_stream() {
       lon: json_object.properties['geom:longitude'],
       bounding_box: json_object.properties['geom:bbox'],
       iso2: json_object.properties['iso:country'],
-      population: json_object.properties['gn:population'],
+      population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum']
     };
 

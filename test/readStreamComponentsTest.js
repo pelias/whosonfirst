@@ -220,7 +220,134 @@ tape('readStreamComponents', function(test) {
 
   });
 
-  test.test('gn:population not found should not include population', function(t) {
+  test.test('gn:population should be favored over zs:pop10 when both are available', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY',
+          'gn:population': 98765,
+          'zs:pop10': 87654,
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: 98765,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+    var map_fields_stream = readStreamComponents.map_fields_stream();
+
+    test_stream(input, map_fields_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('non-0 zs:pop10 should be used for population when gn:population is not found', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY',
+          'zs:pop10': 98765,
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: 98765,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+    var map_fields_stream = readStreamComponents.map_fields_stream();
+
+    test_stream(input, map_fields_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('0 value zs:pop10 and gn:popuation not found should not set population', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY',
+          'zs:pop10': 0,
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: undefined,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+    var map_fields_stream = readStreamComponents.map_fields_stream();
+
+    test_stream(input, map_fields_stream, function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('neither gn:population nor zs:pop10 not found should not include population', function(t) {
     var input = [
       {
         id: 12345,
