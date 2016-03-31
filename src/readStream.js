@@ -8,7 +8,7 @@ var calculateFilePath = require('./components/calculateFilePath');
 var filterOutUnreadableFiles = require('./components/filterOutUnreadableFiles');
 var loadJSON = require('./components/loadJSON');
 var filterOutIncompleteRecords = require('./components/filterOutIncompleteRecords');
-var filterOutDeprecatedRecords = require('./components/filterOutDeprecatedRecords');
+var isNotDeprecatedRecord = require('./components/isNotDeprecatedRecord');
 var extractFields = require('./components/extractFields');
 var filterOutNamelessRecords = require('./components/filterOutNamelessRecords');
 
@@ -25,7 +25,7 @@ function readData(directory, types, wofRecords, callback) {
       .pipe(filterOutUnreadableFiles.create(directory + 'data/'))
       .pipe(loadJSON.create(directory + 'data/'))
       .pipe(filterOutIncompleteRecords.create())
-      .pipe(filterOutDeprecatedRecords.create())
+      .pipe(isNotDeprecatedRecord.create())
       .pipe(extractFields.create())
       .pipe(filterOutNamelessRecords.create())
       .pipe(sink.obj(function(wofRecord) {
