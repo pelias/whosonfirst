@@ -27,7 +27,7 @@ tape('create', function(test) {
         name: 'name 2',
         lat: 13.131313,
         lon: 31.313131,
-        place_type: 'region',
+        place_type: 'macroregion',
         bounding_box: '-13.691314,49.909613,1.771169,60.847887'
       },
       3: {
@@ -35,7 +35,7 @@ tape('create', function(test) {
         name: 'name 3',
         lat: 14.141414,
         lon: 41.414141,
-        place_type: 'county',
+        place_type: 'region',
         bounding_box: '-13.691314,49.909613,1.771169,60.847888'
       },
       4: {
@@ -43,7 +43,7 @@ tape('create', function(test) {
         name: 'name 4',
         lat: 15.151515,
         lon: 51.515151,
-        place_type: 'localadmin',
+        place_type: 'macrocounty',
         bounding_box: '-13.691314,49.909613,1.771169,60.847889'
       },
       5: {
@@ -51,8 +51,24 @@ tape('create', function(test) {
         name: 'name 5',
         lat: 16.161616,
         lon: 61.616161,
+        place_type: 'county',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847890'
+      },
+      6: {
+        id: 6,
+        name: 'name 6',
+        lat: 17.171717,
+        lon: 71.717171,
+        place_type: 'localadmin',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847891'
+      },
+      7: {
+        id: 7,
+        name: 'name 7',
+        lat: 18.181818,
+        lon: 81.818181,
         place_type: 'locality',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847890',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847892',
         iso2: 'this will be ignored'
       }
     };
@@ -60,24 +76,28 @@ tape('create', function(test) {
     // extract all the values from wofRecords to an array since that's how test_stream works
     // sure, this could be done with map, but this is clearer
     var input = [
-      wofRecords['5']
+      wofRecords['7']
     ];
 
     var expected = [
-      new Document( 'whosonfirst', 'locality', '5')
-        .setName('default', 'name 5')
-        .setCentroid({ lat: 16.161616, lon: 61.616161 })
-        .setAdmin( 'locality', 'name 5').addParent( 'locality', 'name 5', '5')
-        .setAdmin( 'local_admin', 'name 4').addParent( 'localadmin', 'name 4', '4')
-        .setAdmin( 'admin2', 'name 3').addParent( 'county', 'name 3', '3')
-        .setAdmin( 'admin1', 'name 2').addParent( 'region', 'name 2', '2')
+      new Document( 'whosonfirst', 'locality', '7')
+        .setName('default', 'name 7')
+        .setCentroid({ lat: 18.181818, lon: 81.818181 })
+        .setAdmin( 'locality', 'name 7').addParent( 'locality', 'name 7', '7')
+        .setAdmin( 'local_admin', 'name 6').addParent( 'localadmin', 'name 6', '6')
+        .setAdmin( 'admin2', 'name 5').addParent( 'county', 'name 5', '5')
+        .addParent( 'macrocounty', 'name 4', '4')
+        .setAdmin( 'admin1', 'name 3').addParent( 'region', 'name 3', '3')
+        .addParent( 'macroregion', 'name 2', '2')
         .setAdmin( 'admin0', 'name 1').addParent( 'country', 'name 1', '1', 'DEU')
         .setAlpha3( 'DEU' )
-        .setBoundingBox({ upperLeft: { lat:60.847890, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
+        .setBoundingBox({ upperLeft: { lat:60.847892, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
     ];
 
     var hierarchies_finder = function() {
       return [
+        wofRecords['7'],
+        wofRecords['6'],
         wofRecords['5'],
         wofRecords['4'],
         wofRecords['3'],
