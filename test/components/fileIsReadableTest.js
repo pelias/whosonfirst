@@ -25,12 +25,12 @@ tape('filterOutUnreadableFiles', function(test) {
     var dirname = path.dirname(filename);
 
     var input = [
-      basename,
-      'does_not_exist.txt'
+      { path: basename },
+      { path: 'does_not_exist.txt' }
     ];
 
     var expected = [
-      basename
+      { path: basename }
     ];
 
     var stderr = '';

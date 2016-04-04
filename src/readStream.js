@@ -4,7 +4,6 @@ var batch = require('batchflow');
 var sink = require('through2-sink');
 
 var isValidId = require('./components/isValidId');
-var calculateFilePath = require('./components/calculateFilePath');
 var fileIsReadable = require('./components/fileIsReadable');
 var loadJSON = require('./components/loadJSON');
 var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
@@ -21,7 +20,6 @@ function readData(directory, types, wofRecords, callback) {
     fs.createReadStream(directory + 'meta/wof-' + type + '-latest.csv')
       .pipe(parse({ delimiter: ',', columns: true }))
       .pipe(isValidId.create())
-      .pipe(calculateFilePath.create())
       .pipe(fileIsReadable.create(directory + 'data/'))
       .pipe(loadJSON.create(directory + 'data/'))
       .pipe(recordHasIdAndProperties.create())

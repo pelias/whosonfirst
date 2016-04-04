@@ -4,8 +4,8 @@ var path = require('path');
 var util = require('util');
 
 module.exports.create = function create(dataDirectory) {
-  return filter.obj(function(filename) {
-    var fullpath = path.join(dataDirectory, filename);
+  return filter.obj(function(record) {
+    var fullpath = path.join(dataDirectory, record.path);
 
     try {
       fs.accessSync(fullpath, fs.R_OK);

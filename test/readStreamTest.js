@@ -16,7 +16,7 @@ tape('readStream', function(test) {
       fs.mkdirsSync('tmp/meta');
 
       // write out first meta and data files
-      fs.writeFileSync('tmp/meta/wof-type1-latest.csv', 'id\n1234567\n');
+      fs.writeFileSync('tmp/meta/wof-type1-latest.csv', 'id,path\n1234567,123/456/7/1234567.geojson\n');
       fs.mkdirsSync('tmp/data/123/456/7');
       fs.writeFileSync('tmp/data/123/456/7/1234567.geojson', JSON.stringify({
         id: 1234567,
@@ -35,7 +35,7 @@ tape('readStream', function(test) {
       }));
 
       // write out second meta and data files
-      fs.writeFileSync('tmp/meta/wof-type2-latest.csv', 'id\n12345678\n');
+      fs.writeFileSync('tmp/meta/wof-type2-latest.csv', 'id,path\n12345678,123/456/78/12345678.geojson\n');
       fs.mkdirsSync('tmp/data/123/456/78');
       fs.writeFileSync('tmp/data/123/456/78/12345678.geojson', JSON.stringify({
         id: 12345678,
@@ -54,7 +54,7 @@ tape('readStream', function(test) {
       // write out third meta and data files that are ignored
       // it will be ignored since 'type3' is not passed as a supported type
       // this shows that types are supported instead of all files being globbed
-      fs.writeFileSync('tmp/meta/wof-type3-latest.csv', 'id\n123456789\n');
+      fs.writeFileSync('tmp/meta/wof-type3-latest.csv', 'id,path\n123456789,123/456/789/123456789.geojson\n');
       fs.mkdirsSync('tmp/data/123/456/789');
       fs.writeFileSync('tmp/data/123/456/789/123456789.geojson', JSON.stringify({
         id: 123456789,

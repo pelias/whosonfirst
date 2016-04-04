@@ -1,4 +1,3 @@
-require ('./components/calculateFilePathTest.js');
 require ('./components/extractFieldsTest.js');
 require ('./components/fileIsReadableTest.js');
 require ('./components/isActiveRecordTest.js');
