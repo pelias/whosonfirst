@@ -23,6 +23,7 @@ if (directory.slice(-1) !== '/') {
 }
 
 var types = [
+  'borough',
   'continent',
   'country',
   'county',
