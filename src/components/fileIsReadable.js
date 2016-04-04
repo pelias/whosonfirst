@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 
-module.exports.create = function(dataDirectory) {
+module.exports.create = function create(dataDirectory) {
   return filter.obj(function(filename) {
     var fullpath = path.join(dataDirectory, filename);
 
