@@ -1,8 +1,12 @@
-require ('./readStreamComponentsTest.js');
-require ('./readStreamTest.js');
+require ('./components/extractFieldsTest.js');
+require ('./components/fileIsReadableTest.js');
+require ('./components/isActiveRecordTest.js');
+require ('./components/isValidIdTest.js');
+require ('./components/loadJSONTest.js');
+require ('./components/recordHasIdAndPropertiesTest.js');
+require ('./components/recordHasNameTest.js');
+require ('./hierarchyFinderTest.js');
 require ('./importStreamTest.js');
 require ('./peliasDocGeneratorsTest.js');
+require ('./readStreamTest.js');
 require ('./wofRecordStreamTest.js');
-require ('./hierarchyFinderTest.js');
-require ('./components/filterOutNamelessRecordsTest.js');
-require ('./components/filterOutDeprecatedRecordsTest.js');
