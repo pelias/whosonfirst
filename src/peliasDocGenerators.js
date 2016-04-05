@@ -51,6 +51,9 @@ module.exports.create = function(hierarchy_finder) {
           wofDoc.setAdmin( 'locality', hierarchy_element.name);
           wofDoc.addParent('locality', hierarchy_element.name, hierarchy_element.id.toString());
           break;
+        case 'borough':
+          wofDoc.addParent('borough', hierarchy_element.name, hierarchy_element.id.toString());
+          break;
         case 'localadmin':
           wofDoc.setAdmin( 'local_admin', hierarchy_element.name);
           wofDoc.addParent('localadmin', hierarchy_element.name, hierarchy_element.id.toString());

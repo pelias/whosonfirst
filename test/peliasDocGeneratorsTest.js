@@ -67,8 +67,16 @@ tape('create', function(test) {
         name: 'name 7',
         lat: 18.181818,
         lon: 81.818181,
+        place_type: 'borough',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847892'
+      },
+      8: {
+        id: 8,
+        name: 'name 8',
+        lat: 19.191919,
+        lon: 91.919191,
         place_type: 'locality',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847892',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847893',
         iso2: 'this will be ignored'
       }
     };
@@ -76,14 +84,15 @@ tape('create', function(test) {
     // extract all the values from wofRecords to an array since that's how test_stream works
     // sure, this could be done with map, but this is clearer
     var input = [
-      wofRecords['7']
+      wofRecords['8']
     ];
 
     var expected = [
-      new Document( 'whosonfirst', 'locality', '7')
-        .setName('default', 'name 7')
-        .setCentroid({ lat: 18.181818, lon: 81.818181 })
-        .setAdmin( 'locality', 'name 7').addParent( 'locality', 'name 7', '7')
+      new Document( 'whosonfirst', 'locality', '8')
+        .setName('default', 'name 8')
+        .setCentroid({ lat: 19.191919, lon: 91.919191 })
+        .setAdmin( 'locality', 'name 8').addParent( 'locality', 'name 8', '8')
+        .addParent('borough', 'name 7', '7')
         .setAdmin( 'local_admin', 'name 6').addParent( 'localadmin', 'name 6', '6')
         .setAdmin( 'admin2', 'name 5').addParent( 'county', 'name 5', '5')
         .addParent( 'macrocounty', 'name 4', '4')
@@ -91,11 +100,12 @@ tape('create', function(test) {
         .addParent( 'macroregion', 'name 2', '2')
         .setAdmin( 'admin0', 'name 1').addParent( 'country', 'name 1', '1', 'DEU')
         .setAlpha3( 'DEU' )
-        .setBoundingBox({ upperLeft: { lat:60.847892, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
+        .setBoundingBox({ upperLeft: { lat:60.847893, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
     ];
 
     var hierarchies_finder = function() {
       return [
+        wofRecords['8'],
         wofRecords['7'],
         wofRecords['6'],
         wofRecords['5'],
