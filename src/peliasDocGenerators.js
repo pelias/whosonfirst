@@ -51,6 +51,9 @@ module.exports.create = function(hierarchy_finder) {
           wofDoc.setAdmin( 'locality', hierarchy_element.name);
           wofDoc.addParent('locality', hierarchy_element.name, hierarchy_element.id.toString());
           break;
+        case 'borough':
+          wofDoc.addParent('borough', hierarchy_element.name, hierarchy_element.id.toString());
+          break;
         case 'localadmin':
           wofDoc.setAdmin( 'local_admin', hierarchy_element.name);
           wofDoc.addParent('localadmin', hierarchy_element.name, hierarchy_element.id.toString());
@@ -58,6 +61,9 @@ module.exports.create = function(hierarchy_finder) {
         case 'county':
           wofDoc.setAdmin( 'admin2', hierarchy_element.name);
           wofDoc.addParent('county', hierarchy_element.name, hierarchy_element.id.toString());
+          break;
+        case 'macrocounty':
+          wofDoc.addParent('macrocounty', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'region':
           wofDoc.setAdmin( 'admin1', hierarchy_element.name);
@@ -67,6 +73,9 @@ module.exports.create = function(hierarchy_finder) {
           } else {
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString());
           }
+          break;
+        case 'macroregion':
+          wofDoc.addParent('macroregion', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'country':
           wofDoc.setAdmin( 'admin0', hierarchy_element.name);

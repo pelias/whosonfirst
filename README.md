@@ -19,6 +19,7 @@ $> npm start
 
 Currently, the supported types are:
 
+- borough
 - continent
 - country
 - county
@@ -44,7 +45,7 @@ npm install
 npm run download
 ```
 
-Alternatively, the download can be achieved by performing 
+Alternatively, the download can be achieved by performing
 
 ```bash
 git clone https://github.com/whosonfirst/whosonfirst-data.git
