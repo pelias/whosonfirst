@@ -61,6 +61,7 @@ function handleType(type) {
 }
 
 [
+  'borough',
   'continent',
   'country',
   'county',
