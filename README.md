@@ -41,6 +41,8 @@ Currently, the supported types are:
 
 Other types may be included in the future.
 
+[This page](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
+
 ## Data
 
 There are multiple ways to download Who's On First data
