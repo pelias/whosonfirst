@@ -27,7 +27,7 @@
     "batchflow": "^0.4.0",
     "clone": "^1.0.2",
     "csv-parse": "^1.0.0",
-    "fs-extra": "^0.26.5",
+    "fs-extra": "^0.27.0",
     "iso3166-1": "^0.2.5",
     "lodash": "^4.5.1",
     "pelias-config": "^1.0.3",
