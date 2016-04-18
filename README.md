@@ -1,12 +1,19 @@
-# Who's on First Data Importer
+# Pelias Who's on First Data Importer
 
-whosonfirst is a tool used for importing [Who's On First data](https://whosonfirst.mapzen.com/) from local files into a Pelias ElasticSearch store.
+This repository is part of the [Pelias](https://github.com/pelias/pelias)
+project. Pelias is an open-source, open-data geocoder built by
+[Mapzen](https://www.mapzen.com/) that also powers [Mapzen Search](https://mapzen.com/projects/search). Our
+official user documentation is [here](https://mapzen.com/documentation/search/).
 
-# Requirements
+## Overview
+
+pelias-whosonfirst is a tool used for importing [Who's On First data](https://whosonfirst.mapzen.com/) from local files into a Pelias ElasticSearch store.
+
+## Requirements
 
 Node 0.12 or higher is required
 
-# Usage
+## Usage
 
 To install the required node module dependencies and execute the importer, run:
 
@@ -15,7 +22,7 @@ $> npm install
 $> npm start
 ```
 
-# Types
+## Types
 
 Currently, the supported types are:
 
@@ -32,9 +39,11 @@ Currently, the supported types are:
 - neighbourhood
 - region
 
-Other types may be included in the future.  
+Other types may be included in the future.
 
-# Data
+[This page](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
+
+## Data
 
 There are multiple ways to download Who's On First data
 
@@ -59,6 +68,6 @@ Once the data is downloaded, the expected layout is:
 ```
 
 
-# Configuration
+## Configuration
 
-The sole Pelias configuration option available is `imports.whosonfirst.datapath`.  It should point to the root of where Who's On First data has been downloaded.  
+The sole Pelias configuration option available is `imports.whosonfirst.datapath`.  It should point to the root of where Who's On First data has been downloaded.
