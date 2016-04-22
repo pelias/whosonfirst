@@ -115,7 +115,7 @@ tape('readStreamComponents', function(test) {
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'gn:population': 98765,
-          'zs:pop10': 87654,
+          'zs:pop10': 87654
         }
       }
     ];
@@ -157,7 +157,7 @@ tape('readStreamComponents', function(test) {
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'zs:pop10': 98765,
+          'zs:pop10': 98765
         }
       }
     ];
@@ -199,7 +199,7 @@ tape('readStreamComponents', function(test) {
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'qs:pop': 98765,
+          'qs:pop': 98765
         }
       }
     ];
@@ -217,6 +217,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -240,7 +241,7 @@ tape('readStreamComponents', function(test) {
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'mz:population': 98765,
+          'mz:population': 98765
         }
       }
     ];
@@ -258,6 +259,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -281,7 +283,7 @@ tape('readStreamComponents', function(test) {
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'zs:pop10': 0,
+          'zs:pop10': 0
         }
       }
     ];
@@ -541,7 +543,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -580,7 +583,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: '-14.691314,50.909613,2.771169,61.847886',
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -619,7 +623,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: '',
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -657,7 +662,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: '',
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
