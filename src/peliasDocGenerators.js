@@ -48,27 +48,22 @@ module.exports.create = function(hierarchy_finder) {
     hierarchy_finder(record).forEach(function(hierarchy_element) {
       switch (hierarchy_element.place_type) {
         case 'locality':
-          wofDoc.setAdmin( 'locality', hierarchy_element.name);
           wofDoc.addParent('locality', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'borough':
           wofDoc.addParent('borough', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'localadmin':
-          wofDoc.setAdmin( 'local_admin', hierarchy_element.name);
           wofDoc.addParent('localadmin', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'county':
-          wofDoc.setAdmin( 'admin2', hierarchy_element.name);
           wofDoc.addParent('county', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'macrocounty':
           wofDoc.addParent('macrocounty', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'region':
-          wofDoc.setAdmin( 'admin1', hierarchy_element.name);
           if (hierarchy_element.abbreviation) {
-            wofDoc.setAdmin( 'admin1_abbr', hierarchy_element.abbreviation );
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
           } else {
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString());
@@ -78,8 +73,6 @@ module.exports.create = function(hierarchy_finder) {
           wofDoc.addParent('macroregion', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'country':
-          wofDoc.setAdmin( 'admin0', hierarchy_element.name);
-
           // this is placetype=country, so lookup and set the iso3 from iso2
           if (iso3166.is2(hierarchy_element.iso2)) {
             var iso3 = iso3166.to3(hierarchy_element.iso2);
