@@ -69,25 +69,14 @@ tape('readStreamComponents', function(test) {
         popularity: 87654,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
-        hierarchy: {
-          'parent_id': 12345
-        }
-      },
-      {
-        id: 12345,
-        name: 'name 1',
-        place_type: 'place type 1',
-        parent_id: 'parent id 1',
-        lat: 12.121212,
-        lon: 21.212121,
-        iso2: 'YZ',
-        population: 98765,
-        popularity: 87654,
-        abbreviation: 'XY',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
-        hierarchy: {
-          'parent_id': 23456
-        }
+        hierarchies: [
+          {
+            'parent_id': 12345
+          },
+          {
+            'parent_id': 23456
+          }
+        ]
       },
       {
         id: 23456,
@@ -100,7 +89,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         abbreviation: undefined,
-        bounding_box: undefined
+        bounding_box: undefined,
+        hierarchies: []
       }
     ];
 
@@ -143,6 +133,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -184,6 +175,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -307,6 +299,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -347,6 +340,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -387,6 +381,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -425,7 +420,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -463,7 +459,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -502,7 +499,8 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
