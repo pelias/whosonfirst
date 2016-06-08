@@ -431,4 +431,43 @@ tape('readStreamComponents', function(test) {
 
   });
 
+  test.test('label centroid should take precedence over math centroid', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'county',
+          'wof:parent_id': 'parent id',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:latitude': 14.141414,
+          'lbl:longitude': 23.232323,
+          'iso:country': 'not US',
+          'qs:a2_alt': 'qs:a2_alt value'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'county',
+        parent_id: 'parent id',
+        lat: 14.141414,
+        lon: 23.232323,
+        iso2: 'not US',
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: undefined
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'label geometry is used');
+      t.end();
+    });
+  });
 });
