@@ -16,7 +16,22 @@ function getPopulation(properties) {
   } else if (properties['zs:pop10']) {
     return properties['zs:pop10'];
   }
+}
 
+function getLat(properties) {
+  if (properties['lbl:latitude']) {
+    return properties['lbl:latitude'];
+  } else {
+    return properties['geom:latitude'];
+  }
+}
+
+function getLon(properties) {
+  if (properties['lbl:longitude']) {
+    return properties['lbl:longitude'];
+  } else {
+    return properties['geom:longitude'];
+  }
 }
 
 /*
@@ -33,8 +48,8 @@ module.exports.create = function map_fields_stream() {
       abbreviation: json_object.properties['wof:abbreviation'],
       place_type: json_object.properties['wof:placetype'],
       parent_id: json_object.properties['wof:parent_id'],
-      lat: json_object.properties['geom:latitude'],
-      lon: json_object.properties['geom:longitude'],
+      lat: getLat(json_object.properties),
+      lon: getLon(json_object.properties),
       bounding_box: json_object.properties['geom:bbox'],
       iso2: json_object.properties['iso:country'],
       population: getPopulation(json_object.properties),
