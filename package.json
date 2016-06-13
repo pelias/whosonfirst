@@ -31,6 +31,7 @@
     "fs-extra": "^0.30.0",
     "iso3166-1": "^0.2.5",
     "lodash": "^4.5.1",
+    "node-version-checker": "^2.0.0",
     "pelias-config": "^1.0.3",
     "pelias-dbclient": "^1.0.1",
     "pelias-logger": "0.0.8",
