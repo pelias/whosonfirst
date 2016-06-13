@@ -1,6 +1,5 @@
 {
   "name": "pelias-whosonfirst",
-  "version": "1.0.0",
   "engines": {
     "node": "0.12"
   },
@@ -11,11 +10,13 @@
     "download": "node download_data.js",
     "test": "node test/test | tap-dot",
     "lint": "jshint .",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "travis": "npm run test",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pelias/whosonfirst.git"
+    "url": "https://github.com/pelias/whosonfirst.git"
   },
   "author": "",
   "license": "MIT",
@@ -49,7 +50,8 @@
     "jshint": "^2.5.6",
     "tap-dot": "^1.0.0",
     "tape": "^4.2.2",
-    "temp": "^0.8.3"
+    "temp": "^0.8.3",
+    "semantic-release": "^4.3.5"
   },
   "pre-commit": [
     "lint",
