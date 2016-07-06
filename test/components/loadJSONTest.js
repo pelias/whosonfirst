@@ -33,7 +33,7 @@ tape('loadJSON', function(test) {
 
     test_stream(input, loadJSON.create('./'), function(err, actual) {
       t.deepEqual(actual, expected, 'an empty object should have been returned');
-      t.equal(stderr, 'exception on this_is_not_json.json: [SyntaxError: Unexpected token h]\n');
+      t.ok(stderr.match(/SyntaxError: Unexpected token h/), 'error output present');
       t.end();
       unhook_intercept();
       fs.unlinkSync(input[0].path);

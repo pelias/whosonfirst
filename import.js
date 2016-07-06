@@ -5,11 +5,14 @@ var peliasDbclient = require( 'pelias-dbclient' );
 var peliasDocGenerators = require('./src/peliasDocGenerators');
 var wofRecordStream = require('./src/wofRecordStream');
 var hierarchyFinder = require('./src/hierarchyFinder');
+var checker = require('node-version-checker').default;
 
 function hasDataDirectory() {
   return peliasConfig.imports.hasOwnProperty('whosonfirst') &&
           peliasConfig.imports.whosonfirst.hasOwnProperty('datapath');
 }
+
+checker();
 
 if (!hasDataDirectory()) {
   console.error('Could not find whosonfirst data directory in configuration');
