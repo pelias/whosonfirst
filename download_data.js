@@ -51,13 +51,18 @@ var handleEntry = function(header, stream, callback) {
 
 // separate out to function to eliminate scope issues when referencing `type`
 function handleType(type, done) {
-  console.log('starting ' + type);
+  process.stdout.write('starting ' + type + '... ');
+  var start = new Date().getTime();
+
   https.get(util.format('https://whosonfirst.mapzen.com/bundles/wof-%s-latest-bundle.tar.bz2', type), function(response) {
     response
       .pipe(bz2())
-      .pipe(tar.extract()
-        .on('entry', handleEntry)
-        .on('finish', function() { console.log('done ' + type); done(); }));
+      .pipe(tar.extract().on('entry', handleEntry))
+      .on('finish', function() {
+        var end = new Date().getTime();
+        console.log('done in ' + (end-start) + 'ms');
+        done();
+      });
   });
 }
 
@@ -76,8 +81,10 @@ var types = [
   'region'
 ];
 
+var start = new Date().getTime();
 batch(types).sequential().each(function(idx, type, done) {
   handleType(type, done);
 }).end(function() {
-  console.log('done');
+  var end = new Date().getTime();
+  console.log('finished all types in ' + (end-start) + 'ms');
 });
