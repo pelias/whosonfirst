@@ -194,6 +194,88 @@ tape('readStreamComponents', function(test) {
 
   });
 
+  test.test('non-0 qs:pop should be used for population when gn:population or zs:pop10 are not found', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY',
+          'qs:pop': 98765,
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: 98765,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('non-0 mz:population should be used for population when gn:population, zs:pop10 or qs:pop are not found', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'wof:parent_id': 'parent id 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'iso:country': 'YZ',
+          'wof:abbreviation': 'XY',
+          'mz:population': 98765,
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        parent_id: 'parent id 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: 'YZ',
+        population: 98765,
+        popularity: undefined,
+        abbreviation: 'XY',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
   test.test('0 value zs:pop10 and gn:popuation not found should not set population', function(t) {
     var input = [
       {

@@ -11,10 +11,14 @@ function isUsCounty(base_record, qs_a2_alt) {
 // this function favors gn:population when available, falling back to zs:pop10
 //  when available and > 0
 function getPopulation(properties) {
-  if (properties['gn:population']) {
+  if(properties['mz:population']){
+    return properties['mz:population'];
+  } else if (properties['gn:population']) {
     return properties['gn:population'];
   } else if (properties['zs:pop10']) {
     return properties['zs:pop10'];
+  } else if(properties['qs:pop']){
+    return properties['qs:pop'];
   }
 }
 
