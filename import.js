@@ -25,19 +25,22 @@ if (directory.slice(-1) !== '/') {
   directory = directory + '/';
 }
 
+// types must be in highest to lowest level order
+// see https://github.com/whosonfirst/whosonfirst-placetypes
+// venue data goes last
 var types = [
-  'borough',
   'continent',
   'country',
-  'county',
   'dependency',
   'disputed',
+  'macroregion',
+  'region',
+  'county',
+  'macrocounty',
   'localadmin',
   'locality',
-  'macrocounty',
-  'macroregion',
-  'neighbourhood',
-  'region'
+  'borough',
+  'neighbourhood'
 ];
 
 var wofRecords = {};
