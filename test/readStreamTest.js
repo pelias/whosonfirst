@@ -67,12 +67,10 @@ tape('readStream', function(test) {
           'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
         }
       }));
-
     }
 
     function cleanupTestEnvironment() {
       fs.removeSync('tmp');
-
     }
 
     setupTestEnvironment();
@@ -113,9 +111,6 @@ tape('readStream', function(test) {
       t.end();
 
       cleanupTestEnvironment();
-
     });
-
   });
-
 });
