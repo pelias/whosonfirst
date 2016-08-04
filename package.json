@@ -1,5 +1,6 @@
 {
   "name": "pelias-whosonfirst",
+  "version": "0.0.0-semantic-release",
   "engines": {
     "node": ">=0.12"
   },
