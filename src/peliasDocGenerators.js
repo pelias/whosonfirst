@@ -72,6 +72,9 @@ module.exports.create = function(hierarchy_finder) {
         case 'macroregion':
           wofDoc.addParent('macroregion', hierarchy_element.name, hierarchy_element.id.toString());
           break;
+        case 'dependency':
+          wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString());
+          break;
         case 'country':
           // this is placetype=country, so lookup and set the iso3 from iso2
           if (iso3166.is2(hierarchy_element.iso2)) {
