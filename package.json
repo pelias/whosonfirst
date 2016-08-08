@@ -28,6 +28,7 @@
   "dependencies": {
     "batchflow": "^0.4.0",
     "clone": "^1.0.2",
+    "combined-stream": "^1.0.5",
     "csv-parse": "^1.0.0",
     "fs-extra": "^0.30.0",
     "iso3166-1": "^0.2.5",
