@@ -39,7 +39,7 @@ function getLon(properties) {
 }
 
 function getBoundingBox(properties) {
-  if (properties['lbl:bbox']) {
+  if (properties.hasOwnProperty('lbl:bbox')) {
     return properties['lbl:bbox'];
   } else {
     return properties['geom:bbox'];
