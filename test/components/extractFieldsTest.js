@@ -552,4 +552,82 @@ tape('readStreamComponents', function(test) {
       t.end();
     });
   });
+
+  test.test('label bounding box should take precedence over math bounding box', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'county',
+          'wof:parent_id': 'parent id',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'lbl:bbox': '-14.691314,50.909613,2.771169,61.847886',
+          'qs:a2_alt': 'qs:a2_alt value'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'county',
+        parent_id: 'parent id',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '-14.691314,50.909613,2.771169,61.847886',
+        abbreviation: undefined
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'label geometry is used');
+      t.end();
+    });
+  });
+
+  test.test('label bounding box should take precedence over math bounding box even if empty', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'county',
+          'wof:parent_id': 'parent id',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'lbl:bbox': '',
+          'qs:a2_alt': 'qs:a2_alt value'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'county',
+        parent_id: 'parent id',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '',
+        abbreviation: undefined
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'label geometry is used');
+      t.end();
+    });
+  });
 });
