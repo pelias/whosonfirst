@@ -675,4 +675,45 @@ tape('create', function(test) {
 
   });
 
+  test.test('dependency should set abbreviation if available', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'Dependency Name',
+        abbreviation: 'Dependency Abbreviation',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'dependency'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'dependency', '1')
+        .setName('default', 'Dependency Name')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent('dependency', 'Dependency Name', '1', 'Dependency Abbreviation')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'abbreviation should be set');
+      t.end();
+    });
+
+  });
+
 });
