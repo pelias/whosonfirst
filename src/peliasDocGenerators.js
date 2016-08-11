@@ -47,6 +47,9 @@ module.exports.create = function(hierarchy_finder) {
     // iterate the hierarchy, assigning fields
     hierarchy_finder(record).forEach(function(hierarchy_element) {
       switch (hierarchy_element.place_type) {
+        case 'neighbourhood':
+          wofDoc.addParent('neighbourhood', hierarchy_element.name, hierarchy_element.id.toString());
+          break;
         case 'locality':
           wofDoc.addParent('locality', hierarchy_element.name, hierarchy_element.id.toString());
           break;
@@ -63,7 +66,7 @@ module.exports.create = function(hierarchy_finder) {
           wofDoc.addParent('macrocounty', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'region':
-          if (hierarchy_element.abbreviation) {
+          if (hierarchy_element.hasOwnProperty('abbreviation')) {
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
           } else {
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString());
@@ -73,7 +76,11 @@ module.exports.create = function(hierarchy_finder) {
           wofDoc.addParent('macroregion', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'dependency':
-          wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString());
+          if (hierarchy_element.hasOwnProperty('abbreviation')) {
+            wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
+          } else {
+            wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString());
+          }
           break;
         case 'country':
           // this is placetype=country, so lookup and set the iso3 from iso2
