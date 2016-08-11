@@ -63,7 +63,7 @@ module.exports.create = function(hierarchy_finder) {
           wofDoc.addParent('macrocounty', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'region':
-          if (hierarchy_element.abbreviation) {
+          if (hierarchy_element.hasOwnProperty('abbreviation')) {
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
           } else {
             wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString());
@@ -73,7 +73,7 @@ module.exports.create = function(hierarchy_finder) {
           wofDoc.addParent('macroregion', hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'dependency':
-          if (hierarchy_element.abbreviation) {
+          if (hierarchy_element.hasOwnProperty('abbreviation')) {
             wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
           } else {
             wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString());
