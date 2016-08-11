@@ -48,38 +48,21 @@ module.exports.create = function(hierarchy_finder) {
     hierarchy_finder(record).forEach(function(hierarchy_element) {
       switch (hierarchy_element.place_type) {
         case 'neighbourhood':
-          wofDoc.addParent('neighbourhood', hierarchy_element.name, hierarchy_element.id.toString());
-          break;
         case 'locality':
-          wofDoc.addParent('locality', hierarchy_element.name, hierarchy_element.id.toString());
-          break;
         case 'borough':
-          wofDoc.addParent('borough', hierarchy_element.name, hierarchy_element.id.toString());
-          break;
         case 'localadmin':
-          wofDoc.addParent('localadmin', hierarchy_element.name, hierarchy_element.id.toString());
-          break;
         case 'county':
-          wofDoc.addParent('county', hierarchy_element.name, hierarchy_element.id.toString());
-          break;
         case 'macrocounty':
-          wofDoc.addParent('macrocounty', hierarchy_element.name, hierarchy_element.id.toString());
+        case 'macroregion':
+          // the above place_types don't have abbrevations (yet)
+          wofDoc.addParent(hierarchy_element.place_type, hierarchy_element.name, hierarchy_element.id.toString());
           break;
         case 'region':
-          if (hierarchy_element.hasOwnProperty('abbreviation')) {
-            wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
-          } else {
-            wofDoc.addParent('region', hierarchy_element.name, hierarchy_element.id.toString());
-          }
-          break;
-        case 'macroregion':
-          wofDoc.addParent('macroregion', hierarchy_element.name, hierarchy_element.id.toString());
-          break;
         case 'dependency':
           if (hierarchy_element.hasOwnProperty('abbreviation')) {
-            wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
+            wofDoc.addParent(hierarchy_element.place_type, hierarchy_element.name, hierarchy_element.id.toString(), hierarchy_element.abbreviation);
           } else {
-            wofDoc.addParent('dependency', hierarchy_element.name, hierarchy_element.id.toString());
+            wofDoc.addParent(hierarchy_element.place_type, hierarchy_element.name, hierarchy_element.id.toString());
           }
           break;
         case 'country':
