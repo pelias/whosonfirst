@@ -1,5 +1,6 @@
 var tape = require('tape');
 var fs = require('fs-extra');
+var sink = require('through2-sink');
 
 var readStream = require('../src/readStream');
 
@@ -8,7 +9,7 @@ tape('readStream', function(test) {
     this test is not terribly attractive, i'm not happy with it but setup wasn't
     all that painful.
   */
-  test.test('readStream should return from all requested types and populate wofRecords', function(t) {
+  test.test('readStream should return from all requested types and populate wofAdminRecords', function(t) {
     function setupTestEnvironment() {
       // remove tmp directory if for some reason it's been hanging around from a previous run
       fs.removeSync('tmp');
@@ -67,22 +68,21 @@ tape('readStream', function(test) {
           'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
         }
       }));
-
     }
 
     function cleanupTestEnvironment() {
       fs.removeSync('tmp');
-
     }
 
     setupTestEnvironment();
 
-    var wofRecords = {};
+    var wofAdminRecords = {};
+    var stream = readStream.create('./tmp/', ['type1', 'type2'], wofAdminRecords);
 
-    readStream('./tmp/', ['type1', 'type2'], wofRecords, function() {
-      t.equals(Object.keys(wofRecords).length, 2, 'there should be 2 records loaded');
+    stream.pipe(sink.obj(function() {})).on('finish', function() {
+      t.equals(Object.keys(wofAdminRecords).length, 2, 'there should be 2 records loaded');
 
-      t.deepEqual(wofRecords[1234567], {
+      t.deepEqual(wofAdminRecords[1234567], {
         id: 1234567,
         name: 'name 1',
         place_type: 'place type 1',
@@ -96,7 +96,7 @@ tape('readStream', function(test) {
         popularity: 87654
       }, 'id 1234567 should have been loaded');
 
-      t.deepEqual(wofRecords[12345678], {
+      t.deepEqual(wofAdminRecords[12345678], {
         id: 12345678,
         name: 'name 2',
         place_type: 'place type 2',
@@ -113,9 +113,6 @@ tape('readStream', function(test) {
       t.end();
 
       cleanupTestEnvironment();
-
     });
-
   });
-
 });

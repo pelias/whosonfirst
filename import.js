@@ -1,9 +1,8 @@
 var peliasConfig = require( 'pelias-config' ).generate();
-var readStream = require('./src/readStream');
+var readStreamModule = require('./src/readStream');
 var importStream = require('./src/importStream');
 var peliasDbclient = require( 'pelias-dbclient' );
 var peliasDocGenerators = require('./src/peliasDocGenerators');
-var wofRecordStream = require('./src/wofRecordStream');
 var hierarchyFinder = require('./src/hierarchyFinder');
 var checker = require('node-version-checker').default;
 
@@ -25,39 +24,38 @@ if (directory.slice(-1) !== '/') {
   directory = directory + '/';
 }
 
+// types must be in highest to lowest level order
+// see https://github.com/whosonfirst/whosonfirst-placetypes
+// venue data goes last
 var types = [
-  'borough',
   'continent',
   'country',
-  'county',
   'dependency',
   'disputed',
+  'macroregion',
+  'region',
+  'county',
+  'macrocounty',
   'localadmin',
   'locality',
-  'macrocounty',
-  'macroregion',
-  'neighbourhood',
-  'region'
+  'borough',
+  'neighbourhood'
 ];
 
-var wofRecords = {};
+// a cache of only admin records, to be used to fill the hierarchy
+// of other, lower admin records as well as venues
+var wofAdminRecords = {};
 
-readStream(directory, types, wofRecords, function() {
-  console.log(Object.keys(wofRecords).length + ' records loaded');
+var readStream = readStreamModule.create(directory, types, wofAdminRecords);
 
-  // a stream of WOF records
-  var recordStream = wofRecordStream.createWofRecordsStream(wofRecords);
+// how to convert WOF records to Pelias Documents
+var documentGenerator = peliasDocGenerators.create(
+  hierarchyFinder.hierarchies_walker(wofAdminRecords));
 
-  // how to convert WOF records to Pelias Documents
-  var documentGenerator = peliasDocGenerators.create(
-    hierarchyFinder.hierarchies_walker(wofRecords));
+// the final destination of Pelias Documents
+var dbClientStream = peliasDbclient();
 
-  // the final destination of Pelias Documents
-  var dbClientStream = peliasDbclient();
-
-  // import WOF records into ES
-  importStream(recordStream, documentGenerator, dbClientStream, function() {
-    console.log('import finished');
-  });
-
+// import WOF records into ES
+importStream(readStream, documentGenerator, dbClientStream, function() {
+  console.log('import finished');
 });

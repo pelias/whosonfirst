@@ -11,6 +11,47 @@ function test_stream(input, testedStream, callback) {
 }
 
 tape('create', function(test) {
+  test.test('neighbourhood place_type should be returned as neighbourhood Document', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'name 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'neighbourhood',
+        iso2: 'DE'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'neighbourhood', '1')
+        .setName('default', 'name 1')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent( 'neighbourhood', 'name 1', '1')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
+    });
+
+  });
+
   test.test('wofRecords at all place_type levels should be returned as Document objects', function(t) {
     var wofRecords = {
       1: {
@@ -27,7 +68,7 @@ tape('create', function(test) {
         name: 'name 2',
         lat: 13.131313,
         lon: 31.313131,
-        place_type: 'macroregion',
+        place_type: 'dependency',
         bounding_box: '-13.691314,49.909613,1.771169,60.847887'
       },
       3: {
@@ -35,7 +76,7 @@ tape('create', function(test) {
         name: 'name 3',
         lat: 14.141414,
         lon: 41.414141,
-        place_type: 'region',
+        place_type: 'macroregion',
         bounding_box: '-13.691314,49.909613,1.771169,60.847888'
       },
       4: {
@@ -43,7 +84,7 @@ tape('create', function(test) {
         name: 'name 4',
         lat: 15.151515,
         lon: 51.515151,
-        place_type: 'macrocounty',
+        place_type: 'region',
         bounding_box: '-13.691314,49.909613,1.771169,60.847889'
       },
       5: {
@@ -51,7 +92,7 @@ tape('create', function(test) {
         name: 'name 5',
         lat: 16.161616,
         lon: 61.616161,
-        place_type: 'county',
+        place_type: 'macrocounty',
         bounding_box: '-13.691314,49.909613,1.771169,60.847890'
       },
       6: {
@@ -59,7 +100,7 @@ tape('create', function(test) {
         name: 'name 6',
         lat: 17.171717,
         lon: 71.717171,
-        place_type: 'localadmin',
+        place_type: 'county',
         bounding_box: '-13.691314,49.909613,1.771169,60.847891'
       },
       7: {
@@ -67,7 +108,7 @@ tape('create', function(test) {
         name: 'name 7',
         lat: 18.181818,
         lon: 81.818181,
-        place_type: 'borough',
+        place_type: 'localadmin',
         bounding_box: '-13.691314,49.909613,1.771169,60.847892'
       },
       8: {
@@ -75,8 +116,16 @@ tape('create', function(test) {
         name: 'name 8',
         lat: 19.191919,
         lon: 91.919191,
+        place_type: 'borough',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847893'
+      },
+      9: {
+        id: 9,
+        name: 'name 9',
+        lat: 10.101010,
+        lon: 1.010101,
         place_type: 'locality',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847893',
+        bounding_box: '-13.691314,49.909613,1.771169,60.847894',
         iso2: 'this will be ignored'
       }
     };
@@ -84,27 +133,29 @@ tape('create', function(test) {
     // extract all the values from wofRecords to an array since that's how test_stream works
     // sure, this could be done with map, but this is clearer
     var input = [
-      wofRecords['8']
+      wofRecords['9']
     ];
 
     var expected = [
-      new Document( 'whosonfirst', 'locality', '8')
-        .setName('default', 'name 8')
-        .setCentroid({ lat: 19.191919, lon: 91.919191 })
-        .addParent( 'locality', 'name 8', '8')
-        .addParent('borough', 'name 7', '7')
-        .addParent( 'localadmin', 'name 6', '6')
-        .addParent( 'county', 'name 5', '5')
-        .addParent( 'macrocounty', 'name 4', '4')
-        .addParent( 'region', 'name 3', '3')
-        .addParent( 'macroregion', 'name 2', '2')
+      new Document( 'whosonfirst', 'locality', '9')
+        .setName('default', 'name 9')
+        .setCentroid({ lat: 10.101010, lon: 1.010101 })
+        .addParent( 'locality', 'name 9', '9')
+        .addParent( 'borough', 'name 8', '8')
+        .addParent( 'localadmin', 'name 7', '7')
+        .addParent( 'county', 'name 6', '6')
+        .addParent( 'macrocounty', 'name 5', '5')
+        .addParent( 'region', 'name 4', '4')
+        .addParent( 'macroregion', 'name 3', '3')
+        .addParent( 'dependency', 'name 2', '2')
         .addParent( 'country', 'name 1', '1', 'DEU')
         .setAlpha3( 'DEU' )
-        .setBoundingBox({ upperLeft: { lat:60.847893, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
+        .setBoundingBox({ upperLeft: { lat:60.847894, lon:-13.691314 }, lowerRight: { lat:49.909613 , lon:1.771169 }})
     ];
 
     var hierarchies_finder = function() {
       return [
+        wofRecords['9'],
         wofRecords['8'],
         wofRecords['7'],
         wofRecords['6'],
@@ -660,6 +711,47 @@ tape('create', function(test) {
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
+  test.test('dependency should set abbreviation if available', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'Dependency Name',
+        abbreviation: 'Dependency Abbreviation',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'dependency'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'dependency', '1')
+        .setName('default', 'Dependency Name')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent('dependency', 'Dependency Name', '1', 'Dependency Abbreviation')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'abbreviation should be set');
       t.end();
     });
 
