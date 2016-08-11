@@ -11,6 +11,47 @@ function test_stream(input, testedStream, callback) {
 }
 
 tape('create', function(test) {
+  test.test('neighbourhood place_type should be returned as neighbourhood Document', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'name 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'neighbourhood',
+        iso2: 'DE'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'neighbourhood', '1')
+        .setName('default', 'name 1')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent( 'neighbourhood', 'name 1', '1')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        wofRecords['1']
+      ];
+    };
+
+    // seed the parent_id_walker with wofRecords
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
+    });
+
+  });
+
   test.test('wofRecords at all place_type levels should be returned as Document objects', function(t) {
     var wofRecords = {
       1: {

@@ -47,6 +47,9 @@ module.exports.create = function(hierarchy_finder) {
     // iterate the hierarchy, assigning fields
     hierarchy_finder(record).forEach(function(hierarchy_element) {
       switch (hierarchy_element.place_type) {
+        case 'neighbourhood':
+          wofDoc.addParent('neighbourhood', hierarchy_element.name, hierarchy_element.id.toString());
+          break;
         case 'locality':
           wofDoc.addParent('locality', hierarchy_element.name, hierarchy_element.id.toString());
           break;
