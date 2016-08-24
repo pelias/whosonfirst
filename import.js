@@ -39,7 +39,9 @@ var types = [
   'localadmin',
   'locality',
   'borough',
-  'neighbourhood'
+  'neighbourhood',
+  'venue-us-ca',
+  'venue-us-ny'
 ];
 
 // a cache of only admin records, to be used to fill the hierarchy
