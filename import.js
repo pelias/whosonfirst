@@ -40,6 +40,7 @@ var types = [
   'locality',
   'borough',
   'neighbourhood',
+  'venue-gb',
   'venue-us-ca',
   'venue-us-ny',
   'venue-us-or',
