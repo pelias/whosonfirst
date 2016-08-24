@@ -41,7 +41,9 @@ var types = [
   'borough',
   'neighbourhood',
   'venue-us-ca',
-  'venue-us-ny'
+  'venue-us-ny',
+  'venue-us-or',
+  'venue-us-pa'
 ];
 
 // a cache of only admin records, to be used to fill the hierarchy
