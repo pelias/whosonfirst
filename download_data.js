@@ -1,90 +1,47 @@
-var bz2 = require('unbzip2-stream');
-var tar = require('tar-stream');
-var fs = require('fs-extra');
-var _ = require('lodash');
-var https = require('https');
-var util = require('util');
-var path = require('path');
-var sep = require('path').sep;
-var batch = require('batchflow');
+var child_process = require('child_process');
+var async = require('async');
+var os = require('os');
 
-// strip off the first component and prepend new root:
-//  e.g. `reassignRoot('original_root/1/2.geojson', 'new_root')` -> `new_root/1/2.geojson`
-function reassignRoot(filename, root) {
-  // grab all the path elements except the root
-  var nonRootParts = filename.split(sep).slice(1);
+var bundles = require('./src/bundleList');
+var config = require('pelias-config').generate();
 
-  // join them all together, prepended with the new root
-  return path.join.apply(this, [root].concat(nonRootParts));
+// download one bundle for every other CPU (tar and bzip2 can both max out one core)
+// (but not more than 4, to keep things from getting too intense)
+// lower this number to make the downloader more CPU friendly
+// raise this number to (possibly) make it faster
+var simultaneousDownloads = Math.max(4, Math.min(1, os.cpus().length / 2));
 
+/*
+ * generate a shell command that does the following:
+ * 1.) use curl to download the bundle, piping directly to tar (this avoids the need for intermediate storage of the archive file)
+ * 2.) extract the archive so that the data directory goes in the right place and the README file is ignored (it just would get overridden by subsequent bundles)
+ * 3.) move the meta file to the meta files directory
+ */
+function generateCommand(type, directory) {
+  return 'curl https://whosonfirst.mapzen.com/bundles/wof-' + type + '-latest-bundle.tar.bz2 | tar -xj --strip-components=1 --exclude=README.txt -C ' + directory + ' && mv ' + directory + '/wof-' + type  + '-latest.csv ' + directory + '/meta/';
 }
 
-// setup a `meta` directory in which to place .csv files
-fs.ensureDirSync(path.join('wof_data', 'meta'));
+var bundlesToDownload = bundles.allBundles;
 
-// setup a function that handles entries from tar-stream
-var handleEntry = function(header, stream, callback) {
-  var name;
-
-  try {
-    if (header.type === 'directory') {
-      name = reassignRoot(header.name, 'wof_data');
-      fs.mkdirsSync(name);
-    }
-    if (_.endsWith(header.name, '.geojson')) {
-      name = reassignRoot(header.name, 'wof_data');
-      stream.pipe(fs.createWriteStream(name));
-    }
-    if (_.endsWith(header.name, '.csv')) {
-      name = reassignRoot(header.name, path.join('wof_data', 'meta'));
-      stream.pipe(fs.createWriteStream(name));
-    }
-
-  } catch (err) {
-    console.error('error processing ' + header.name);
-    console.error('exception: ' + err);
-  }
-
-  callback();
-
-};
-
-// separate out to function to eliminate scope issues when referencing `type`
-function handleType(type, done) {
-  process.stdout.write('starting ' + type + '... ');
-  var start = new Date().getTime();
-
-  https.get(util.format('https://whosonfirst.mapzen.com/bundles/wof-%s-latest-bundle.tar.bz2', type), function(response) {
-    response
-      .pipe(bz2())
-      .pipe(tar.extract().on('entry', handleEntry))
-      .on('finish', function() {
-        var end = new Date().getTime();
-        console.log('done in ' + (end-start) + 'ms');
-        done();
-      });
-  });
+if (process.argv[2] == '--admin-only') {
+  bundlesToDownload = bundles.hierarchyBundles;
 }
 
-var types = [
-  'borough',
-  'continent',
-  'country',
-  'county',
-  'dependency',
-  'disputed',
-  'localadmin',
-  'locality',
-  'macrocounty',
-  'macroregion',
-  'neighbourhood',
-  'region'
-];
+var downloadFunctions = bundlesToDownload.map(function(type) {
+  return function downloadABundle(callback) {
+    var cmd = generateCommand(type, config.imports.whosonfirst.datapath);
+    console.log('Downloading ' + type + ' bundle');
+    child_process.exec(cmd, function commandCallback(error, stdout, stderr) {
+      console.log('done downloading ' + type + ' bundle');
+      if (error) {
+        console.error('error downloading ' + type + ' bundle: ' + error);
+        console.log(stderr);
+      }
+      callback();
+    });
+  };
+});
 
-var start = new Date().getTime();
-batch(types).sequential().each(function(idx, type, done) {
-  handleType(type, done);
-}).end(function() {
-  var end = new Date().getTime();
-  console.log('finished all types in ' + (end-start) + 'ms');
+async.parallelLimit(downloadFunctions, simultaneousDownloads, function allDone() {
+  console.log('All done downloading WOF!');
 });
