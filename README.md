@@ -13,18 +13,15 @@ pelias-whosonfirst is a tool used for importing [Who's On First data](https://wh
 
 Node 0.12 or higher is required
 
-## Usage
-
-To install the required node module dependencies and execute the importer, run:
-
-```bash
-$> npm install
-$> npm start
-```
-
 ## Types
 
-Currently, the supported types are:
+There are two major categories of Who's on First data supported: hierarchy (or admin) data, and venues.
+
+Hierarchy data represents things like cities, countries, counties, boroughs, etc.
+
+Venues represent individual places like the Statue of Liberty, a gas station, etc. Venues are subdivided by country, and sometimes regions within a country.
+
+Currently, the supported hierarchy types are:
 
 - borough
 - continent
@@ -43,31 +40,35 @@ Other types may be included in the future.
 
 [This page](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
 
-## Data
+## Configuration
 
-There are multiple ways to download Who's On First data
+The sole Pelias configuration option available is `imports.whosonfirst.datapath`.  It should point to the root of where Who's On First data has been downloaded.
 
-* The enclosed script `download_data.js` will download the required bundles and place the data into `./wof_data` in the required directory layout.  To install the required node module dependencies and run the download script:
+## Downloading the Data
+
+* The enclosed script `download_data.js` will download the required bundles and place the data into the datapath configured in [pelias-config](https://github.com/pelias/config) in the required directory layout.  To install the required node module dependencies and run the download script:
 
 ```bash
 npm install
 npm run download
+
+## or
+
+npm run download -- --admin-only # to only download hierarchy data, and not venues (venues require around 100GB of disk space)
 ```
 
-Alternatively, the download can be achieved by performing
+**Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
+Additionally, Who's on First uses one file per record. In addition to lots of disk space,
+you need lots of free [inodes](https://en.wikipedia.org/wiki/Inode). On
+Linux/Mac,  `df -ih` can show you how many free inodes you have.
+
+Expect to use a few million inodes for Who's on First. You probably don't want to store multiple copies of the Who's on First data due to its disk requirements.
+
+## Usage
+
+To install the required node module dependencies and execute the importer, run:
 
 ```bash
-git clone https://github.com/whosonfirst/whosonfirst-data.git
+$> npm install
+$> npm start
 ```
-
-Once the data is downloaded, the expected layout is:
-
-```bash
-./wof_data/data/<the nested structure of .geojson files>
-./wof_data/meta/<all the .csv meta files>
-```
-
-
-## Configuration
-
-The sole Pelias configuration option available is `imports.whosonfirst.datapath`.  It should point to the root of where Who's On First data has been downloaded.
