@@ -46,6 +46,14 @@ function getBoundingBox(properties) {
   }
 }
 
+function getName(properties) {
+  if (properties.hasOwnProperty('wof:label')) {
+    return properties['wof:label'];
+  } else {
+    return properties['wof:name'];
+  }
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -56,7 +64,7 @@ module.exports.create = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
     var base_record = {
       id: json_object.id,
-      name: json_object.properties['wof:name'],
+      name: getName(json_object.properties),
       abbreviation: json_object.properties['wof:abbreviation'],
       place_type: json_object.properties['wof:placetype'],
       parent_id: json_object.properties['wof:parent_id'],

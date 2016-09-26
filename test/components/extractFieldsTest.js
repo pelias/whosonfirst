@@ -630,4 +630,44 @@ tape('readStreamComponents', function(test) {
       t.end();
     });
   });
+
+  test.test('wof:label should be used for name when both it and wof:name are available', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:label': 'wof:label value',
+          'wof:placetype': 'county',
+          'wof:parent_id': 'parent id',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:label value',
+        place_type: 'county',
+        parent_id: 'parent id',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '',
+        abbreviation: undefined
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:label is used for name');
+      t.end();
+    });
+
+  });
+
 });
