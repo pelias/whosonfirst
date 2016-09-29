@@ -27,7 +27,6 @@
   "homepage": "https://github.com/pelias/whosonfirst#readme",
   "dependencies": {
     "async": "^2.0.1",
-    "clone": "^1.0.2",
     "combined-stream": "^1.0.5",
     "csv-parse": "^1.0.0",
     "fs-extra": "^0.30.0",
