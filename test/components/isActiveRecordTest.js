@@ -30,16 +30,16 @@ tape('isActiveRecord', function(test) {
 
   });
 
-  test.test('undefined/blank edtf:superseded values should return true', function(t) {
+  test.test('undefined/non-array/zero-length wof:superseded_by should return true', function(t) {
     var input = [
-      { properties: { 'edtf:superseded': undefined } },
-      { properties: { 'edtf:superseded': '' } },
-      { properties: { 'edtf:superseded': ' \t ' } }
+      { properties: { 'wof:superseded_by': undefined } },
+      { properties: { 'wof:superseded_by': 'this is not an array' } },
+      { properties: { 'wof:superseded_by': [] } }
     ];
     var expected = [
-      { properties: { 'edtf:superseded': undefined } },
-      { properties: { 'edtf:superseded': '' } },
-      { properties: { 'edtf:superseded': ' \t ' } }
+      { properties: { 'wof:superseded_by': undefined } },
+      { properties: { 'wof:superseded_by': 'this is not an array' } },
+      { properties: { 'wof:superseded_by': [] } }
     ];
 
     test_stream(input, isActiveRecord.create(), function(err, actual) {
@@ -49,7 +49,7 @@ tape('isActiveRecord', function(test) {
 
   });
 
-  test.test('properties without edtf:superseded or edtf:deprecated or mz:is_current should return true', function(t) {
+  test.test('properties without wof:superseded_by or edtf:deprecated or mz:is_current should return true', function(t) {
     var input = [
       { properties: { } }
     ];
@@ -77,9 +77,9 @@ tape('isActiveRecord', function(test) {
 
   });
 
-  test.test('non-blank edtf:superseded values should return false', function(t) {
+  test.test('non-zero-length wof:superseded_by array should return false', function(t) {
     var input = [
-      { properties: { 'edtf:superseded': 'some value' } }
+      { properties: { 'wof:superseded_by': [1, 2] } }
     ];
     var expected = [];
 
