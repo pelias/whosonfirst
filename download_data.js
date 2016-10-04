@@ -21,8 +21,14 @@ function generateCommand(type, directory) {
   return 'curl https://whosonfirst.mapzen.com/bundles/wof-' + type + '-latest-bundle.tar.bz2 | tar -xj --strip-components=1 --exclude=README.txt -C ' + directory + ' && mv ' + directory + '/wof-' + type  + '-latest.csv ' + directory + '/meta/';
 }
 
-var bundlesToDownload = bundles.allBundles;
+var bundlesToDownload = bundles.hierarchyBundles;
 
+if (config.imports.whosonfirst.importVenues) {
+  bundlesToDownload = bundlesToDownload.concat(bundles.venueBundles);
+}
+
+// this should override the config setting since the hierarchy bundles are useful
+// on their own to allow other importers to start when using admin lookup
 if (process.argv[2] == '--admin-only') {
   bundlesToDownload = bundles.hierarchyBundles;
 }

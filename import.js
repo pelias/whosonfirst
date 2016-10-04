@@ -29,7 +29,13 @@ if (directory.slice(-1) !== '/') {
 // of other, lower admin records as well as venues
 var wofAdminRecords = {};
 
-var readStream = readStreamModule.create(directory, bundles.allBundles, wofAdminRecords);
+var bundlesToImport = bundles.hierarchyBundles;
+
+if (peliasConfig.imports.whosonfirst.importVenues) {
+  bundlesToImport = bundlesToImport.concat(bundles.venueBundles);
+}
+
+var readStream = readStreamModule.create(directory, bundlesToImport, wofAdminRecords);
 
 // how to convert WOF records to Pelias Documents
 var documentGenerator = peliasDocGenerators.create(
