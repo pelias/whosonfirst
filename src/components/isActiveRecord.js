@@ -6,7 +6,9 @@ function isDeprecated(wofData) {
 }
 
 function isSuperseded(wofData) {
-  return !_.isEmpty(_.trim(wofData.properties['edtf:superseded']));
+  return wofData.properties.hasOwnProperty('wof:superseded_by') &&
+          _.isArray(wofData.properties['wof:superseded_by']) &&
+          wofData.properties['wof:superseded_by'].length > 0;
 }
 
 function isCurrent(wofData) {

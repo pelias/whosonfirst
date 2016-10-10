@@ -5,6 +5,7 @@ var peliasDbclient = require( 'pelias-dbclient' );
 var peliasDocGenerators = require('./src/peliasDocGenerators');
 var hierarchyFinder = require('./src/hierarchyFinder');
 var checker = require('node-version-checker').default;
+var bundles = require('./src/bundleList');
 
 function hasDataDirectory() {
   return peliasConfig.imports.hasOwnProperty('whosonfirst') &&
@@ -24,29 +25,17 @@ if (directory.slice(-1) !== '/') {
   directory = directory + '/';
 }
 
-// types must be in highest to lowest level order
-// see https://github.com/whosonfirst/whosonfirst-placetypes
-// venue data goes last
-var types = [
-  'continent',
-  'country',
-  'dependency',
-  'disputed',
-  'macroregion',
-  'region',
-  'macrocounty',
-  'county',
-  'localadmin',
-  'locality',
-  'borough',
-  'neighbourhood'
-];
-
 // a cache of only admin records, to be used to fill the hierarchy
 // of other, lower admin records as well as venues
 var wofAdminRecords = {};
 
-var readStream = readStreamModule.create(directory, types, wofAdminRecords);
+var bundlesToImport = bundles.hierarchyBundles;
+
+if (peliasConfig.imports.whosonfirst.importVenues) {
+  bundlesToImport = bundlesToImport.concat(bundles.venueBundles);
+}
+
+var readStream = readStreamModule.create(directory, bundlesToImport, wofAdminRecords);
 
 // how to convert WOF records to Pelias Documents
 var documentGenerator = peliasDocGenerators.create(
