@@ -4,15 +4,16 @@ var importStream = require('./src/importStream');
 var peliasDbclient = require( 'pelias-dbclient' );
 var peliasDocGenerators = require('./src/peliasDocGenerators');
 var hierarchyFinder = require('./src/hierarchyFinder');
-var checker = require('node-version-checker').default;
+var version_checker = require('node-version-checker').default;
 var bundles = require('./src/bundleList');
+
+// print a warning if an unsupported Node.JS version is used
+version_checker();
 
 function hasDataDirectory() {
   return peliasConfig.imports.hasOwnProperty('whosonfirst') &&
           peliasConfig.imports.whosonfirst.hasOwnProperty('datapath');
 }
-
-checker();
 
 if (!hasDataDirectory()) {
   console.error('Could not find whosonfirst data directory in configuration');
