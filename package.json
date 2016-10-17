@@ -33,7 +33,7 @@
     "iso3166-1": "^0.2.5",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
-    "pelias-config": "2.1.0",
+    "pelias-config": "2.3.0",
     "pelias-dbclient": "2.0.0",
     "pelias-logger": "0.0.8",
     "pelias-model": "4.2.0",
