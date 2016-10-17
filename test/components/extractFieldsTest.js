@@ -391,7 +391,7 @@ tape('readStreamComponents', function(test) {
 
   });
 
-  test.test('wof:placetype=county and iso2:country=US should use qs:a2_alt for name', function(t) {
+  test.test('wof:placetype=county and wof:country=US should use qs:a2_alt for name', function(t) {
     var input = [
       {
         id: 12345,
@@ -401,6 +401,7 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'US',
+          'wof:country': 'US',
           'qs:a2_alt': 'qs:a2_alt value'
         }
       }
@@ -514,9 +515,7 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'lbl:latitude': 14.141414,
-          'lbl:longitude': 23.232323,
-          'iso:country': 'not US',
-          'qs:a2_alt': 'qs:a2_alt value'
+          'lbl:longitude': 23.232323
         }
       }
     ];
@@ -528,7 +527,7 @@ tape('readStreamComponents', function(test) {
         place_type: 'county',
         lat: 14.141414,
         lon: 23.232323,
-        iso2: 'not US',
+        iso2: undefined,
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
@@ -553,8 +552,7 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'lbl:bbox': '-14.691314,50.909613,2.771169,61.847886',
-          'qs:a2_alt': 'qs:a2_alt value'
+          'lbl:bbox': '-14.691314,50.909613,2.771169,61.847886'
         }
       }
     ];
@@ -591,8 +589,7 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'lbl:bbox': '',
-          'qs:a2_alt': 'qs:a2_alt value'
+          'lbl:bbox': ''
         }
       }
     ];

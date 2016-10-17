@@ -2,8 +2,8 @@ var through2 = require('through2');
 var _ = require('lodash');
 
 // this function is used to verify that a US county QS altname is available
-function isUsCounty(base_record, qs_a2_alt) {
-  return 'US' === base_record.iso2 &&
+function isUsCounty(base_record, wof_country, qs_a2_alt) {
+  return 'US' === wof_country &&
           'county' === base_record.place_type &&
           !_.isUndefined(qs_a2_alt);
 }
@@ -77,7 +77,7 @@ module.exports.create = function map_fields_stream() {
     };
 
     // use the QS altname if US county and available
-    if (isUsCounty(record, json_object.properties['qs:a2_alt'])) {
+    if (isUsCounty(record, json_object.properties['wof:country'], json_object.properties['qs:a2_alt'])) {
       record.name = json_object.properties['qs:a2_alt'];
     }
 
