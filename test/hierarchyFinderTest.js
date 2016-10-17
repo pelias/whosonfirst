@@ -32,10 +32,7 @@ tape('hierarchies_walker tests', function(test) {
       }
     };
 
-    // seed the hierarchies_walker with wofRecords
-    var hierarchies_walker = hierarchyFinder.hierarchies_walker(wofRecords);
-
-    var hierarchies = hierarchies_walker(wofRecords['4']);
+    var hierarchies = hierarchyFinder(wofRecords)(wofRecords['4']);
 
     t.deepEqual(hierarchies, [
       [
@@ -78,10 +75,7 @@ tape('hierarchies_walker tests', function(test) {
       }
     };
 
-    // seed the hierarchies_walker with wofRecords
-    var hierarchies_walker = hierarchyFinder.hierarchies_walker(wofRecords);
-
-    var hierarchies = hierarchies_walker(wofRecords['4']);
+    var hierarchies = hierarchyFinder(wofRecords)(wofRecords['4']);
 
     t.deepEqual(hierarchies, [[
       wofRecords['4'],
@@ -112,10 +106,7 @@ tape('hierarchies_walker tests', function(test) {
       }
     };
 
-    // seed the hierarchies_walker with wofRecords
-    var hierarchies_walker = hierarchyFinder.hierarchies_walker(wofRecords);
-
-    var hierarchy = hierarchies_walker(wofRecords['4']);
+    var hierarchy = hierarchyFinder(wofRecords)(wofRecords['4']);
 
     t.deepEqual(hierarchy, [
       [

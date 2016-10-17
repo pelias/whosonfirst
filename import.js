@@ -39,8 +39,7 @@ if (peliasConfig.imports.whosonfirst.importVenues) {
 var readStream = readStreamModule.create(directory, bundlesToImport, wofAdminRecords);
 
 // how to convert WOF records to Pelias Documents
-var documentGenerator = peliasDocGenerators.create(
-  hierarchyFinder.hierarchies_walker(wofAdminRecords));
+var documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
 
 // the final destination of Pelias Documents
 var dbClientStream = peliasDbclient();

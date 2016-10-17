@@ -39,7 +39,7 @@ function resolveHierarchy(wofRecords, hierarchy) {
  wofRecord can have multiple hierarchies, so resolve them by looking up the
  referenced wofRecord in the big collection of wofRecords.
 */
-module.exports.hierarchies_walker = function(wofRecords) {
+module.exports = function(wofRecords) {
   return function(wofRecord) {
     return wofRecord.hierarchies.reduce(function(resolvedHierarchies, hierarchy) {
       resolvedHierarchies.push(resolveHierarchy(wofRecords, hierarchy));
