@@ -35,7 +35,7 @@
     "node-version-checker": "^2.0.0",
     "pelias-config": "2.3.0",
     "pelias-dbclient": "2.0.0",
-    "pelias-logger": "0.0.8",
+    "pelias-logger": "0.1.0",
     "pelias-model": "4.2.0",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
