@@ -2,7 +2,7 @@ var tape = require('tape');
 
 var hierarchyFinder = require('../src/hierarchyFinder');
 
-tape('hierarchies_walker tests', function(test) {
+tape('tests for looking up hierarchies', function(test) {
   test.test('all hierarchies should be returned', function(t) {
     // records are limited to just the fields needed to operate
     var wofRecords = {
