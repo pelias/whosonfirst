@@ -150,7 +150,6 @@ tape('create', function(test) {
        name: 'name 1',
        lat: 12.121212,
        lon: 21.212121,
-       parent_id: undefined,
        place_type: 'continent'
      }
     };
@@ -185,7 +184,6 @@ tape('create', function(test) {
         id: 1,
         lat: 12.121212,
         lon: 21.212121,
-        parent_id: undefined,
         place_type: 'continent',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: undefined
