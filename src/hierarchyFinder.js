@@ -1,5 +1,3 @@
-var _ = require('lodash');
-
 module.exports = {};
 
 var hasName = function(r) {
@@ -8,29 +6,6 @@ var hasName = function(r) {
 
 var isDefined = function(r) {
   return r;
-};
-
-/*
-  This function builds a hierarchy by starting with the current record and
-  walking up by parent_id until a parent can't be found, filtering out those
-  w/o name.
-*/
-module.exports.parent_id_walker = function(wofRecords) {
-  return function(wofRecord) {
-    // collect all the defined parents, starting with the current record
-    var parent;
-    var parents = [];
-    var parent_id = wofRecord.id;
-
-    while (!_.isUndefined(parent = wofRecords[parent_id])) {
-      parents.push(parent);
-      parent_id = parent.parent_id;
-    }
-
-    return [parents.filter(hasName)];
-
-  };
-
 };
 
 /*
