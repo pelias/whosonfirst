@@ -48,10 +48,6 @@ tape('readStreamComponents', function(test) {
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
-      },
-      {
-        id: 23456,
-        properties: {}
       }
     ];
 
@@ -75,7 +71,25 @@ tape('readStreamComponents', function(test) {
             'country_id': 23456
           }
         ]
-      },
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
+  test.test('missing fields should return undefined and empty array for hierarchies', function(t) {
+    var input = [
+      {
+        id: 23456,
+        properties: {}
+      }
+    ];
+
+    var expected = [
       {
         id: 23456,
         name: undefined,
