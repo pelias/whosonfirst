@@ -62,7 +62,7 @@ function getName(properties) {
 */
 module.exports.create = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
-    var base_record = {
+    var record = {
       id: json_object.id,
       name: getName(json_object.properties),
       abbreviation: json_object.properties['wof:abbreviation'],
@@ -73,29 +73,16 @@ module.exports.create = function map_fields_stream() {
       bounding_box: getBoundingBox(json_object.properties),
       iso2: json_object.properties['iso:country'],
       population: getPopulation(json_object.properties),
-      popularity: json_object.properties['misc:photo_sum']
+      popularity: json_object.properties['misc:photo_sum'],
+      hierarchies: _.get(json_object, 'properties.wof:hierarchy', [])
     };
 
     // use the QS altname if US county and available
-    if (isUsCounty(base_record, json_object.properties['qs:a2_alt'])) {
-      base_record.name = json_object.properties['qs:a2_alt'];
+    if (isUsCounty(record, json_object.properties['qs:a2_alt'])) {
+      record.name = json_object.properties['qs:a2_alt'];
     }
 
-    // if there's no hierarchy then just add the base record
-    if (_.isUndefined(json_object.properties['wof:hierarchy'])) {
-      this.push(base_record);
-
-    } else {
-      // otherwise, clone the base record for each hierarchy in the list and push
-      json_object.properties['wof:hierarchy'].forEach(function(hierarchy) {
-        var clone = _.clone(base_record, true);
-        clone.hierarchy = hierarchy;
-        this.push(clone);
-      }, this);
-
-    }
-
-    return callback();
+    return callback(null, record);
 
   });
 
