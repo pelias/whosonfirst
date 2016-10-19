@@ -30,16 +30,15 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'wof:hierarchy': [
             {
-              'parent_id': 12345
+              'country_id': 12345
             },
             {
-              'parent_id': 23456
+              'country_id': 23456
             }
           ],
           'iso:country': 'YZ',
@@ -49,10 +48,6 @@ tape('readStreamComponents', function(test) {
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
-      },
-      {
-        id: 23456,
-        properties: {}
       }
     ];
 
@@ -61,7 +56,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -71,18 +65,35 @@ tape('readStreamComponents', function(test) {
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchies: [
           {
-            'parent_id': 12345
+            'country_id': 12345
           },
           {
-            'parent_id': 23456
+            'country_id': 23456
           }
         ]
-      },
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
+  test.test('missing fields should return undefined and empty array for hierarchies', function(t) {
+    var input = [
+      {
+        id: 23456,
+        properties: {}
+      }
+    ];
+
+    var expected = [
       {
         id: 23456,
         name: undefined,
         place_type: undefined,
-        parent_id: undefined,
         lat: undefined,
         lon: undefined,
         iso2: undefined,
@@ -108,7 +119,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -125,7 +135,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -151,7 +160,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -167,7 +175,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -193,7 +200,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -209,7 +215,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -235,7 +240,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -251,7 +255,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -277,7 +280,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -293,7 +295,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -319,7 +320,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -334,7 +334,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -360,7 +359,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -375,7 +373,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -401,7 +398,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'US',
@@ -415,7 +411,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'qs:a2_alt value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'US',
@@ -441,7 +436,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'US'
@@ -454,7 +448,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'US',
@@ -480,7 +473,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'not US',
@@ -494,7 +486,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'not US',
@@ -520,7 +511,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'lbl:latitude': 14.141414,
@@ -536,7 +526,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 14.141414,
         lon: 23.232323,
         iso2: 'not US',
@@ -561,7 +550,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -576,7 +564,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: undefined,
@@ -601,7 +588,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -616,7 +602,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: undefined,
@@ -642,7 +627,6 @@ tape('readStreamComponents', function(test) {
           'wof:name': 'wof:name value',
           'wof:label': 'wof:label value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'lbl:bbox': ''
@@ -655,7 +639,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:label value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: undefined,

@@ -24,7 +24,6 @@ tape('readStream', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 2,
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'YZ',
@@ -43,7 +42,6 @@ tape('readStream', function(test) {
         properties: {
           'wof:name': 'name 2',
           'wof:placetype': 'place type 2',
-          'wof:parent_id': 3,
           'geom:latitude': 13.131313,
           'geom:longitude': 31.313131,
           'iso:country': 'XZ',
@@ -62,7 +60,6 @@ tape('readStream', function(test) {
         properties: {
           'wof:name': 'name 3',
           'wof:placetype': 'place type 3',
-          'wof:parent_id': 4,
           'geom:latitude': 14.141414,
           'geom:longitude': 41.414141,
           'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
@@ -86,7 +83,6 @@ tape('readStream', function(test) {
         id: 1234567,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 2,
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -101,7 +97,6 @@ tape('readStream', function(test) {
         id: 12345678,
         name: 'name 2',
         place_type: 'place type 2',
-        parent_id: 3,
         lat: 13.131313,
         lon: 31.313131,
         iso2: 'XZ',

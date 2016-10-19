@@ -67,7 +67,6 @@ module.exports.create = function map_fields_stream() {
       name: getName(json_object.properties),
       abbreviation: json_object.properties['wof:abbreviation'],
       place_type: json_object.properties['wof:placetype'],
-      parent_id: json_object.properties['wof:parent_id'],
       lat: getLat(json_object.properties),
       lon: getLon(json_object.properties),
       bounding_box: getBoundingBox(json_object.properties),
