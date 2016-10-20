@@ -1,9 +1,13 @@
 var child_process = require('child_process');
 var async = require('async');
+var fs = require('fs-extra');
 var os = require('os');
 
 var bundles = require('./src/bundleList');
 var config = require('pelias-config').generate();
+
+//ensure required directory structure exists
+fs.ensureDirSync(config.imports.whosonfirst.datapath + '/meta');
 
 // download one bundle for every other CPU (tar and bzip2 can both max out one core)
 // (but not more than 4, to keep things from getting too intense)
