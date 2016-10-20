@@ -11,7 +11,7 @@ pelias-whosonfirst is a tool used for importing [Who's On First data](https://wh
 
 ## Requirements
 
-Node 0.12 or higher is required
+Node.js 4 or higher is required
 
 ## Types
 

@@ -30,16 +30,15 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'wof:hierarchy': [
             {
-              'parent_id': 12345
+              'country_id': 12345
             },
             {
-              'parent_id': 23456
+              'country_id': 23456
             }
           ],
           'iso:country': 'YZ',
@@ -49,10 +48,6 @@ tape('readStreamComponents', function(test) {
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
-      },
-      {
-        id: 23456,
-        properties: {}
       }
     ];
 
@@ -61,7 +56,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -69,38 +63,45 @@ tape('readStreamComponents', function(test) {
         popularity: 87654,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
-        hierarchy: {
-          'parent_id': 12345
-        }
-      },
+        hierarchies: [
+          {
+            'country_id': 12345
+          },
+          {
+            'country_id': 23456
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
+  test.test('missing fields should return undefined and empty array for hierarchies', function(t) {
+    var input = [
       {
-        id: 12345,
-        name: 'name 1',
-        place_type: 'place type 1',
-        parent_id: 'parent id 1',
-        lat: 12.121212,
-        lon: 21.212121,
-        iso2: 'YZ',
-        population: 98765,
-        popularity: 87654,
-        abbreviation: 'XY',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
-        hierarchy: {
-          'parent_id': 23456
-        }
-      },
+        id: 23456,
+        properties: {}
+      }
+    ];
+
+    var expected = [
       {
         id: 23456,
         name: undefined,
         place_type: undefined,
-        parent_id: undefined,
         lat: undefined,
         lon: undefined,
         iso2: undefined,
         population: undefined,
         popularity: undefined,
         abbreviation: undefined,
-        bounding_box: undefined
+        bounding_box: undefined,
+        hierarchies: []
       }
     ];
 
@@ -118,14 +119,13 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'gn:population': 98765,
-          'zs:pop10': 87654,
+          'zs:pop10': 87654
         }
       }
     ];
@@ -135,7 +135,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -143,6 +142,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -160,13 +160,12 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'zs:pop10': 98765,
+          'zs:pop10': 98765
         }
       }
     ];
@@ -176,7 +175,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -184,6 +182,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -201,13 +200,12 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'qs:pop': 98765,
+          'qs:pop': 98765
         }
       }
     ];
@@ -217,7 +215,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -225,6 +222,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -242,13 +240,12 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'mz:population': 98765,
+          'mz:population': 98765
         }
       }
     ];
@@ -258,7 +255,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -266,6 +262,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -283,13 +280,12 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
-          'zs:pop10': 0,
+          'zs:pop10': 0
         }
       }
     ];
@@ -299,7 +295,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -307,6 +302,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -324,7 +320,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -339,7 +334,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -347,6 +341,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -364,7 +359,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 'parent id 1',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -379,7 +373,6 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 'parent id 1',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'YZ',
@@ -387,6 +380,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: []
       }
     ];
 
@@ -404,7 +398,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'US',
@@ -418,14 +411,14 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'qs:a2_alt value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'US',
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -443,7 +436,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'US'
@@ -456,14 +448,14 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'US',
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -481,7 +473,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'iso:country': 'not US',
@@ -495,14 +486,14 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: 'not US',
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -520,7 +511,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'lbl:latitude': 14.141414,
@@ -536,14 +526,14 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 14.141414,
         lon: 23.232323,
         iso2: 'not US',
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -560,7 +550,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -575,14 +564,14 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: undefined,
         population: undefined,
         popularity: undefined,
         bounding_box: '-14.691314,50.909613,2.771169,61.847886',
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -599,7 +588,6 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'county',
-          'wof:parent_id': 'parent id',
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
@@ -614,14 +602,14 @@ tape('readStreamComponents', function(test) {
         id: 12345,
         name: 'wof:name value',
         place_type: 'county',
-        parent_id: 'parent id',
         lat: 12.121212,
         lon: 21.212121,
         iso2: undefined,
         population: undefined,
         popularity: undefined,
         bounding_box: '',
-        abbreviation: undefined
+        abbreviation: undefined,
+        hierarchies: []
       }
     ];
 
@@ -630,4 +618,43 @@ tape('readStreamComponents', function(test) {
       t.end();
     });
   });
+
+  test.test('wof:label should be used for name when both it and wof:name are available', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:label': 'wof:label value',
+          'wof:placetype': 'county',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:label value',
+        place_type: 'county',
+        lat: 12.121212,
+        lon: 21.212121,
+        iso2: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '',
+        abbreviation: undefined,
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:label is used for name');
+      t.end();
+    });
+
+  });
+
 });

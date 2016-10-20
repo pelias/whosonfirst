@@ -41,11 +41,12 @@ tape('create', function(test) {
 
       var hierarchies_finder = function() {
         return [
-          wofRecords['1']
+          [
+            wofRecords['1']
+          ]
         ];
       };
 
-      // seed the parent_id_walker with wofRecords
       var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
       test_stream(input, docGenerator, function(err, actual) {
@@ -58,7 +59,7 @@ tape('create', function(test) {
 
   });
 
-  test.test('place_types that allow abbreviations should honor them when available', function(t) {
+  test.test('region and dependency (that allow abbreviations) should honor them when available', function(t) {
     ['region', 'dependency'].forEach(function(place_type) {
       var wofRecords = {
         1: {
@@ -87,11 +88,12 @@ tape('create', function(test) {
 
       var hierarchies_finder = function() {
         return [
-          wofRecords['1']
+          [
+            wofRecords['1']
+          ]
         ];
       };
 
-      // seed the parent_id_walker with wofRecords
       var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
       test_stream(input, docGenerator, function(err, actual) {
@@ -132,7 +134,6 @@ tape('create', function(test) {
       return [];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -144,32 +145,30 @@ tape('create', function(test) {
 
   test.test('wofRecord without bounding_box should have undefined bounding box in output', function(t) {
     var wofRecords = {
-      1: {
-        id: 1,
-        name: 'name 1',
-        lat: 12.121212,
-        lon: 21.212121,
-        parent_id: undefined,
-        place_type: 'continent'
-      }
+     1: {
+       id: 1,
+       name: 'name 1',
+       lat: 12.121212,
+       lon: 21.212121,
+       place_type: 'continent'
+     }
     };
 
     var input = [
-      wofRecords['1']
+     wofRecords['1']
     ];
 
     var expected = [
-      new Document( 'whosonfirst', 'continent', '1' )
-        .setName('default', 'name 1')
-        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+     new Document( 'whosonfirst', 'continent', '1' )
+       .setName('default', 'name 1')
+       .setCentroid({ lat: 12.121212, lon: 21.212121 })
     ];
 
     // don't care about hierarchies in this test
     var hierarchies_finder = function() {
-      return [];
+     return [];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -185,7 +184,6 @@ tape('create', function(test) {
         id: 1,
         lat: 12.121212,
         lon: 21.212121,
-        parent_id: undefined,
         place_type: 'continent',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchy: undefined
@@ -207,7 +205,6 @@ tape('create', function(test) {
       return [];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -243,11 +240,12 @@ tape('create', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -284,11 +282,12 @@ tape('create', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -327,11 +326,12 @@ tape('create', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -371,11 +371,12 @@ tape('create', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -414,11 +415,12 @@ tape('create', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -458,11 +460,12 @@ tape('create', function(test) {
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1']
+        [
+          wofRecords['1']
+        ]
       ];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
@@ -472,31 +475,28 @@ tape('create', function(test) {
 
   });
 
-  test.test('hierarchy should be walked to populate parentage', function(t) {
+  test.test('a document should be created for each available hierarchy', function(t) {
     var wofRecords = {
       1: {
         id: 1,
         name: 'neighbourhood name',
         lat: 12.121212,
         lon: 21.212121,
-        place_type: 'neighbourhood',
-        iso2: 'US'
+        place_type: 'neighbourhood'
       },
       2: {
         id: 2,
-        name: 'locality name',
+        name: 'country name 1',
         lat: 13.131313,
         lon: 31.313131,
-        place_type: 'locality',
-        iso2: 'US'
+        place_type: 'country'
       },
       3: {
         id: 3,
-        name: 'region name',
+        name: 'country name 2',
         lat: 14.141414,
         lon: 41.414141,
-        place_type: 'region',
-        iso2: 'US'
+        place_type: 'country'
       }
     };
 
@@ -511,19 +511,27 @@ tape('create', function(test) {
         .setName('default', 'neighbourhood name')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
         .addParent( 'neighbourhood', 'neighbourhood name', '1')
-        .addParent( 'locality', 'locality name', '2')
-        .addParent( 'region', 'region name', '3')
+        .addParent( 'country', 'country name 1', '2'),
+      new Document( 'whosonfirst', 'neighbourhood', '1')
+        .setName('default', 'neighbourhood name')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent( 'neighbourhood', 'neighbourhood name', '1')
+        .addParent( 'country', 'country name 2', '3')
     ];
 
     var hierarchies_finder = function() {
       return [
-        wofRecords['1'],
-        wofRecords['2'],
-        wofRecords['3']
+        [
+          wofRecords['1'],
+          wofRecords['2']
+        ],
+        [
+          wofRecords['1'],
+          wofRecords['3']
+        ]
       ];
     };
 
-    // seed the parent_id_walker with wofRecords
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
     test_stream(input, docGenerator, function(err, actual) {
