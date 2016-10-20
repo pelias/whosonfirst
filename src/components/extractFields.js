@@ -54,6 +54,13 @@ function getName(properties) {
   }
 }
 
+function getAbbreviation(properties) {
+  if (properties['wof:placetype'] === 'country' && properties['wof:country']) {
+    return properties['wof:country'];
+  }
+  return properties['wof:abbreviation'];
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -65,12 +72,11 @@ module.exports.create = function map_fields_stream() {
     var record = {
       id: json_object.id,
       name: getName(json_object.properties),
-      abbreviation: json_object.properties['wof:abbreviation'],
+      abbreviation: getAbbreviation(json_object.properties),
       place_type: json_object.properties['wof:placetype'],
       lat: getLat(json_object.properties),
       lon: getLon(json_object.properties),
       bounding_box: getBoundingBox(json_object.properties),
-      iso2: json_object.properties['iso:country'],
       population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum'],
       hierarchies: _.get(json_object, 'properties.wof:hierarchy', [])

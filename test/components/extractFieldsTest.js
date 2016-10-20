@@ -41,7 +41,6 @@ tape('readStreamComponents', function(test) {
               'country_id': 23456
             }
           ],
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'gn:population': 98765,
           'misc:photo_sum': 87654,
@@ -58,7 +57,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: 98765,
         popularity: 87654,
         abbreviation: 'XY',
@@ -96,7 +94,6 @@ tape('readStreamComponents', function(test) {
         place_type: undefined,
         lat: undefined,
         lon: undefined,
-        iso2: undefined,
         population: undefined,
         popularity: undefined,
         abbreviation: undefined,
@@ -122,7 +119,6 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'gn:population': 98765,
           'zs:pop10': 87654
@@ -137,7 +133,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: 98765,
         popularity: undefined,
         abbreviation: 'XY',
@@ -163,7 +158,6 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'zs:pop10': 98765
         }
@@ -177,7 +171,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: 98765,
         popularity: undefined,
         abbreviation: 'XY',
@@ -203,7 +196,6 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'qs:pop': 98765
         }
@@ -217,7 +209,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: 98765,
         popularity: undefined,
         abbreviation: 'XY',
@@ -243,7 +234,6 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'mz:population': 98765
         }
@@ -257,7 +247,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: 98765,
         popularity: undefined,
         abbreviation: 'XY',
@@ -283,7 +272,6 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'zs:pop10': 0
         }
@@ -297,7 +285,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: undefined,
         popularity: undefined,
         abbreviation: 'XY',
@@ -323,7 +310,6 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY'
         }
       }
@@ -336,7 +322,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: undefined,
         popularity: undefined,
         abbreviation: 'XY',
@@ -362,7 +347,6 @@ tape('readStreamComponents', function(test) {
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY'
         }
       }
@@ -375,7 +359,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         population: undefined,
         popularity: undefined,
         abbreviation: 'XY',
@@ -414,7 +397,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'county',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'US',
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
@@ -451,7 +433,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'county',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'US',
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
@@ -489,7 +470,6 @@ tape('readStreamComponents', function(test) {
         place_type: 'county',
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'not US',
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
@@ -526,7 +506,6 @@ tape('readStreamComponents', function(test) {
         place_type: undefined,
         lat: 14.141414,
         lon: 23.232323,
-        iso2: undefined,
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
@@ -562,7 +541,6 @@ tape('readStreamComponents', function(test) {
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
-        iso2: undefined,
         population: undefined,
         popularity: undefined,
         bounding_box: '-14.691314,50.909613,2.771169,61.847886',
@@ -598,7 +576,6 @@ tape('readStreamComponents', function(test) {
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
-        iso2: undefined,
         population: undefined,
         popularity: undefined,
         bounding_box: '',
@@ -634,7 +611,6 @@ tape('readStreamComponents', function(test) {
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
-        iso2: undefined,
         population: undefined,
         popularity: undefined,
         bounding_box: '',
@@ -645,6 +621,76 @@ tape('readStreamComponents', function(test) {
 
     test_stream(input, extractFields.create(), function(err, actual) {
       t.deepEqual(actual, expected, 'wof:label is used for name');
+      t.end();
+    });
+
+  });
+
+  test.test('wof:placetype=country should use wof:country value for abbreviation', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'country',
+          'wof:country': 'XY',
+          'wof:abbreviation': 'YZ'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'country',
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: 'XY',
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:country is used for abbreviation');
+      t.end();
+    });
+
+  });
+
+  test.test('wof:placetype=country should use wof:abbreviation value for abbreviation when wof:country is undefined', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'country',
+          'wof:country': undefined,
+          'wof:abbreviation': 'YZ'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'country',
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: 'YZ',
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:abbreviation is used for abbreviation');
       t.end();
     });
 
