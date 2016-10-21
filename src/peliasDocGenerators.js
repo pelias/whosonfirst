@@ -27,9 +27,9 @@ function assignField(hierarchyElement, wofDoc) {
       }
       break;
     case 'country':
-      // this is placetype=country, so lookup and set the iso3 from iso2
-      if (iso3166.is2(hierarchyElement.iso2)) {
-        var iso3 = iso3166.to3(hierarchyElement.iso2);
+      // this is placetype=country, so lookup and set the iso3 from abbreviation
+      if (iso3166.is2(hierarchyElement.abbreviation)) {
+        var iso3 = iso3166.to3(hierarchyElement.abbreviation);
 
         wofDoc.setAlpha3(iso3);
         wofDoc.addParent('country', hierarchyElement.name, hierarchyElement.id.toString(), iso3);

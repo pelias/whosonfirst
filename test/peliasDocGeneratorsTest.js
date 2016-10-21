@@ -21,8 +21,7 @@ tape('create', function(test) {
           name: 'record name',
           lat: 12.121212,
           lon: 21.212121,
-          place_type: place_type,
-          iso2: 'DE'
+          place_type: place_type
         }
       };
 
@@ -68,8 +67,7 @@ tape('create', function(test) {
           abbreviation: 'record abbreviation',
           lat: 12.121212,
           lon: 21.212121,
-          place_type: place_type,
-          iso2: 'DE'
+          place_type: place_type
         }
       };
 
@@ -214,7 +212,7 @@ tape('create', function(test) {
 
   });
 
-  test.test('record without iso2 should not set alpha3', function(t) {
+  test.test('country record without abbreviation should not set alpha3', function(t) {
     var wofRecords = {
       1: {
         id: 1,
@@ -255,7 +253,7 @@ tape('create', function(test) {
 
   });
 
-  test.test('record with unknown iso2 should not set alpha3', function(t) {
+  test.test('country record with unknown abbreviation should not set alpha3', function(t) {
     var wofRecords = {
       1: {
         id: 1,
@@ -263,7 +261,7 @@ tape('create', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         place_type: 'country',
-        iso2: 'this is not a known ISO2 country code'
+        abbreviation: 'this is not a known ISO2 country code'
       }
     };
 
@@ -305,7 +303,7 @@ tape('create', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         place_type: 'country',
-        iso2: 'US',
+        abbreviation: 'US',
         population: undefined
       }
     };
@@ -349,7 +347,7 @@ tape('create', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         place_type: 'country',
-        iso2: 'US',
+        abbreviation: 'US',
         population: 98765
       }
     };
@@ -394,7 +392,7 @@ tape('create', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         place_type: 'country',
-        iso2: 'US',
+        abbreviation: 'US',
         popularity: undefined
       }
     };
@@ -438,7 +436,7 @@ tape('create', function(test) {
         lat: 12.121212,
         lon: 21.212121,
         place_type: 'country',
-        iso2: 'US',
+        abbreviation: 'US',
         popularity: 87654
       }
     };
