@@ -24,10 +24,8 @@ tape('readStream', function(test) {
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
-          'wof:parent_id': 2,
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
-          'iso:country': 'YZ',
           'wof:abbreviation': 'XY',
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'gn:population': 98765,
@@ -43,10 +41,8 @@ tape('readStream', function(test) {
         properties: {
           'wof:name': 'name 2',
           'wof:placetype': 'place type 2',
-          'wof:parent_id': 3,
           'geom:latitude': 13.131313,
           'geom:longitude': 31.313131,
-          'iso:country': 'XZ',
           'wof:abbreviation': 'XY',
           'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
         }
@@ -62,7 +58,6 @@ tape('readStream', function(test) {
         properties: {
           'wof:name': 'name 3',
           'wof:placetype': 'place type 3',
-          'wof:parent_id': 4,
           'geom:latitude': 14.141414,
           'geom:longitude': 41.414141,
           'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
@@ -86,28 +81,26 @@ tape('readStream', function(test) {
         id: 1234567,
         name: 'name 1',
         place_type: 'place type 1',
-        parent_id: 2,
         lat: 12.121212,
         lon: 21.212121,
-        iso2: 'YZ',
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         population: 98765,
-        popularity: 87654
+        popularity: 87654,
+        hierarchies: []
       }, 'id 1234567 should have been loaded');
 
       t.deepEqual(wofAdminRecords[12345678], {
         id: 12345678,
         name: 'name 2',
         place_type: 'place type 2',
-        parent_id: 3,
         lat: 13.131313,
         lon: 31.313131,
-        iso2: 'XZ',
         abbreviation: 'XY',
         bounding_box: '-24.539906,34.815009,69.033946,81.85871',
         population: undefined,
-        popularity: undefined
+        popularity: undefined,
+        hierarchies: []
       }, 'id 12345678 should have been loaded');
 
       t.end();

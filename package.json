@@ -2,7 +2,7 @@
   "name": "pelias-whosonfirst",
   "version": "0.0.0-semantic-release",
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4.0.0"
   },
   "description": "Importer for Who's on First",
   "main": "index.js",
@@ -33,10 +33,10 @@
     "iso3166-1": "^0.2.5",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
-    "pelias-config": "2.1.0",
+    "pelias-config": "2.3.0",
     "pelias-dbclient": "2.0.0",
-    "pelias-logger": "0.0.8",
-    "pelias-model": "4.2.0",
+    "pelias-logger": "0.1.0",
+    "pelias-model": "4.3.0",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
     "through2-map": "^2.0.0",
