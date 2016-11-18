@@ -1,4 +1,5 @@
 require ('./components/extractFieldsTest.js');
+require ('./components/fileIsReadableTest.js');
 require ('./components/isActiveRecordTest.js');
 require ('./components/isValidIdTest.js');
 require ('./components/loadJSONTest.js');

@@ -6,6 +6,7 @@ var through2 = require('through2');
 var logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
 var isValidId = require('./components/isValidId');
+var fileIsReadable = require('./components/fileIsReadable');
 var loadJSON = require('./components/loadJSON');
 var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
 var isActiveRecord = require('./components/isActiveRecord');
@@ -58,6 +59,7 @@ function createReadStream(directory, types, wofAdminRecords) {
 
   return createMetaRecordStream(metaFilePaths, types)
   .pipe(isValidId.create())
+  .pipe(fileIsReadable.create(directory + 'data/'))
   .pipe(loadJSON.create(directory + 'data/'))
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
