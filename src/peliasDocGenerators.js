@@ -15,6 +15,7 @@ function assignField(hierarchyElement, wofDoc) {
     case 'county':
     case 'macrocounty':
     case 'macroregion':
+    case 'continent':
       // the above place_types don't have abbrevations (yet)
       wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
       break;
