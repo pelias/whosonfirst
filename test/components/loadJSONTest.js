@@ -22,13 +22,12 @@ function test_stream(input, testedStream, callback, error_callback) {
 }
 
 tape('loadJSON', function(test) {
-  test.test('json_parse_stream should return an empty object if the file is not json', function(t) {
+  test.test('json_parse_stream should throw error if the file is not json', function(t) {
     var input = [
       {
         path: 'this_is_not_json.json'
       }
     ];
-    var expected = [{}];
 
     var stderr = '';
 
@@ -40,8 +39,8 @@ tape('loadJSON', function(test) {
 
     fs.writeFileSync(input[0].path, 'this is not JSON');
 
-    test_stream(input, loadJSON.create('./'), function(err, actual) {
-      t.deepEqual(actual, expected, 'an empty object should have been returned');
+    test_stream(input, loadJSON.create('./'), undefined, function(err, actual) {
+      t.deepEqual(actual, undefined, 'an error should be thrown');
       t.ok(stderr.match(/SyntaxError: Unexpected token h/), 'error output present');
       t.end();
       unhook_intercept();
