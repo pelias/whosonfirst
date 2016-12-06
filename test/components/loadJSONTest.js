@@ -22,6 +22,30 @@ function test_stream(input, testedStream, callback, error_callback) {
 }
 
 tape('loadJSON', function(test) {
+  test.test('json_parse_stream should throw error if the file is not readable', function(t) {
+    var input = [
+      {
+        path: 'this_file_does_not_exist.json'
+      }
+    ];
+
+    var stderr = '';
+
+    // intercept/swallow stderr
+    var unhook_intercept = intercept(
+      function() { },
+      function(txt) { stderr += txt; return ''; }
+    );
+
+    test_stream(input, loadJSON.create('./'), undefined, function(err, actual) {
+      t.deepEqual(actual, undefined, 'an error should be thrown');
+      t.ok(stderr.match(/exception reading file/), 'error output present');
+      console.log(stderr);
+      unhook_intercept();
+      t.end();
+    });
+  });
+
   test.test('json_parse_stream should throw error if the file is not json', function(t) {
     var input = [
       {
@@ -42,9 +66,9 @@ tape('loadJSON', function(test) {
     test_stream(input, loadJSON.create('./'), undefined, function(err, actual) {
       t.deepEqual(actual, undefined, 'an error should be thrown');
       t.ok(stderr.match(/SyntaxError: Unexpected token h/), 'error output present');
-      t.end();
       unhook_intercept();
       fs.unlinkSync(input[0].path);
+      t.end();
     });
 
   });

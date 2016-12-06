@@ -7,6 +7,7 @@ module.exports.create = function create_json_parse_stream(dataDirectory) {
   return parallelStream(maxInFlight, function(record, enc, next) {
     fs.readFile(dataDirectory + record.path, function(err, data) {
       if (err) {
+        console.error('exception reading file ' + record.path);
         next(err);
       } else {
         try {
