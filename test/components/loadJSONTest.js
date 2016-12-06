@@ -5,11 +5,20 @@ var fs = require('fs');
 
 var loadJSON = require('../../src/components/loadJSON');
 
-function test_stream(input, testedStream, callback) {
+function test_stream(input, testedStream, callback, error_callback) {
+    if (!error_callback) {
+      error_callback = function() {};
+    }
+
+    if (!callback) {
+      callback = function() {};
+    }
+
     var input_stream = event_stream.readArray(input);
     var destination_stream = event_stream.writeArray(callback);
 
-    input_stream.pipe(testedStream).pipe(destination_stream);
+    input_stream.pipe(testedStream).on('error', error_callback)
+    .pipe(destination_stream);
 }
 
 tape('loadJSON', function(test) {
