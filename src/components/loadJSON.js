@@ -5,9 +5,10 @@ var maxInFlight = 10;
 
 module.exports.create = function create_json_parse_stream(dataDirectory) {
   return parallelStream(maxInFlight, function(record, enc, next) {
-    fs.readFile(dataDirectory + record.path, function(err, data) {
+    var full_file_path = dataDirectory + record.path;
+    fs.readFile(full_file_path, function(err, data) {
       if (err) {
-        console.error('exception reading file ' + record.path);
+        console.error('exception reading file ' + full_file_path);
         next(err);
       } else {
         try {
