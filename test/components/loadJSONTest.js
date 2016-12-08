@@ -5,21 +5,53 @@ var fs = require('fs');
 
 var loadJSON = require('../../src/components/loadJSON');
 
-function test_stream(input, testedStream, callback) {
+function test_stream(input, testedStream, callback, error_callback) {
+    if (!error_callback) {
+      error_callback = function() {};
+    }
+
+    if (!callback) {
+      callback = function() {};
+    }
+
     var input_stream = event_stream.readArray(input);
     var destination_stream = event_stream.writeArray(callback);
 
-    input_stream.pipe(testedStream).pipe(destination_stream);
+    input_stream.pipe(testedStream).on('error', error_callback)
+    .pipe(destination_stream);
 }
 
 tape('loadJSON', function(test) {
-  test.test('json_parse_stream should return an empty object if the file is not json', function(t) {
+  test.test('json_parse_stream should throw error if the file is not readable', function(t) {
+    var input = [
+      {
+        path: 'this_file_does_not_exist.json'
+      }
+    ];
+
+    var stderr = '';
+
+    // intercept/swallow stderr
+    var unhook_intercept = intercept(
+      function() { },
+      function(txt) { stderr += txt; return ''; }
+    );
+
+    test_stream(input, loadJSON.create('./'), undefined, function(err, actual) {
+      t.deepEqual(actual, undefined, 'an error should be thrown');
+      t.ok(stderr.match(/exception reading file/), 'error output present');
+      console.log(stderr);
+      unhook_intercept();
+      t.end();
+    });
+  });
+
+  test.test('json_parse_stream should throw error if the file is not json', function(t) {
     var input = [
       {
         path: 'this_is_not_json.json'
       }
     ];
-    var expected = [{}];
 
     var stderr = '';
 
@@ -31,12 +63,12 @@ tape('loadJSON', function(test) {
 
     fs.writeFileSync(input[0].path, 'this is not JSON');
 
-    test_stream(input, loadJSON.create('./'), function(err, actual) {
-      t.deepEqual(actual, expected, 'an empty object should have been returned');
+    test_stream(input, loadJSON.create('./'), undefined, function(err, actual) {
+      t.deepEqual(actual, undefined, 'an error should be thrown');
       t.ok(stderr.match(/SyntaxError: Unexpected token h/), 'error output present');
-      t.end();
       unhook_intercept();
       fs.unlinkSync(input[0].path);
+      t.end();
     });
 
   });
