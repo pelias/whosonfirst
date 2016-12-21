@@ -10,15 +10,8 @@ var bundles = require('./src/bundleList');
 // print a warning if an unsupported Node.JS version is used
 version_checker();
 
-function hasDataDirectory() {
-  return peliasConfig.imports.hasOwnProperty('whosonfirst') &&
-          peliasConfig.imports.whosonfirst.hasOwnProperty('datapath');
-}
-
-if (!hasDataDirectory()) {
-  console.error('Could not find whosonfirst data directory in configuration');
-  process.exit( 2 );
-}
+// validate the WOF importer configuration before continuing
+require('./src/configValidation').validate(peliasConfig.imports.whosonfirst);
 
 var directory = peliasConfig.imports.whosonfirst.datapath;
 
