@@ -34,7 +34,7 @@
     "joi": "^10.0.6",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
-    "pelias-config": "2.4.0",
+    "pelias-config": "2.6.0",
     "pelias-dbclient": "2.0.0",
     "pelias-logger": "0.1.0",
     "pelias-model": "4.4.0",
