@@ -661,6 +661,41 @@ tape('readStreamComponents', function(test) {
 
   });
 
+  test.test('wof:placetype=dependency should use wof:country value for abbreviation', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'dependency',
+          'wof:country': 'XY',
+          'wof:abbreviation': 'YZ'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'dependency',
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: 'XY',
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:country is used for abbreviation');
+      t.end();
+    });
+
+  });
+
   test.test('wof:placetype=country should use wof:abbreviation value for abbreviation when wof:country is undefined', function(t) {
     var input = [
       {
