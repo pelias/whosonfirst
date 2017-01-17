@@ -6,6 +6,9 @@ var os = require('os');
 var bundles = require('./src/bundleList');
 var config = require('pelias-config').generate();
 
+// validate the WOF importer configuration before continuing
+require('./src/configValidation').validate(config.imports.whosonfirst);
+
 //ensure required directory structure exists
 fs.ensureDirSync(config.imports.whosonfirst.datapath + '/meta');
 
@@ -17,12 +20,16 @@ var simultaneousDownloads = Math.max(4, Math.min(1, os.cpus().length / 2));
 
 /*
  * generate a shell command that does the following:
- * 1.) use curl to download the bundle, piping directly to tar (this avoids the need for intermediate storage of the archive file)
- * 2.) extract the archive so that the data directory goes in the right place and the README file is ignored (it just would get overridden by subsequent bundles)
+ * 1.) use curl to download the bundle, piping directly to tar (this avoids the
+       need for intermediate storage of the archive file)
+ * 2.) extract the archive so that the data directory goes in the right place and
+       the README file is ignored (it just would get overridden by subsequent bundles)
  * 3.) move the meta file to the meta files directory
  */
 function generateCommand(type, directory) {
-  return 'curl https://whosonfirst.mapzen.com/bundles/wof-' + type + '-latest-bundle.tar.bz2 | tar -xj --strip-components=1 --exclude=README.txt -C ' + directory + ' && mv ' + directory + '/wof-' + type  + '-latest.csv ' + directory + '/meta/';
+  return 'curl https://whosonfirst.mapzen.com/bundles/wof-' + type +
+          '-latest-bundle.tar.bz2 | tar -xj --strip-components=1 --exclude=README.txt -C ' +
+          directory + ' && mv ' + directory + '/wof-' + type  + '-latest.csv ' + directory + '/meta/';
 }
 
 var bundlesToDownload = bundles.hierarchyBundles;
@@ -33,7 +40,7 @@ if (config.imports.whosonfirst.importVenues) {
 
 // this should override the config setting since the hierarchy bundles are useful
 // on their own to allow other importers to start when using admin lookup
-if (process.argv[2] == '--admin-only') {
+if (process.argv[2] === '--admin-only') {
   bundlesToDownload = bundles.hierarchyBundles;
 }
 
