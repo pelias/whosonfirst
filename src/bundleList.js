@@ -6,7 +6,7 @@
 //
 // downloading can be done in any order, but the same order might as well be used
 var hierarchyBundles = [
-  // 'continent',
+  'continent',
   'country',
   'dependency',
   'disputed',
