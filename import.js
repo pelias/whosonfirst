@@ -1,4 +1,6 @@
-var peliasConfig = require( 'pelias-config' ).generate();
+// validate the WOF importer configuration before continuing
+var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
+
 var readStreamModule = require('./src/readStream');
 var importStream = require('./src/importStream');
 var peliasDbclient = require( 'pelias-dbclient' );
@@ -9,9 +11,6 @@ var bundles = require('./src/bundleList');
 
 // print a warning if an unsupported Node.JS version is used
 version_checker();
-
-// validate the WOF importer configuration before continuing
-require('./src/configValidation').validate(peliasConfig.imports.whosonfirst);
 
 var directory = peliasConfig.imports.whosonfirst.datapath;
 

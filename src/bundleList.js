@@ -3,10 +3,10 @@
 // for info on what each bundle type means
 //
 // venue bundle data has to be imported only after all hierarchy bundles are done
-// 
+//
 // downloading can be done in any order, but the same order might as well be used
 var hierarchyBundles = [
-  'continent',
+  // 'continent',
   'country',
   'dependency',
   'disputed',
