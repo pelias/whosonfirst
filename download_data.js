@@ -5,6 +5,7 @@ var async = require('async');
 var fs = require('fs-extra');
 var os = require('os');
 const url = require('url');
+const path = require('path');
 
 var bundles = require('./src/bundleList');
 var config = require('pelias-config').generate();
@@ -13,7 +14,7 @@ var config = require('pelias-config').generate();
 require('./src/configValidation').validate(config.imports.whosonfirst);
 
 //ensure required directory structure exists
-fs.ensureDirSync(config.imports.whosonfirst.datapath + '/meta');
+fs.ensureDirSync(path.join(config.imports.whosonfirst.datapath, 'meta'));
 
 // download one bundle for every other CPU (tar and bzip2 can both max out one core)
 // (but not more than 4, to keep things from getting too intense)
@@ -33,7 +34,7 @@ function generateCommand(bundle, directory) {
   const targetPath = bundle.replace('-bundle.tar.bz2', '.csv');
 
   return 'curl https://whosonfirst.mapzen.com/bundles/' + bundle + ' | tar -xj --strip-components=1 --exclude=README.txt -C ' +
-         directory + ' && mv ' + directory + targetPath + ' ' + directory + 'meta/';
+         directory + ' && mv ' + path.join(directory, targetPath) + ' ' + path.join(directory, 'meta');
 }
 
 bundles.generateBundleList((err, bundlesToDownload) => {
