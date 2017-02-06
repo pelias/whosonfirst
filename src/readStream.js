@@ -2,6 +2,7 @@ var combinedStream = require('combined-stream');
 var parse = require('csv-parse');
 var fs = require('fs');
 var through2 = require('through2');
+var path = require('path');
 
 var logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
@@ -15,9 +16,9 @@ var recordHasName = require('./components/recordHasName');
 /*
  * Convert a base directory and list of types into a list of meta file paths
  */
-function getMetaFilePaths(directory, types) {
-  return types.map(function(type) {
-    return directory + 'meta/wof-' + type + '-latest.csv';
+function getMetaFilePaths(directory, bundles) {
+  return bundles.map(function(bundle) {
+    return path.join(directory, 'meta', bundle);
   });
 }
 
