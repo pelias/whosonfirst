@@ -1,5 +1,5 @@
 var combinedStream = require('combined-stream');
-var parse = require('csv-parse');
+var parse = require('csv-stream');
 var fs = require('fs');
 var through2 = require('through2');
 var path = require('path');
@@ -27,8 +27,15 @@ function getMetaFilePaths(directory, bundles) {
  * within that CSV file.
  */
 function createOneMetaRecordStream(metaFilePath) {
+
+  // All of these arguments are optional.
+  var options = {
+    escapeChar : '"', // default is an empty string
+    enclosedChar : '"' // default is an empty string
+  };
+
   return fs.createReadStream(metaFilePath)
-    .pipe(parse({ delimiter: ',', columns: true }));
+    .pipe(parse.createStream(options));
 }
 
 /*
