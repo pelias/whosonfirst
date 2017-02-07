@@ -12,6 +12,7 @@ var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
 var isActiveRecord = require('./components/isActiveRecord');
 var extractFields = require('./components/extractFields');
 var recordHasName = require('./components/recordHasName');
+var notVisitingNullIsland = require('./components/recordNotVisitingNullIsland');
 
 /*
  * Convert a base directory and list of types into a list of meta file paths
@@ -70,6 +71,7 @@ function createReadStream(directory, types, wofAdminRecords) {
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
   .pipe(extractFields.create())
+  .pipe(notVisitingNullIsland.create())
   .pipe(recordHasName.create())
   .pipe(through2.obj(function(wofRecord, enc, callback) {
     // store admin records in memory to traverse the heirarchy
