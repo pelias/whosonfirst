@@ -19,7 +19,7 @@ const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
 fs.ensureDirSync(metaDataPath);
 
 // if the bundle index file is not found, download it
-if (!fs.exists(bundleIndexFile)) {
+if (!fs.statSync(bundleIndexFile).isFile()) {
   fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
 }
 
@@ -44,7 +44,7 @@ var hierarchyRoles = [
   'locality',
   'borough',
   'neighbourhood',
-  'postalcode-us'
+  'postalcode'
 ];
 
 var venueRoles = [
@@ -79,7 +79,10 @@ function getBundleList(callback) {
   }).on('close', () => {
 
     const bundles = combineBundleBuckets(roles, bundleBuckets);
+
+    console.log('Generated list of bundles:');
     console.log(bundles);
+
     callback(null, bundles);
 
   });
@@ -95,7 +98,7 @@ function initBundleBuckets(roles) {
 
 function sortBundleByBuckets(roles, bundle, bundleBuckets) {
   roles.forEach((role) => {
-    if (bundle.indexOf(role) !== -1) {
+    if (bundle.indexOf('-' + role + '-') !== -1) {
       bundleBuckets[role].push(bundle);
     }
   });
