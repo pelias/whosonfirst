@@ -73,7 +73,7 @@ function createReadStream(directory, types, wofAdminRecords) {
   .pipe(recordHasName.create())
   .pipe(through2.obj(function(wofRecord, enc, callback) {
     // store admin records in memory to traverse the heirarchy
-    if (wofRecord.place_type !== 'venue' && wofRecord.place_type !== 'postalcode') {
+    if (wofRecord.place_type !== 'venue') {
       wofAdminRecords[wofRecord.id] = wofRecord;
     }
 
