@@ -90,7 +90,11 @@ function setupDocument(record, hierarchy) {
     hierarchy.forEach(function(hierarchyElement) {
       assignField(hierarchyElement, wofDoc);
     });
+  }
 
+  // add self to parent hierarchy for postalcodes only
+  if (record.place_type === 'postalcode') {
+    assignField(record, wofDoc);
   }
 
   return wofDoc;
