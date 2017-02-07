@@ -4,6 +4,7 @@ const readline = require('readline');
 const fs = require('fs-extra');
 const path = require('path');
 const downloadFileSync = require('download-file-sync');
+const _ = require('lodash');
 
 const peliasConfig = require('pelias-config').generate();
 
@@ -43,7 +44,7 @@ var hierarchyRoles = [
   'locality',
   'borough',
   'neighbourhood',
-  'postalcode'
+  'postalcode-us'
 ];
 
 var venueRoles = [
@@ -60,21 +61,54 @@ function getBundleList(callback) {
     roles = roles.concat(venueRoles);
   }
 
-  const bundles = [];
+  // the order in which the bundles are list is critical to the correct execution
+  // of the admin hierarchy lookup code in whosonfirst importer,
+  // so in order to preserve the order specified by the roles list
+  // we must collect the bundles from the index files by buckets
+  // and then at the end merge all the buckets into a single ordered array
+  const bundleBuckets = initBundleBuckets(roles);
 
   const rl = readline.createInterface({
     input: fs.createReadStream(bundleIndexFile)
   });
 
   rl.on('line', (line) => {
-    roles.forEach((role) => {
-      if (line.indexOf(role) !== -1) {
-        bundles.push(line);
-      }
-    });
+
+    sortBundleByBuckets(roles, line, bundleBuckets);
+
   }).on('close', () => {
+
+    const bundles = combineBundleBuckets(roles, bundleBuckets);
+    console.log(bundles);
     callback(null, bundles);
+
   });
+}
+
+function initBundleBuckets(roles) {
+  const bundleBuckets = {};
+  roles.forEach( (role) => {
+    bundleBuckets[role] = [];
+  });
+  return bundleBuckets;
+}
+
+function sortBundleByBuckets(roles, bundle, bundleBuckets) {
+  roles.forEach((role) => {
+    if (bundle.indexOf(role) !== -1) {
+      bundleBuckets[role].push(bundle);
+    }
+  });
+}
+
+function combineBundleBuckets(roles, bundleBuckets) {
+  let bundles = [];
+
+  roles.forEach( (role) => {
+    bundles = _.concat(bundles, _.get(bundleBuckets, role, []));
+  });
+
+  return bundles;
 }
 
 module.exports.generateBundleList = getBundleList;
