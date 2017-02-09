@@ -38,7 +38,7 @@
     "pelias-config": "2.7.1",
     "pelias-dbclient": "2.0.0",
     "pelias-logger": "0.1.0",
-    "pelias-model": "git://github.com/pelias/model.git#add-postalcode",
+    "pelias-model": "3.7.0",
     "pelias-parallel-stream": "0.0.2",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
