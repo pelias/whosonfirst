@@ -1,3 +1,29 @@
+'use strict';
+
+const readline = require('readline');
+const fs = require('fs-extra');
+const path = require('path');
+const downloadFileSync = require('download-file-sync');
+const _ = require('lodash');
+
+const peliasConfig = require('pelias-config').generate();
+
+// validate the WOF importer configuration before continuing
+require('./configValidation').validate(peliasConfig.imports.whosonfirst);
+
+const metaDataPath = peliasConfig.imports.whosonfirst.datapath + '/meta';
+const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
+const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
+
+//ensure required directory structure exists
+fs.ensureDirSync(metaDataPath);
+
+// if the bundle index file is not found, download it
+if (!fs.statSync(bundleIndexFile).isFile()) {
+  fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
+}
+
+
 // the importer depends on hierarchy bundles being imported in highest to
 // lowest level order. See https://github.com/whosonfirst/whosonfirst-placetypes
 // for info on what each bundle type means
@@ -5,7 +31,7 @@
 // venue bundle data has to be imported only after all hierarchy bundles are done
 // 
 // downloading can be done in any order, but the same order might as well be used
-var hierarchyBundles = [
+var hierarchyRoles = [
   'continent',
   'country',
   'dependency',
@@ -17,286 +43,75 @@ var hierarchyBundles = [
   'localadmin',
   'locality',
   'borough',
-  'neighbourhood'
+  'neighbourhood',
+  'postalcode'
 ];
 
-var venueBundles = [
-  'venue-xn',
-  'venue-un',
-  'venue-ge',
-  'venue-so',
-  'venue-kz',
-  'venue-sd',
-  'venue-sm',
-  'venue-mo',
-  'venue-bh',
-  'venue-bt',
-  'venue-ls',
-  'venue-pa',
-  'venue-mm',
-  'venue-sx',
-  'venue-va',
-  'venue-gh',
-  'venue-iq',
-  'venue-id',
-  'venue-om',
-  'venue-bf',
-  'venue-jm',
-  'venue-eh',
-  'venue-mg',
-  'venue-tz',
-  'venue-af',
-  'venue-kr',
-  'venue-gf',
-  'venue-bw',
-  'venue-la',
-  'venue-zw',
-  'venue-cm',
-  'venue-bj',
-  'venue-lr',
-  'venue-sa',
-  'venue-et',
-  'venue-km',
-  'venue-ec',
-  'venue-vu',
-  'venue-ne',
-  'venue-tt',
-  'venue-ao',
-  'venue-bi',
-  'venue-gq',
-  'venue-th',
-  'venue-aw',
-  'venue-qa',
-  'venue-rw',
-  'venue-mv',
-  'venue-kz',
-  'venue-lk',
-  'venue-il',
-  'venue-ve',
-  'venue-dj',
-  'venue-hn',
-  'venue-td',
-  'venue-ke',
-  'venue-pw',
-  'venue-gd',
-  'venue-bs',
-  'venue-ad',
-  'venue-pg',
-  'venue-re',
-  'venue-py',
-  'venue-mu',
-  'venue-kh',
-  'venue-ir',
-  'venue-sn',
-  'venue-lc',
-  'venue-pm',
-  'venue-mk',
-  'venue-so',
-  'venue-mw',
-  'venue-gt',
-  'venue-cf',
-  'venue-tr',
-  'venue-by',
-  'venue-gy',
-  'venue-kw',
-  'venue-tw',
-  'venue-al',
-  'venue-ga',
-  'venue-sy',
-  'venue-gp',
-  'venue-jo',
-  'venue-jp',
-  'venue-fm',
-  'venue-ht',
-  'venue-cy',
-  'venue-mn',
-  'venue-cw',
-  'venue-sr',
-  'venue-ci',
-  'venue-dz',
-  'venue-to',
-  'venue-im',
-  'venue-np',
-  'venue-sl',
-  'venue-in',
-  'venue-bd',
-  'venue-hk',
-  'venue-cr',
-  'venue-bb',
-  'venue-cc',
-  'venue-ye',
-  'venue-dm',
-  'venue-ar',
-  'venue-ph',
-  'venue-uy',
-  'venue-tj',
-  'venue-co',
-  'venue-pe',
-  'venue-yt',
-  'venue-ag',
-  'venue-mq',
-  'venue-lb',
-  'venue-na',
-  'venue-cg',
-  'venue-sv',
-  'venue-gg',
-  'venue-kn',
-  'venue-ml',
-  'venue-zm',
-  'venue-vc',
-  'venue-bz',
-  'venue-ae',
-  'venue-eg',
-  'venue-tl',
-  'venue-sb',
-  'venue-je',
-  'venue-ni',
-  'venue-gm',
-  'venue-sg',
-  'venue-tv',
-  'venue-ba',
-  'venue-bo',
-  'venue-ug',
-  'venue-ly',
-  'venue-sz',
-  'venue-kp',
-  'venue-cd',
-  'venue-uz',
-  'venue-tg',
-  'venue-ss',
-  'venue-pk',
-  'venue-sc',
-  'venue-mh',
-  'venue-me',
-  'venue-tm',
-  'venue-cu',
-  'venue-mr',
-  'venue-ws',
-  'venue-ru',
-  'venue-gn',
-  'venue-ma',
-  'venue-cn',
-  'venue-tn',
-  'venue-ki',
-  'venue-do',
-  'venue-aq',
-  'venue-az',
-  'venue-cv',
-  'venue-an',
-  'venue-mz',
-  'venue-xs',
-  'venue-ng',
-  'venue-my',
-  'venue-nr',
-  'venue-bn',
-  'venue-sd',
-  'venue-fj',
-  'venue-gw',
-  'venue-kg',
-  'venue-vn',
-  'venue-st',
-  'venue-am',
-  'venue-er',
-  'venue-at',
-  'venue-au',
-  'venue-be',
-  'venue-bg',
-  'venue-br',
-  'venue-ca',
-  'venue-ch',
-  'venue-cl',
-  'venue-cz',
-  'venue-de',
-  'venue-dk',
-  'venue-es',
-  'venue-ee',
-  'venue-fi',
-  'venue-fr',
-  'venue-gb',
-  'venue-ge',
-  'venue-gr',
-  'venue-gl',
-  'venue-hr',
-  'venue-hu',
-  'venue-ie',
-  'venue-is',
-  'venue-it',
-  'venue-xk',
-  'venue-li',
-  'venue-lt',
-  'venue-lu',
-  'venue-lv',
-  'venue-mc',
-  'venue-md',
-  'venue-mx',
-  'venue-mt',
-  'venue-nl',
-  'venue-no',
-  'venue-nz',
-  'venue-pl',
-  'venue-pt',
-  'venue-ps',
-  'venue-ro',
-  'venue-rs',
-  'venue-sm',
-  'venue-sk',
-  'venue-si',
-  'venue-se',
-  'venue-us-in',
-  'venue-us-ca',
-  'venue-us-mn',
-  'venue-us-al',
-  'venue-us-ar',
-  'venue-us-md',
-  'venue-us-co',
-  'venue-us-pa',
-  'venue-us-ct',
-  'venue-us-de',
-  'venue-us-dc',
-  'venue-us-hi',
-  'venue-us-ne',
-  'venue-us-ma',
-  'venue-us-va',
-  'venue-us-id',
-  'venue-us-ia',
-  'venue-us-az',
-  'venue-us-tn',
-  'venue-us-ks',
-  'venue-us-ky',
-  'venue-us-la',
-  'venue-us-ms',
-  'venue-us-ok',
-  'venue-us-ri',
-  'venue-us-mo',
-  'venue-us-nc',
-  'venue-us-oh',
-  'venue-us-wi',
-  'venue-us-mt',
-  'venue-us-ak',
-  'venue-us-nv',
-  'venue-us-nh',
-  'venue-us-nm',
-  'venue-us-nd',
-  'venue-us-fl',
-  'venue-us-mi',
-  'venue-us-me',
-  'venue-us-wa',
-  'venue-us-ga',
-  'venue-us-sc',
-  'venue-us-sd',
-  'venue-us-vt',
-  'venue-us-nj',
-  'venue-us-wv',
-  'venue-us-il',
-  'venue-us-or',
-  'venue-us-wy',
-  'venue-us-ny',
-  'venue-ua',
-  'venue-za'
+var venueRoles = [
+  'venue'
 ];
 
-module.exports = {
-  hierarchyBundles: hierarchyBundles,
-  venueBundles: venueBundles,
-  allBundles: hierarchyBundles.concat(venueBundles)
-};
+function getBundleList(callback) {
+
+  let roles = hierarchyRoles;
+
+  // admin-only env var should override the config setting since the hierarchy bundles are useful
+  // on their own to allow other importers to start when using admin lookup
+  if (peliasConfig.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only') {
+    roles = roles.concat(venueRoles);
+  }
+
+  // the order in which the bundles are list is critical to the correct execution
+  // of the admin hierarchy lookup code in whosonfirst importer,
+  // so in order to preserve the order specified by the roles list
+  // we must collect the bundles from the index files by buckets
+  // and then at the end merge all the buckets into a single ordered array
+  const bundleBuckets = initBundleBuckets(roles);
+
+  const rl = readline.createInterface({
+    input: fs.createReadStream(bundleIndexFile)
+  });
+
+  rl.on('line', (line) => {
+
+    sortBundleByBuckets(roles, line, bundleBuckets);
+
+  }).on('close', () => {
+
+    const bundles = combineBundleBuckets(roles, bundleBuckets);
+
+    console.log('Generated list of bundles:');
+    console.log(bundles);
+
+    callback(null, bundles);
+
+  });
+}
+
+function initBundleBuckets(roles) {
+  const bundleBuckets = {};
+  roles.forEach( (role) => {
+    bundleBuckets[role] = [];
+  });
+  return bundleBuckets;
+}
+
+function sortBundleByBuckets(roles, bundle, bundleBuckets) {
+  roles.forEach((role) => {
+    if (bundle.indexOf('-' + role + '-') !== -1) {
+      bundleBuckets[role].push(bundle);
+    }
+  });
+}
+
+function combineBundleBuckets(roles, bundleBuckets) {
+  let bundles = [];
+
+  roles.forEach( (role) => {
+    bundles = _.concat(bundles, _.get(bundleBuckets, role, []));
+  });
+
+  return bundles;
+}
+
+module.exports.generateBundleList = getBundleList;

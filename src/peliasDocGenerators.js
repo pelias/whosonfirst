@@ -15,7 +15,8 @@ function assignField(hierarchyElement, wofDoc) {
     case 'county':
     case 'macrocounty':
     case 'macroregion':
-      // the above place_types don't have abbreviations (yet)
+    case 'postalcode':
+      // the above place_types don't have abbrevations (yet)
       wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
       break;
     case 'region':
@@ -92,7 +93,11 @@ function setupDocument(record, hierarchy) {
     hierarchy.forEach(function(hierarchyElement) {
       assignField(hierarchyElement, wofDoc);
     });
+  }
 
+  // add self to parent hierarchy for postalcodes only
+  if (record.place_type === 'postalcode') {
+    assignField(record, wofDoc);
   }
 
   return wofDoc;
