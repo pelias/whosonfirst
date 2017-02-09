@@ -59,46 +59,129 @@ tape('create', function(test) {
 
   });
 
-  test.test('region and dependency (that allow abbreviations) should honor them when available', function(t) {
-    ['region', 'dependency'].forEach(function(place_type) {
-      var wofRecords = {
-        1: {
-          id: 1,
-          name: 'record name',
-          abbreviation: 'record abbreviation',
-          lat: 12.121212,
-          lon: 21.212121,
-          place_type: place_type
-        }
-      };
+  test.test('region should honor abbreviations when available', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'record name',
+        abbreviation: 'record abbreviation',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'region'
+      }
+    };
 
-      // extract all the values from wofRecords to an array since that's how test_stream works
-      // sure, this could be done with map, but this is clearer
-      var input = [
-        wofRecords['1']
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'region', '1')
+        .setName('default', 'record name')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent( 'region', 'record name', '1', 'record abbreviation')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        [
+          wofRecords['1']
+        ]
       ];
+    };
 
-      var expected = [
-        new Document( 'whosonfirst', place_type, '1')
-          .setName('default', 'record name')
-          .setCentroid({ lat: 12.121212, lon: 21.212121 })
-          .addParent( place_type, 'record name', '1', 'record abbreviation')
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
+    });
+
+    t.end();
+
+  });
+
+  test.test('dependency with unknown abbreviation should not set', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'record name',
+        abbreviation: 'XY',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'dependency'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'dependency', '1')
+        .setName('default', 'record name')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent( 'dependency', 'record name', '1')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        [
+          wofRecords['1']
+        ]
       ];
+    };
 
-      var hierarchies_finder = function() {
-        return [
-          [
-            wofRecords['1']
-          ]
-        ];
-      };
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
 
-      var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
+    });
 
-      test_stream(input, docGenerator, function(err, actual) {
-        t.deepEqual(actual, expected, 'should have returned true');
-      });
+    t.end();
 
+  });
+
+  test.test('dependency with abbreviation known as iso3 should use iso3 as abbreviation', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'record name',
+        abbreviation: 'PR',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'dependency'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'dependency', '1')
+        .setName('default', 'record name')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent( 'dependency', 'record name', '1', 'PRI')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        [
+          wofRecords['1']
+        ]
+      ];
+    };
+
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
     });
 
     t.end();
