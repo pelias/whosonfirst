@@ -1,7 +1,8 @@
 var combinedStream = require('combined-stream');
-var parse = require('csv-parse');
+var parse = require('csv-stream');
 var fs = require('fs');
 var through2 = require('through2');
+var path = require('path');
 
 var logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
@@ -11,13 +12,14 @@ var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
 var isActiveRecord = require('./components/isActiveRecord');
 var extractFields = require('./components/extractFields');
 var recordHasName = require('./components/recordHasName');
+var notVisitingNullIsland = require('./components/recordNotVisitingNullIsland');
 
 /*
  * Convert a base directory and list of types into a list of meta file paths
  */
-function getMetaFilePaths(directory, types) {
-  return types.map(function(type) {
-    return directory + 'meta/wof-' + type + '-latest.csv';
+function getMetaFilePaths(directory, bundles) {
+  return bundles.map(function(bundle) {
+    return path.join(directory, 'meta', bundle);
   });
 }
 
@@ -26,8 +28,15 @@ function getMetaFilePaths(directory, types) {
  * within that CSV file.
  */
 function createOneMetaRecordStream(metaFilePath) {
+
+  // All of these arguments are optional.
+  var options = {
+    escapeChar : '"', // default is an empty string
+    enclosedChar : '"' // default is an empty string
+  };
+
   return fs.createReadStream(metaFilePath)
-    .pipe(parse({ delimiter: ',', columns: true }));
+    .pipe(parse.createStream(options));
 }
 
 /*
@@ -62,10 +71,11 @@ function createReadStream(directory, types, wofAdminRecords) {
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
   .pipe(extractFields.create())
+  .pipe(notVisitingNullIsland.create())
   .pipe(recordHasName.create())
   .pipe(through2.obj(function(wofRecord, enc, callback) {
     // store admin records in memory to traverse the heirarchy
-    if (wofRecord.place_type !== 'venue') {
+    if (wofRecord.place_type !== 'venue' && wofRecord.place_type !== 'postalcode') {
       wofAdminRecords[wofRecord.id] = wofRecord;
     }
 

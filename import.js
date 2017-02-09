@@ -1,3 +1,5 @@
+'use strict';
+
 var peliasConfig = require( 'pelias-config' ).generate();
 var readStreamModule = require('./src/readStream');
 var importStream = require('./src/importStream');
@@ -23,21 +25,24 @@ if (directory.slice(-1) !== '/') {
 // of other, lower admin records as well as venues
 var wofAdminRecords = {};
 
-var bundlesToImport = bundles.hierarchyBundles;
+bundles.generateBundleList((err, bundlesToImport) => {
 
-if (peliasConfig.imports.whosonfirst.importVenues) {
-  bundlesToImport = bundlesToImport.concat(bundles.venueBundles);
-}
+  if (err) {
+    throw new Error(err.message);
+  }
 
-var readStream = readStreamModule.create(directory, bundlesToImport, wofAdminRecords);
+  const bundlesMetaFiles = bundlesToImport.map( (bundle) => { return bundle.replace('-bundle.tar.bz2', '.csv'); });
 
-// how to convert WOF records to Pelias Documents
-var documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
+  var readStream = readStreamModule.create(directory, bundlesMetaFiles, wofAdminRecords);
 
-// the final destination of Pelias Documents
-var dbClientStream = peliasDbclient();
+  // how to convert WOF records to Pelias Documents
+  var documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
 
-// import WOF records into ES
-importStream(readStream, documentGenerator, dbClientStream, function() {
-  console.log('import finished');
+  // the final destination of Pelias Documents
+  var dbClientStream = peliasDbclient();
+
+  // import WOF records into ES
+  importStream(readStream, documentGenerator, dbClientStream, function () {
+    console.log('import finished');
+  });
 });

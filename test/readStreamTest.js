@@ -72,7 +72,7 @@ tape('readStream', function(test) {
     setupTestEnvironment();
 
     var wofAdminRecords = {};
-    var stream = readStream.create('./tmp/', ['type1', 'type2'], wofAdminRecords);
+    var stream = readStream.create('./tmp/', ['wof-type1-latest.csv', 'wof-type2-latest.csv'], wofAdminRecords);
 
     stream.pipe(sink.obj(function() {})).on('finish', function() {
       t.equals(Object.keys(wofAdminRecords).length, 2, 'there should be 2 records loaded');
