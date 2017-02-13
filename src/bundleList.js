@@ -19,7 +19,7 @@ const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
 fs.ensureDirSync(metaDataPath);
 
 // if the bundle index file is not found, download it
-if (!fs.statSync(bundleIndexFile).isFile()) {
+if (!fs.existsSync(bundleIndexFile)) {
   fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
 }
 
