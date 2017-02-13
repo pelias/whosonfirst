@@ -80,9 +80,6 @@ function getBundleList(callback) {
 
     const bundles = combineBundleBuckets(roles, bundleBuckets);
 
-    console.log('Generated list of bundles:');
-    console.log(bundles);
-
     callback(null, bundles);
 
   });
