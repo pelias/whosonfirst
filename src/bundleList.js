@@ -19,7 +19,7 @@ const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
 fs.ensureDirSync(metaDataPath);
 
 // if the bundle index file is not found, download it
-if (!fs.statSync(bundleIndexFile).isFile()) {
+if (!fs.existsSync(bundleIndexFile)) {
   fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
 }
 
@@ -79,9 +79,6 @@ function getBundleList(callback) {
   }).on('close', () => {
 
     const bundles = combineBundleBuckets(roles, bundleBuckets);
-
-    console.log('Generated list of bundles:');
-    console.log(bundles);
 
     callback(null, bundles);
 
