@@ -15,27 +15,32 @@ function assignField(hierarchyElement, wofDoc) {
     case 'county':
     case 'macrocounty':
     case 'macroregion':
+    case 'postalcode':
       // the above place_types don't have abbrevations (yet)
       wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
       break;
     case 'region':
-    case 'dependency':
       if (hierarchyElement.hasOwnProperty('abbreviation')) {
         wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString(), hierarchyElement.abbreviation);
       } else {
         wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
       }
       break;
+    case 'dependency':
     case 'country':
-      // this is placetype=country, so lookup and set the iso3 from abbreviation
+      // this is country or dependency, so lookup and set the iso3 from abbreviation
       if (iso3166.is2(hierarchyElement.abbreviation)) {
         var iso3 = iso3166.to3(hierarchyElement.abbreviation);
 
-        wofDoc.setAlpha3(iso3);
-        wofDoc.addParent('country', hierarchyElement.name, hierarchyElement.id.toString(), iso3);
+        // only set iso3 for country records
+        if (hierarchyElement.place_type === 'country') {
+          wofDoc.setAlpha3(iso3);
+        }
+        wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString(), iso3);
 
       } else {
-        wofDoc.addParent('country', hierarchyElement.name, hierarchyElement.id.toString());
+        // there's no known abbreviation
+        wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
 
       }
 
@@ -88,7 +93,11 @@ function setupDocument(record, hierarchy) {
     hierarchy.forEach(function(hierarchyElement) {
       assignField(hierarchyElement, wofDoc);
     });
+  }
 
+  // add self to parent hierarchy for postalcodes only
+  if (record.place_type === 'postalcode') {
+    assignField(record, wofDoc);
   }
 
   return wofDoc;
