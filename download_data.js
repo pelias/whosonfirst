@@ -8,10 +8,7 @@ const url = require('url');
 const path = require('path');
 
 var bundles = require('./src/bundleList');
-var config = require('pelias-config').generate();
-
-// validate the WOF importer configuration before continuing
-require('./src/configValidation').validate(config.imports.whosonfirst);
+var config = require( 'pelias-config' ).generate(require('./schema'));
 
 //ensure required directory structure exists
 fs.ensureDirSync(path.join(config.imports.whosonfirst.datapath, 'meta'));
