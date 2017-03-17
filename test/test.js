@@ -8,4 +8,4 @@ require ('./hierarchyFinderTest.js');
 require ('./importStreamTest.js');
 require ('./peliasDocGeneratorsTest.js');
 require ('./readStreamTest.js');
-require ('./configValidationTest.js');
+require ('./schemaTest.js');
