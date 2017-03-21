@@ -48,7 +48,7 @@ The following configuration options are supported by this importer.
 
 | key | required | default | description |
 | --- | --- | --- | --- |
-| `imports.whosonfirst.datapath` | yes | | full path to the root of where `Who's On First` data has been downloaded |
+| `imports.whosonfirst.datapath` | yes | | full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data) |
 | `imports.whosonfirst.importPostalcodes` | no | false | set to `true` to include postalcodes in the data download and import process |
 | `imports.whosonfirst.importVenues` | no | false | set to `true` to include venues in the data download and import process |
 
@@ -62,7 +62,7 @@ npm run download
 
 ## or
 
-npm run download -- --admin-only # to only download hierarchy data, and not venues and postalcodes (venues require around 100GB of disk space)
+npm run download -- --admin-only # to only download hierarchy data, without venues or postalcodes
 ```
 
 **Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
