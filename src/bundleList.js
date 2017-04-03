@@ -6,10 +6,7 @@ const path = require('path');
 const downloadFileSync = require('download-file-sync');
 const _ = require('lodash');
 
-const peliasConfig = require('pelias-config').generate();
-
-// validate the WOF importer configuration before continuing
-require('./configValidation').validate(peliasConfig.imports.whosonfirst);
+const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 
 const metaDataPath = peliasConfig.imports.whosonfirst.datapath + '/meta';
 const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
@@ -43,7 +40,10 @@ var hierarchyRoles = [
   'localadmin',
   'locality',
   'borough',
-  'neighbourhood',
+  'neighbourhood'
+];
+
+var postalcodeRoles = [
   'postalcode'
 ];
 
@@ -59,6 +59,10 @@ function getBundleList(callback) {
   // on their own to allow other importers to start when using admin lookup
   if (peliasConfig.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only') {
     roles = roles.concat(venueRoles);
+  }
+
+  if (peliasConfig.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only') {
+    roles = roles.concat(postalcodeRoles);
   }
 
   // the order in which the bundles are list is critical to the correct execution
