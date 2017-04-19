@@ -8,18 +8,20 @@ function isUsCounty(base_record, wof_country, qs_a2_alt) {
           !_.isUndefined(qs_a2_alt);
 }
 
-// this function favors gn:population when available, falling back to zs:pop10
-//  when available and > 0
-function getPopulation(properties) {
-  if(properties['mz:population']){
-    return properties['mz:population'];
-  } else if (properties['gn:population']) {
-    return properties['gn:population'];
-  } else if (properties['zs:pop10']) {
-    return properties['zs:pop10'];
-  } else if(properties['qs:pop']){
-    return properties['qs:pop'];
-  }
+// this function favors mz:population when available, falling back to other properties.
+// see: https://github.com/whosonfirst-data/whosonfirst-data/issues/240#issuecomment-294907374
+function getPopulation( props ) {
+       if( props['mz:population'] ){          return props['mz:population']; }
+  else if( props['wof:population'] ){         return props['wof:population']; }
+  else if( props['wk:population'] ){          return props['wk:population']; }
+  else if( props['gn:population'] ){          return props['gn:population']; }
+  else if( props['gn:pop'] ){                 return props['gn:pop']; }
+  else if( props['qs:pop'] ){                 return props['qs:pop']; }
+  else if( props['qs:gn_pop'] ){              return props['qs:gn_pop']; }
+  else if( props['zs:pop10'] ){               return props['zs:pop10']; }
+  else if( props['meso:pop'] ){               return props['meso:pop']; }
+  else if( props['statoids:population'] ){    return props['statoids:population']; }
+  else if( props['ne:pop_est'] ){             return props['ne:pop_est']; }
 }
 
 function getLat(properties) {
