@@ -32,6 +32,7 @@ Currently, the supported hierarchy types are:
 - localadmin
 - locality
 - macrocounty
+- macrohood
 - macroregion
 - neighbourhood
 - region
