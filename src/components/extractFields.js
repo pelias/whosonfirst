@@ -1,6 +1,21 @@
 var through2 = require('through2');
 var _ = require('lodash');
 
+// hierarchy in importance-descending order of population fields
+const population_hierarchy = [
+  'mz:population',
+  'wof:population',
+  'wk:population',
+  'gn:population',
+  'gn:pop',
+  'qs:pop',
+  'qs:gn_pop',
+  'zs:pop10',
+  'meso:pop',
+  'statoids:population',
+  'ne:pop_est'
+];
+
 // this function is used to verify that a US county QS altname is available
 function isUsCounty(base_record, wof_country, qs_a2_alt) {
   return 'US' === wof_country &&
@@ -11,17 +26,11 @@ function isUsCounty(base_record, wof_country, qs_a2_alt) {
 // this function favors mz:population when available, falling back to other properties.
 // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/240#issuecomment-294907374
 function getPopulation( props ) {
-       if( props['mz:population'] ){          return props['mz:population']; }
-  else if( props['wof:population'] ){         return props['wof:population']; }
-  else if( props['wk:population'] ){          return props['wk:population']; }
-  else if( props['gn:population'] ){          return props['gn:population']; }
-  else if( props['gn:pop'] ){                 return props['gn:pop']; }
-  else if( props['qs:pop'] ){                 return props['qs:pop']; }
-  else if( props['qs:gn_pop'] ){              return props['qs:gn_pop']; }
-  else if( props['zs:pop10'] ){               return props['zs:pop10']; }
-  else if( props['meso:pop'] ){               return props['meso:pop']; }
-  else if( props['statoids:population'] ){    return props['statoids:population']; }
-  else if( props['ne:pop_est'] ){             return props['ne:pop_est']; }
+  // extract all the population values as numbers and find the first non-negative value
+  // returns undefined if there are no such values
+  return population_hierarchy.
+          map((field) => { return _.toNumber(props[field]); }).
+          find((val) => { return val >= 0; } );
 }
 
 function getLat(properties) {
