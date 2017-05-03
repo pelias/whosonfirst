@@ -6,6 +6,10 @@ const temp = require('temp').track();
 const proxyquire = require('proxyquire').noCallThru();
 
 function test_stream(input, testedStream, callback, error_callback) {
+    if (!error_callback) {
+      error_callback = () => {};
+    }
+
     if (!callback) {
       callback = function() {};
     }
@@ -15,7 +19,7 @@ function test_stream(input, testedStream, callback, error_callback) {
 
     input_stream
       .pipe(testedStream)
-      .on('error', error_callback || () => {})
+      .on('error', error_callback)
       .pipe(destination_stream);
 
 }
