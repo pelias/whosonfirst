@@ -8,7 +8,7 @@ const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
 module.exports.create = function create(wofRoot, missingFilesAreFatal) {
   return parallelStream(maxInFlight, function(record, enc, next) {
-    const full_file_path = [ wofRoot, 'data', record.path ].join(path.sep);
+    const full_file_path = path.join(wofRoot, 'data', record.path);
 
     fs.readFile(full_file_path, (err, data) => {
       if (err) {
@@ -28,7 +28,7 @@ module.exports.create = function create(wofRoot, missingFilesAreFatal) {
                       'has been cloned without using git-lfs, please see instructions ' +
                       'here: https://github.com/whosonfirst/whosonfirst-data#git-and-large-files');
         next(parse_err);
-        
+
       }
 
     });

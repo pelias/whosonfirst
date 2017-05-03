@@ -23,10 +23,10 @@ function test_stream(input, testedStream, callback, error_callback) {
 tape('loadJSON tests', (test) => {
   test.test('json should be loaded from file', (t) => {
     temp.mkdir('tmp_wof_data', (err, temp_dir) => {
-      fs.mkdirSync([temp_dir, 'data'].join(path.sep));
+      fs.mkdirSync(path.join(temp_dir, 'data'));
 
       // write the contents to a file
-      const filename = [temp_dir, 'data', 'datafile.geojson'].join(path.sep);
+      const filename = path.join(temp_dir, 'data', 'datafile.geojson');
       fs.writeFileSync(filename, '{ "a": 1, "b": 2 }\n');
 
       const loadJSON = require('../../src/components/loadJSON');
@@ -49,14 +49,14 @@ tape('loadJSON tests', (test) => {
     const logger = require('pelias-mock-logger')();
 
     temp.mkdir('tmp_wof_data', (err, temp_dir) => {
-      fs.mkdirSync([temp_dir, 'data'].join(path.sep));
+      fs.mkdirSync(path.join(temp_dir, 'data'));
 
       const loadJSON = proxyquire('../../src/components/loadJSON', {
         'pelias-logger': logger
       });
 
       // write the contents to a file
-      const filename = [temp_dir, 'data', 'datafile.geojson'].join(path.sep);
+      const filename = path.join(temp_dir, 'data', 'datafile.geojson');
       fs.writeFileSync(filename, 'this is not json\n');
 
       const input = {
@@ -78,7 +78,7 @@ tape('loadJSON tests', (test) => {
     const logger = require('pelias-mock-logger')();
 
     temp.mkdir('tmp_wof_data', (err, temp_dir) => {
-      fs.mkdirSync([temp_dir, 'data'].join(path.sep));
+      fs.mkdirSync(path.join(temp_dir, 'data'));
 
       const loadJSON = proxyquire('../../src/components/loadJSON', {
         'pelias-logger': logger
@@ -86,7 +86,7 @@ tape('loadJSON tests', (test) => {
 
       // non-existent file
       const input = {
-        path: path.basename([temp_dir, 'data', 'datafile.geojson'].join(path.sep))
+        path: 'datafile.geojson'
       };
 
       test_stream([input], loadJSON.create(temp_dir), (err, actual) => {
@@ -107,7 +107,7 @@ tape('loadJSON tests', (test) => {
     const logger = require('pelias-mock-logger')();
 
     temp.mkdir('tmp_wof_data', (err, temp_dir) => {
-      fs.mkdirSync([temp_dir, 'data'].join(path.sep));
+      fs.mkdirSync(path.join(temp_dir, 'data'));
 
       const loadJSON = proxyquire('../../src/components/loadJSON', {
         'pelias-logger': logger
@@ -115,7 +115,7 @@ tape('loadJSON tests', (test) => {
 
       // non-existent file
       const input = {
-        path: path.basename([temp_dir, 'data', 'datafile.geojson'].join(path.sep))
+        path: 'datafile.geojson'
       };
 
       test_stream([input], loadJSON.create(temp_dir, true), (err, actual) => {
