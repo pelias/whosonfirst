@@ -17,9 +17,9 @@ var notVisitingNullIsland = require('./components/recordNotVisitingNullIsland');
 /*
  * Convert a base directory and list of types into a list of meta file paths
  */
-function getMetaFilePaths(directory, bundles) {
-  return bundles.map(function(bundle) {
-    return path.join(directory, 'meta', bundle);
+function getMetaFilePaths(wofRoot, bundles) {
+  return bundles.map((bundle) => {
+    return path.join(wofRoot, 'meta', bundle);
   });
 }
 
@@ -62,12 +62,12 @@ function createMetaRecordStream(metaFilePaths, types) {
   CSV parses them, extracts the required fields, stores only admin records for
   later, and passes all records on for further processing
 */
-function createReadStream(directory, types, wofAdminRecords) {
-  var metaFilePaths = getMetaFilePaths(directory, types);
+function createReadStream(wofRoot, types, wofAdminRecords) {
+  var metaFilePaths = getMetaFilePaths(wofRoot, types);
 
   return createMetaRecordStream(metaFilePaths, types)
   .pipe(isValidId.create())
-  .pipe(loadJSON.create(directory + 'data/'))
+  .pipe(loadJSON.create(wofRoot))
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
   .pipe(extractFields.create())
