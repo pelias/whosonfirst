@@ -14,10 +14,6 @@ version_checker();
 
 var directory = peliasConfig.imports.whosonfirst.datapath;
 
-if (directory.slice(-1) !== '/') {
-  directory = directory + '/';
-}
-
 // a cache of only admin records, to be used to fill the hierarchy
 // of other, lower admin records as well as venues
 var wofAdminRecords = {};
