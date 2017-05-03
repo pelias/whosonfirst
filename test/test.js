@@ -10,3 +10,4 @@ require ('./peliasDocGeneratorsTest.js');
 require ('./readStreamTest.js');
 require ('./schema.js');
 require ('./bundleList.js');
+require ('./index.js');
