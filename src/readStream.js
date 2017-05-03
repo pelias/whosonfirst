@@ -49,7 +49,7 @@ function createMetaRecordStream(metaFilePaths, types) {
   metaFilePaths.forEach(function appendToCombinedStream(metaFilePath, idx) {
     var type = types[idx];
     metaRecordStream.append( function ( next ){
-      logger.info( 'Loading ' + type + ' records from ' + metaFilePath );
+      logger.info( `Loading ${type} records from ${metaFilePath}` );
       next(createOneMetaRecordStream(metaFilePath));
     });
   });
