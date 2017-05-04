@@ -6,13 +6,12 @@ var path = require('path');
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
 const parseMetaFiles = require('./components/parseMetaFiles');
-const isNotNullIsland = require('./components/isNotNullIsland');
+const isNotNullIslandRelated = require('./components/isNotNullIslandRelated');
 const loadJSON = require('./components/loadJSON');
 const recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
 const isActiveRecord = require('./components/isActiveRecord');
 const extractFields = require('./components/extractFields');
 const recordHasName = require('./components/recordHasName');
-const notVisitingNullIsland = require('./components/recordNotVisitingNullIsland');
 
 /*
  * Convert a base directory and list of types into a list of meta file paths
@@ -65,8 +64,7 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
   const metaFilePaths = getMetaFilePaths(wofRoot, types);
 
   return createMetaRecordStream(metaFilePaths, types)
-  .pipe(isNotNullIsland.create())
-  .pipe(notVisitingNullIsland.create())
+  .pipe(isNotNullIslandRelated.create())
   .pipe(loadJSON.create(wofRoot, wofConfig.missingFilesAreFatal))
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
