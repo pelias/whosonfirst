@@ -1,26 +1,25 @@
-var tape = require('tape');
-var fs = require('fs-extra');
-var sink = require('through2-sink');
+const tape = require('tape');
+const fs = require('fs-extra');
+const path = require('path');
+const temp = require('temp').track();
+const proxyquire = require('proxyquire').noCallThru();
+const through2 = require('through2');
 
-var readStream = require('../src/readStream');
+tape('readStream', (test) => {
+  test.test('readStream should return from all requested types and populate wofAdminRecords', (t) => {
+    const logger = require('pelias-mock-logger')();
 
-tape('readStream', function(test) {
-  /*
-    this test is not terribly attractive, i'm not happy with it but setup wasn't
-    all that painful.
-  */
-  test.test('readStream should return from all requested types and populate wofAdminRecords', function(t) {
-    function setupTestEnvironment() {
-      // remove tmp directory if for some reason it's been hanging around from a previous run
-      fs.removeSync('tmp');
+    const readStream = proxyquire('../src/readStream', {
+      'pelias-logger': logger
+    });
 
-      fs.mkdirsSync('tmp/meta');
+    temp.mkdir('tmp_wof', (err, temp_dir) => {
+      fs.mkdirSync(path.join(temp_dir, 'meta'));
+      fs.mkdirSync(path.join(temp_dir, 'data'));
 
-      // write out first meta and data files
-      fs.writeFileSync('tmp/meta/wof-type1-latest.csv', 'id,path\n1234567,123/456/7/1234567.geojson\n');
-      fs.mkdirsSync('tmp/data/123/456/7');
-      fs.writeFileSync('tmp/data/123/456/7/1234567.geojson', JSON.stringify({
-        id: 1234567,
+      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type1-latest.csv'), 'id,path\n123,123.geojson\n');
+      fs.writeFileSync(path.join(temp_dir, 'data', '123.geojson'), JSON.stringify({
+        id: 123,
         properties: {
           'wof:name': 'name 1',
           'wof:placetype': 'place type 1',
@@ -34,10 +33,9 @@ tape('readStream', function(test) {
       }));
 
       // write out second meta and data files
-      fs.writeFileSync('tmp/meta/wof-type2-latest.csv', 'id,path\n12345678,123/456/78/12345678.geojson\n');
-      fs.mkdirsSync('tmp/data/123/456/78');
-      fs.writeFileSync('tmp/data/123/456/78/12345678.geojson', JSON.stringify({
-        id: 12345678,
+      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type2-latest.csv'), 'id,path\n456,456.geojson\n');
+      fs.writeFileSync(path.join(temp_dir, 'data', '456.geojson'), JSON.stringify({
+        id: 456,
         properties: {
           'wof:name': 'name 2',
           'wof:placetype': 'place type 2',
@@ -51,10 +49,9 @@ tape('readStream', function(test) {
       // write out third meta and data files that are ignored
       // it will be ignored since 'type3' is not passed as a supported type
       // this shows that types are supported instead of all files being globbed
-      fs.writeFileSync('tmp/meta/wof-type3-latest.csv', 'id,path\n123456789,123/456/789/123456789.geojson\n');
-      fs.mkdirsSync('tmp/data/123/456/789');
-      fs.writeFileSync('tmp/data/123/456/789/123456789.geojson', JSON.stringify({
-        id: 123456789,
+      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type3-latest.csv'), 'id,path\789,789.geojson\n');
+      fs.writeFileSync(path.join(temp_dir, 'data', '789.geojson'), JSON.stringify({
+        id: 789,
         properties: {
           'wof:name': 'name 3',
           'wof:placetype': 'place type 3',
@@ -63,49 +60,115 @@ tape('readStream', function(test) {
           'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
         }
       }));
-    }
 
-    function cleanupTestEnvironment() {
-      fs.removeSync('tmp');
-    }
+      const wofConfig = {
+        datapath: temp_dir,
+        missingFilesAreFatal: false
+      };
 
-    setupTestEnvironment();
+      const wofAdminRecords = {};
+      const stream = readStream.create(wofConfig, ['wof-type1-latest.csv', 'wof-type2-latest.csv'], wofAdminRecords);
 
-    var wofAdminRecords = {};
-    var stream = readStream.create('./tmp/', ['wof-type1-latest.csv', 'wof-type2-latest.csv'], wofAdminRecords);
+      stream.on('finish', _ => {
+        temp.cleanupSync();
 
-    stream.pipe(sink.obj(function() {})).on('finish', function() {
-      t.equals(Object.keys(wofAdminRecords).length, 2, 'there should be 2 records loaded');
+        t.deepEquals(wofAdminRecords, {
+          '123': {
+            id: 123,
+            name: 'name 1',
+            place_type: 'place type 1',
+            lat: 12.121212,
+            lon: 21.212121,
+            abbreviation: 'XY',
+            bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+            population: 98765,
+            popularity: 87654,
+            hierarchies: []
+          },
+          '456': {
+            id: 456,
+            name: 'name 2',
+            place_type: 'place type 2',
+            lat: 13.131313,
+            lon: 31.313131,
+            abbreviation: 'XY',
+            bounding_box: '-24.539906,34.815009,69.033946,81.85871',
+            population: undefined,
+            popularity: undefined,
+            hierarchies: []
+          }
+        });
 
-      t.deepEqual(wofAdminRecords[1234567], {
-        id: 1234567,
-        name: 'name 1',
-        place_type: 'place type 1',
-        lat: 12.121212,
-        lon: 21.212121,
-        abbreviation: 'XY',
-        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
-        population: 98765,
-        popularity: 87654,
-        hierarchies: []
-      }, 'id 1234567 should have been loaded');
+        t.deepEquals(logger.getInfoMessages(), [
+          `Loading wof-type1-latest.csv records from ${temp_dir}/meta`,
+          `Loading wof-type2-latest.csv records from ${temp_dir}/meta`
+        ]);
+        t.end();
 
-      t.deepEqual(wofAdminRecords[12345678], {
-        id: 12345678,
-        name: 'name 2',
-        place_type: 'place type 2',
-        lat: 13.131313,
-        lon: 31.313131,
-        abbreviation: 'XY',
-        bounding_box: '-24.539906,34.815009,69.033946,81.85871',
-        population: undefined,
-        popularity: undefined,
-        hierarchies: []
-      }, 'id 12345678 should have been loaded');
+      });
 
-      t.end();
+    });
 
-      cleanupTestEnvironment();
+  });
+
+  test.test('missingFilesAreFatal=false from config should be passed to loadJSON', (t) => {
+    temp.mkdir('tmp_wof', (err, temp_dir) => {
+      t.plan(2, 'plan for 2 tests so we know that loadJSON was actually used');
+
+      const readStream = proxyquire('../src/readStream', {
+        './components/loadJSON': {
+          create: (wofRoot, missingFilesAreFatal) => {
+            t.equals(wofRoot, temp_dir);
+            t.equals(missingFilesAreFatal, false);
+            return through2.obj();
+          }
+        }
+      });
+
+      const wofConfig = {
+        datapath: temp_dir,
+        missingFilesAreFatal: false
+      };
+
+      const wofAdminRecords = {};
+      const stream = readStream.create(wofConfig, [], wofAdminRecords);
+
+      stream.on('finish', _ => {
+        temp.cleanupSync();
+        t.end();
+      });
+
     });
   });
+
+  test.test('missingFilesAreFatal=true from config should be passed to loadJSON', (t) => {
+    temp.mkdir('tmp_wof', (err, temp_dir) => {
+      t.plan(2, 'plan for 2 tests so we know that loadJSON was actually used');
+
+      const readStream = proxyquire('../src/readStream', {
+        './components/loadJSON': {
+          create: (wofRoot, missingFilesAreFatal) => {
+            t.equals(wofRoot, temp_dir);
+            t.equals(missingFilesAreFatal, true);
+            return through2.obj();
+          }
+        }
+      });
+
+      const wofConfig = {
+        datapath: temp_dir,
+        missingFilesAreFatal: true
+      };
+
+      const wofAdminRecords = {};
+      const stream = readStream.create(wofConfig, [], wofAdminRecords);
+
+      stream.on('finish', _ => {
+        temp.cleanupSync();
+        t.end();
+      });
+
+    });
+  });
+
 });
