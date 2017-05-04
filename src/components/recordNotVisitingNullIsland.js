@@ -1,5 +1,5 @@
-var filter = require('through2-filter');
-var _ = require('lodash');
+const filter = require('through2-filter');
+const _ = require('lodash');
 
 /*
   This function filters out null island records
@@ -14,7 +14,5 @@ function isNullIslandPostalCode(record) {
 }
 
 module.exports.create = function create() {
-  return filter.obj((record) => {
-    return !isNullIslandPostalCode(record);
-  });
+  return filter.obj(_.negate(isNullIslandPostalCode));
 };
