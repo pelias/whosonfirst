@@ -1,11 +1,11 @@
 var combinedStream = require('combined-stream');
-var parse = require('csv-stream');
 var fs = require('fs');
 var through2 = require('through2');
 var path = require('path');
 
 var logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
+const parseMetaFiles = require('./components/parseMetaFiles');
 var isValidId = require('./components/isValidId');
 var loadJSON = require('./components/loadJSON');
 var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
@@ -36,7 +36,7 @@ function createOneMetaRecordStream(metaFilePath) {
   };
 
   return fs.createReadStream(metaFilePath)
-    .pipe(parse.createStream(options));
+    .pipe(parseMetaFiles.create());
 }
 
 /*
