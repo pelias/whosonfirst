@@ -7,10 +7,10 @@ var _ = require('lodash');
   Filter out any postalcodes located at 0,0 because there are currently too many of those
 */
 module.exports.create = function create() {
-  return filter.obj(function(json_object) {
-    return _.get(json_object, 'place_type', '') !== 'postalcode' ||
-      (_.get(json_object, 'place_type', '') === 'postalcode' &&
-       _.get(json_object, 'lat', 0) !== 0 &&
-       _.get(json_object, 'lon', 0) !== 0);
+  return filter.obj((record) => {
+    if (record.placetype === 'postalcode' && record.geom_latitude === '0.0' && record.geom_longitude === '0.0') {
+      return false;
+    }
+    return true;
   });
 };

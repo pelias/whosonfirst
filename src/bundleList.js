@@ -8,7 +8,7 @@ const _ = require('lodash');
 
 const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 
-const metaDataPath = peliasConfig.imports.whosonfirst.datapath + '/meta';
+const metaDataPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'meta');
 const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
 const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
 

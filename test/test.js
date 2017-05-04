@@ -5,6 +5,7 @@ require ('./components/loadJSONTest.js');
 require ('./components/parseMetaFiles.js');
 require ('./components/recordHasIdAndPropertiesTest.js');
 require ('./components/recordHasNameTest.js');
+require ('./components/recordNotVisitingNullIsland.js');
 require ('./hierarchyFinderTest.js');
 require ('./importStreamTest.js');
 require ('./peliasDocGeneratorsTest.js');

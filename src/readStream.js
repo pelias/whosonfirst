@@ -66,11 +66,11 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
 
   return createMetaRecordStream(metaFilePaths, types)
   .pipe(isNotNullIsland.create())
+  .pipe(notVisitingNullIsland.create())
   .pipe(loadJSON.create(wofRoot, wofConfig.missingFilesAreFatal))
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
   .pipe(extractFields.create())
-  .pipe(notVisitingNullIsland.create())
   .pipe(recordHasName.create())
   .pipe(through2.obj(function(wofRecord, enc, callback) {
     // store admin records in memory to traverse the heirarchy
