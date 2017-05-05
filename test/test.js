@@ -1,6 +1,6 @@
 require ('./components/extractFieldsTest.js');
 require ('./components/isActiveRecordTest.js');
-require ('./components/isNotNullIsland.js');
+require ('./components/isNotNullIslandRelated.js');
 require ('./components/loadJSONTest.js');
 require ('./components/parseMetaFiles.js');
 require ('./components/recordHasIdAndPropertiesTest.js');
