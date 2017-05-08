@@ -2,6 +2,7 @@
 
 const tape = require('tape');
 const proxyquire = require('proxyquire');
+const fs = require('fs-extra');
 
 proxyquire.noPreserveCache();
 proxyquire.noCallThru();
@@ -58,6 +59,7 @@ tape('bundlesList tests', (test) => {
         t.assert(found, type + ' bundle(s) missing');
         return found;
       });
+      fs.removeSync('foo');
       t.end();
     });
   });
@@ -69,7 +71,7 @@ tape('bundlesList tests', (test) => {
         return {
           imports: {
             whosonfirst: {
-              datapath: 'foo'              
+              datapath: 'foo'
             }
           }
         };
@@ -78,7 +80,7 @@ tape('bundlesList tests', (test) => {
 
     const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
-    const expected = ADMIN;    
+    const expected = ADMIN;
     const unexpected = POSTALCODES.concat(VENUES);
 
     bundles.generateBundleList((err, bundlesList) => {
@@ -89,7 +91,7 @@ tape('bundlesList tests', (test) => {
         t.assert(found, type + ' bundle(s) missing');
         return found;
       });
-    
+
       unexpected.every((type) => {
         const found = bundlesList.some((bundle) => {
           return bundle.indexOf(type) !== -1;
@@ -97,6 +99,7 @@ tape('bundlesList tests', (test) => {
         t.assert(!found, type + ' bundle(s) should not be there');
         return !found;
       });
+      fs.removeSync('foo');
       t.end();
     });
   });
@@ -119,7 +122,7 @@ tape('bundlesList tests', (test) => {
 
     const previousValue = process.argv[2];
     process.argv[2] = '--admin-only';
-    
+
     const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
     const expected = ADMIN;
@@ -133,7 +136,7 @@ tape('bundlesList tests', (test) => {
         t.assert(found, type + ' bundle(s) missing');
         return found;
       });
-    
+
       unexpected.every((type) => {
         const found = bundlesList.some((bundle) => {
           return bundle.indexOf(type) !== -1;
@@ -141,6 +144,7 @@ tape('bundlesList tests', (test) => {
         t.assert(!found, type + ' bundle(s) should not be there');
         return !found;
       });
+      fs.removeSync('foo');
       t.end();
 
       process.argv[2] = previousValue;

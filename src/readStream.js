@@ -1,25 +1,24 @@
 var combinedStream = require('combined-stream');
-var parse = require('csv-stream');
 var fs = require('fs');
 var through2 = require('through2');
 var path = require('path');
 
-var logger = require( 'pelias-logger' ).get( 'whosonfirst' );
+const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
-var isValidId = require('./components/isValidId');
-var loadJSON = require('./components/loadJSON');
-var recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
-var isActiveRecord = require('./components/isActiveRecord');
-var extractFields = require('./components/extractFields');
-var recordHasName = require('./components/recordHasName');
-var notVisitingNullIsland = require('./components/recordNotVisitingNullIsland');
+const parseMetaFiles = require('./components/parseMetaFiles');
+const isNotNullIslandRelated = require('./components/isNotNullIslandRelated');
+const loadJSON = require('./components/loadJSON');
+const recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
+const isActiveRecord = require('./components/isActiveRecord');
+const extractFields = require('./components/extractFields');
+const recordHasName = require('./components/recordHasName');
 
 /*
  * Convert a base directory and list of types into a list of meta file paths
  */
-function getMetaFilePaths(directory, bundles) {
-  return bundles.map(function(bundle) {
-    return path.join(directory, 'meta', bundle);
+function getMetaFilePaths(wofRoot, bundles) {
+  return bundles.map((bundle) => {
+    return path.join(wofRoot, 'meta', bundle);
   });
 }
 
@@ -28,15 +27,14 @@ function getMetaFilePaths(directory, bundles) {
  * within that CSV file.
  */
 function createOneMetaRecordStream(metaFilePath) {
-
   // All of these arguments are optional.
-  var options = {
+  const options = {
     escapeChar : '"', // default is an empty string
     enclosedChar : '"' // default is an empty string
   };
 
   return fs.createReadStream(metaFilePath)
-    .pipe(parse.createStream(options));
+    .pipe(parseMetaFiles.create());
 }
 
 /*
@@ -44,12 +42,11 @@ function createOneMetaRecordStream(metaFilePath) {
  * records via the csv parser
  */
 function createMetaRecordStream(metaFilePaths, types) {
-  var metaRecordStream = combinedStream.create();
+  const metaRecordStream = combinedStream.create();
 
-  metaFilePaths.forEach(function appendToCombinedStream(metaFilePath, idx) {
-    var type = types[idx];
-    metaRecordStream.append( function ( next ){
-      logger.info( 'Loading ' + type + ' records from ' + metaFilePath );
+  metaFilePaths.forEach((metaFilePath) => {
+    metaRecordStream.append( (next) => {
+      logger.info( `Loading ${path.basename(metaFilePath)} records from ${path.dirname(metaFilePath)}` );
       next(createOneMetaRecordStream(metaFilePath));
     });
   });
@@ -58,20 +55,20 @@ function createMetaRecordStream(metaFilePaths, types) {
 }
 
 /*
-  This function creates a steram that finds all the `latest` files in `meta/`,
+  This function creates a stream that processes files in `meta/`:
   CSV parses them, extracts the required fields, stores only admin records for
   later, and passes all records on for further processing
 */
-function createReadStream(directory, types, wofAdminRecords) {
-  var metaFilePaths = getMetaFilePaths(directory, types);
+function createReadStream(wofConfig, types, wofAdminRecords) {
+  const wofRoot = wofConfig.datapath;
+  const metaFilePaths = getMetaFilePaths(wofRoot, types);
 
   return createMetaRecordStream(metaFilePaths, types)
-  .pipe(isValidId.create())
-  .pipe(loadJSON.create(directory + 'data/'))
+  .pipe(isNotNullIslandRelated.create())
+  .pipe(loadJSON.create(wofRoot, wofConfig.missingFilesAreFatal))
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
   .pipe(extractFields.create())
-  .pipe(notVisitingNullIsland.create())
   .pipe(recordHasName.create())
   .pipe(through2.obj(function(wofRecord, enc, callback) {
     // store admin records in memory to traverse the heirarchy
