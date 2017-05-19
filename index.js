@@ -1,4 +1,5 @@
 module.exports = {
+  metadataStream: require('./src/components/metadataStream'),
   isActiveRecord: require('./src/components/isActiveRecord').create,
   isNotNullIslandRelated: require('./src/components/isNotNullIslandRelated').create,
   loadJSON: require('./src/components/loadJSON').create,

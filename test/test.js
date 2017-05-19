@@ -2,6 +2,7 @@ require ('./components/extractFieldsTest.js');
 require ('./components/isActiveRecordTest.js');
 require ('./components/isNotNullIslandRelated.js');
 require ('./components/loadJSONTest.js');
+require ('./components/metadataStream.js');
 require ('./components/parseMetaFiles.js');
 require ('./components/recordHasIdAndPropertiesTest.js');
 require ('./components/recordHasNameTest.js');
