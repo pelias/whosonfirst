@@ -1,7 +1,9 @@
 require ('./components/extractFieldsTest.js');
 require ('./components/isActiveRecordTest.js');
-require ('./components/isValidIdTest.js');
+require ('./components/isNotNullIslandRelated.js');
 require ('./components/loadJSONTest.js');
+require ('./components/metadataStream.js');
+require ('./components/parseMetaFiles.js');
 require ('./components/recordHasIdAndPropertiesTest.js');
 require ('./components/recordHasNameTest.js');
 require ('./hierarchyFinderTest.js');
@@ -10,3 +12,4 @@ require ('./peliasDocGeneratorsTest.js');
 require ('./readStreamTest.js');
 require ('./schema.js');
 require ('./bundleList.js');
+require ('./index.js');

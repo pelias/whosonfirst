@@ -9,14 +9,10 @@ var hierarchyFinder = require('./src/hierarchyFinder');
 var version_checker = require('node-version-checker').default;
 var bundles = require('./src/bundleList');
 
+const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
+
 // print a warning if an unsupported Node.JS version is used
 version_checker();
-
-var directory = peliasConfig.imports.whosonfirst.datapath;
-
-if (directory.slice(-1) !== '/') {
-  directory = directory + '/';
-}
 
 // a cache of only admin records, to be used to fill the hierarchy
 // of other, lower admin records as well as venues
@@ -30,7 +26,10 @@ bundles.generateBundleList((err, bundlesToImport) => {
 
   const bundlesMetaFiles = bundlesToImport.map( (bundle) => { return bundle.replace('-bundle.tar.bz2', '.csv'); });
 
-  var readStream = readStreamModule.create(directory, bundlesMetaFiles, wofAdminRecords);
+  const readStream = readStreamModule.create(
+    peliasConfig.imports.whosonfirst,
+    bundlesMetaFiles,
+    wofAdminRecords);
 
   // how to convert WOF records to Pelias Documents
   var documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
@@ -40,6 +39,6 @@ bundles.generateBundleList((err, bundlesToImport) => {
 
   // import WOF records into ES
   importStream(readStream, documentGenerator, dbClientStream, function () {
-    console.log('import finished');
+    logger.info('import finished');
   });
 });

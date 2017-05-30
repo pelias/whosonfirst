@@ -8,7 +8,7 @@ const _ = require('lodash');
 
 const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 
-const metaDataPath = peliasConfig.imports.whosonfirst.datapath + '/meta';
+const metaDataPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'meta');
 const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
 const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
 
@@ -26,7 +26,7 @@ if (!fs.existsSync(bundleIndexFile)) {
 // for info on what each bundle type means
 //
 // venue bundle data has to be imported only after all hierarchy bundles are done
-// 
+//
 // downloading can be done in any order, but the same order might as well be used
 var hierarchyRoles = [
   'continent',
@@ -40,6 +40,7 @@ var hierarchyRoles = [
   'localadmin',
   'locality',
   'borough',
+  'macrohood',
   'neighbourhood'
 ];
 

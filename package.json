@@ -12,8 +12,9 @@
     "test": "node test/test | tap-dot",
     "lint": "jshint .",
     "validate": "npm ls",
-    "travis": "npm run test",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "travis": "npm run check-dependencies && npm run test",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "check-dependencies": "node_modules/.bin/npm-check --production"
   },
   "repository": {
     "type": "git",
@@ -31,25 +32,25 @@
     "csv-stream": "^0.1.3",
     "download-file-sync": "^1.0.4",
     "fs-extra": "^2.0.0",
-    "iso3166-1": "^0.2.5",
+    "iso3166-1": "^0.3.0",
     "joi": "^10.0.6",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
-    "pelias-config": "2.7.1",
+    "pelias-config": "2.10.0",
     "pelias-dbclient": "2.0.0",
-    "pelias-logger": "0.1.0",
-    "pelias-model": "4.5.0",
-    "pelias-parallel-stream": "0.0.2",
+    "pelias-logger": "0.2.0",
+    "pelias-model": "4.6.0",
+    "pelias-parallel-stream": "0.1.0",
     "through2": "^2.0.0",
     "through2-filter": "^2.0.0",
     "through2-map": "^3.0.0",
-    "through2-sink": "^1.0.0",
-    "through2-spy": "^2.0.0"
+    "through2-sink": "^1.0.0"
   },
   "devDependencies": {
     "event-stream": "^3.3.2",
-    "intercept-stdout": "^0.1.2",
     "jshint": "^2.5.6",
+    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
+    "pelias-mock-logger": "^1.1.0",
     "precommit-hook": "^3.0.0",
     "proxyquire": "^1.7.11",
     "semantic-release": "^6.3.2",
@@ -60,6 +61,7 @@
   "pre-commit": [
     "lint",
     "validate",
-    "test"
+    "test",
+    "check-dependencies"
   ]
 }

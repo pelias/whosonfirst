@@ -28,21 +28,7 @@ tape('tests for looking up hierarchies', function(test) {
 
   });
 
-  test.test('config lacking importVenues should not throw error', function(t) {
-    var config = {
-      imports: {
-        whosonfirst: {
-          datapath: '/path/to/data'
-        }
-      }
-    };
-
-    t.doesNotThrow(validate.bind(null, config));
-    t.end();
-
-  });
-
-  test.test('config lacking importPostalcodes should not throw error', function (t) {
+  test.test('missing importVenues, importPostalcodes, and missingFilesAreFatal should not throw error', function(t) {
     var config = {
       imports: {
         whosonfirst: {
@@ -102,6 +88,42 @@ tape('tests for looking up hierarchies', function(test) {
       };
 
       t.throws(validate.bind(null, config), /"importVenues" must be a boolean/);
+    });
+
+    t.end();
+
+  });
+
+  test.test('non-boolean importPostalcodes should throw error', function(t) {
+    [null, 17, {}, [], 'string'].forEach((value) => {
+      var config = {
+        imports: {
+          whosonfirst: {
+            datapath: '/path/to/data',
+            importPostalcodes: value
+          }
+        }
+      };
+
+      t.throws(validate.bind(null, config), /"importPostalcodes" must be a boolean/);
+    });
+
+    t.end();
+
+  });
+
+  test.test('non-boolean missingFilesAreFatal should throw error', function(t) {
+    [null, 17, {}, [], 'string'].forEach((value) => {
+      var config = {
+        imports: {
+          whosonfirst: {
+            datapath: '/path/to/data',
+            missingFilesAreFatal: value
+          }
+        }
+      };
+
+      t.throws(validate.bind(null, config), /"missingFilesAreFatal" must be a boolean/);
     });
 
     t.end();
@@ -169,6 +191,42 @@ tape('tests for looking up hierarchies', function(test) {
           whosonfirst: {
             datapath: '/path/to/data',
             importPostalcodes: value
+          }
+        }
+      };
+
+      t.doesNotThrow(validate.bind(null, config));
+    });
+
+    t.end();
+
+  });
+
+  test.test('case-insensitive \'yes\' and true should be valid missingFilesAreFatal values', function(t) {
+    [true, 'YeS', 'yEs'].forEach((value) => {
+      var config = {
+        imports: {
+          whosonfirst: {
+            datapath: '/path/to/data',
+            missingFilesAreFatal: value
+          }
+        }
+      };
+
+      t.doesNotThrow(validate.bind(null, config));
+    });
+
+    t.end();
+
+  });
+
+  test.test('case-insensitive \'no\' and false should be valid missingFilesAreFatal values', function(t) {
+    [false, 'nO', 'No'].forEach((value) => {
+      var config = {
+        imports: {
+          whosonfirst: {
+            datapath: '/path/to/data',
+            missingFilesAreFatal: value
           }
         }
       };

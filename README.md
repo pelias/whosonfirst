@@ -32,9 +32,11 @@ Currently, the supported hierarchy types are:
 - localadmin
 - locality
 - macrocounty
+- macrohood
 - macroregion
 - neighbourhood
 - region
+- postalcodes (optional, see configuration)
 
 Other types may be included in the future.
 
@@ -42,7 +44,15 @@ Other types may be included in the future.
 
 ## Configuration
 
-The sole Pelias configuration option available is `imports.whosonfirst.datapath`.  It should point to the root of where Who's On First data has been downloaded.
+This importer is configured using the [`pelias-config`](https://github.com/pelias/config) module.
+The following configuration options are supported by this importer.
+
+| key | required | default | description |
+| --- | --- | --- | --- |
+| `imports.whosonfirst.datapath` | yes | | full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data) |
+| `imports.whosonfirst.importPostalcodes` | no | false | set to `true` to include postalcodes in the data download and import process |
+| `imports.whosonfirst.importVenues` | no | false | set to `true` to include venues in the data download and import process |
+| `imports.whosonfirst.missingFilesAreFatal` | no | false | set to `true` for missing files from [Who's on First bundles](https://whosonfirst.mapzen.com/bundles/) to stop the import process |
 
 ## Downloading the Data
 
@@ -54,7 +64,7 @@ npm run download
 
 ## or
 
-npm run download -- --admin-only # to only download hierarchy data, and not venues (venues require around 100GB of disk space)
+npm run download -- --admin-only # to only download hierarchy data, without venues or postalcodes
 ```
 
 **Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
@@ -72,3 +82,14 @@ To install the required node module dependencies and execute the importer, run:
 $> npm install
 $> npm start
 ```
+
+### In Other Projects
+
+This project exposes a number of node streams for dealing with Who's on First data and metadata files:
+
+- `parseMetaFiles`: CSV parse stream configured for metadata file contents
+- `loadJSON`: parallel stream that asynchronously loads GeoJSON files
+- `recordHasIdAndProperties`: rejects Who's on First records missing id or properties
+- `isActiveRecord`: rejects records that are superseded, deprecated, or otherwise inactive
+- `isNotNullIslandRelated`: rejects [Null Island](https://whosonfirst.mapzen.com/spelunker/id/1) and other records that intersect it (currently just postal codes at 0/0)
+- `recordHasName`: rejects records without names
