@@ -23,10 +23,7 @@ module.exports.create = function create(wofRoot, missingFilesAreFatal) {
         next(null, JSON.parse(data));
 
       } catch (parse_err) {
-        logger.error(`exception parsing JSON in file ${record.path}: ${parse_err}`);
-        logger.error('Inability to parse JSON usually means that Who\'s on First ' +
-                      'has been cloned without using git-lfs, please see instructions ' +
-                      'here: https://github.com/whosonfirst/whosonfirst-data#git-and-large-files');
+        logger.error(`exception parsing JSON for id ${record.id} in file ${record.path}: ${parse_err}`);
         next(parse_err);
 
       }
