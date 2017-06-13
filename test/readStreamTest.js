@@ -49,7 +49,7 @@ tape('readStream', (test) => {
       // write out third meta and data files that are ignored
       // it will be ignored since 'type3' is not passed as a supported type
       // this shows that types are supported instead of all files being globbed
-      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type3-latest.csv'), 'id,path\789,789.geojson\n');
+      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type3-latest.csv'), 'id,path\n789,789.geojson\n');
       fs.writeFileSync(path.join(temp_dir, 'data', '789.geojson'), JSON.stringify({
         id: 789,
         properties: {
