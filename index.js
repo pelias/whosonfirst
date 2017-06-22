@@ -5,5 +5,6 @@ module.exports = {
   loadJSON: require('./src/components/loadJSON').create,
   parseMetaFiles: require('./src/components/parseMetaFiles').create,
   recordHasIdAndProperties: require('./src/components/recordHasIdAndProperties').create,
-  recordHasName: require('./src/components/recordHasName').create
+  recordHasName: require('./src/components/recordHasName').create,
+  conformsTo: require('./src/components/conformsTo').create
 };

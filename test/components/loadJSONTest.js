@@ -64,13 +64,15 @@ tape('loadJSON tests', (test) => {
       fs.writeFileSync(filename, 'this is not json\n');
 
       const input = {
+        id: '17',
         path: path.basename(filename)
       };
 
       test_stream([input], loadJSON.create(temp_dir), undefined, (err, actual) => {
         temp.cleanupSync();
         t.deepEqual(actual, undefined, 'an error should be thrown');
-        t.ok(logger.isErrorMessage(/SyntaxError: Unexpected token h/), 'error output present');
+        t.ok(logger.isErrorMessage(new RegExp(
+          `exception parsing JSON for id 17 in file ${path.basename(filename)}: SyntaxError: Unexpected token h.*`)));
         t.end();
       });
 

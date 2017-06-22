@@ -87,9 +87,11 @@ $> npm start
 
 This project exposes a number of node streams for dealing with Who's on First data and metadata files:
 
+- `metadataStream`: streams rows from a Who's on First metadata file
 - `parseMetaFiles`: CSV parse stream configured for metadata file contents
 - `loadJSON`: parallel stream that asynchronously loads GeoJSON files
 - `recordHasIdAndProperties`: rejects Who's on First records missing id or properties
 - `isActiveRecord`: rejects records that are superseded, deprecated, or otherwise inactive
 - `isNotNullIslandRelated`: rejects [Null Island](https://whosonfirst.mapzen.com/spelunker/id/1) and other records that intersect it (currently just postal codes at 0/0)
 - `recordHasName`: rejects records without names
+- `conformsTo`: filter Who's on First records on a predicate (see lodash's [conformsTo](https://lodash.com/docs/4.17.4#conformsTo) for more information)

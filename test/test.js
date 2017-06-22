@@ -1,3 +1,4 @@
+require ('./components/conformsTo.js');
 require ('./components/extractFieldsTest.js');
 require ('./components/isActiveRecordTest.js');
 require ('./components/isNotNullIslandRelated.js');
