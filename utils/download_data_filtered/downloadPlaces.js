@@ -73,7 +73,7 @@ function downloadById(params, callback) {
       return onError(error, `error making directory ${targetDirFull}`, callback);
     }
 
-    const cmd = `wget -O ${path.join(targetDirFull, filename)} ${sourceUrl}`;
+    const cmd = `curl -o ${path.join(targetDirFull, filename)} ${sourceUrl}`;
 
     child_process.exec(cmd, (error) => {
       if (error) {
