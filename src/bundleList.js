@@ -8,19 +8,6 @@ const _ = require('lodash');
 
 const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 
-const metaDataPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'meta');
-const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
-const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
-
-//ensure required directory structure exists
-fs.ensureDirSync(metaDataPath);
-
-// if the bundle index file is not found, download it
-if (!fs.existsSync(bundleIndexFile)) {
-  fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
-}
-
-
 // the importer depends on hierarchy bundles being imported in highest to
 // lowest level order. See https://github.com/whosonfirst/whosonfirst-placetypes
 // for info on what each bundle type means
@@ -28,7 +15,7 @@ if (!fs.existsSync(bundleIndexFile)) {
 // venue bundle data has to be imported only after all hierarchy bundles are done
 //
 // downloading can be done in any order, but the same order might as well be used
-var hierarchyRoles = [
+const hierarchyRoles = [
   'continent',
   'country',
   'dependency',
@@ -44,16 +31,16 @@ var hierarchyRoles = [
   'neighbourhood'
 ];
 
-var postalcodeRoles = [
+const postalcodeRoles = [
   'postalcode'
 ];
 
-var venueRoles = [
+const venueRoles = [
   'venue'
 ];
 
-function getBundleList(callback) {
 
+function getPlacetypes() {
   let roles = hierarchyRoles;
 
   // admin-only env var should override the config setting since the hierarchy bundles are useful
@@ -65,6 +52,24 @@ function getBundleList(callback) {
   if (peliasConfig.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only') {
     roles = roles.concat(postalcodeRoles);
   }
+
+  return roles;
+}
+
+function getBundleList(callback) {
+  const metaDataPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'meta');
+  const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
+  const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
+
+  //ensure required directory structure exists
+  fs.ensureDirSync(metaDataPath);
+
+  // if the bundle index file is not found, download it
+  if (!fs.existsSync(bundleIndexFile)) {
+    fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
+  }
+
+  const roles = getPlacetypes();
 
   // the order in which the bundles are list is critical to the correct execution
   // of the admin hierarchy lookup code in whosonfirst importer,
@@ -116,4 +121,5 @@ function combineBundleBuckets(roles, bundleBuckets) {
   return bundles;
 }
 
+module.exports.getPlacetypes = getPlacetypes;
 module.exports.generateBundleList = getBundleList;
