@@ -50,8 +50,10 @@ The following configuration options are supported by this importer.
 | key | required | default | description |
 | --- | --- | --- | --- |
 | `imports.whosonfirst.datapath` | yes | | full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data) |
+| `imports.whosonfirst.api_key` | no | | used by the filtered download script, must be set if using `imports.whosonfirst.importPlace` config option |
 | `imports.whosonfirst.importPostalcodes` | no | false | set to `true` to include postalcodes in the data download and import process |
 | `imports.whosonfirst.importVenues` | no | false | set to `true` to include venues in the data download and import process |
+| `imports.whosonfirst.importPlace` | no | | set to a WOF id string indicating the region of interest, only data pertaining to that place shall be downloaded  |
 | `imports.whosonfirst.missingFilesAreFatal` | no | false | set to `true` for missing files from [Who's on First bundles](https://whosonfirst.mapzen.com/bundles/) to stop the import process |
 
 ## Downloading the Data
@@ -66,6 +68,10 @@ npm run download
 
 npm run download -- --admin-only # to only download hierarchy data, without venues or postalcodes
 ```
+
+When running an instance intended to provide coverage for an area smaller than the entire world,
+it is recommended that the `importPlace` config parameter is used to limit the data download to records
+that are parents or descendants of the specified place. See the configuration details in the above section of this document.
 
 **Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
 Additionally, Who's on First uses one file per record. In addition to lots of disk space,
