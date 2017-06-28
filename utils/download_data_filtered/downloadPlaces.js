@@ -1,81 +1,17 @@
 'use strict';
 
-const RateLimiter = require('request-rate-limiter');
 const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs-extra');
 const async = require('async');
-const _ = require('lodash');
+const logger = require('pelias-logger').get('download_data_filtered');
 const parallelStream = require('pelias-parallel-stream');
 const streamArray = require('stream-array');
 const os = require('os');
 
-const PLACETYPES = require('../../src/bundleList').getPlacetypes();
-
-const limiter = new RateLimiter({
-  rate: 6,
-  interval: 1,
-  backoffCode: 429,
-  backoffTime: 1
-});
-
 const maxInFlight = os.cpus().length * 10;
 
 const _defaultHost = 'https://whosonfirst.mapzen.com';
-const _defaultApiHost = 'https://whosonfirst-api.mapzen.com/';
-
-function getPlaceByIds(apiKey, ids, format, callback) {
-
-  const reqOptions = {
-    url: _defaultApiHost,
-    method: 'GET',
-    qs: {
-      method: 'whosonfirst.places.getInfoMulti',
-      api_key: apiKey,
-      ids: ids.join(','),
-      format: format,
-      extras: [
-        'id',
-        'iso',
-        'bbox',
-        'wof:',
-        'geom:',
-        'edtf:',
-        'iso:',
-        'lbl:'
-      ].join(',')
-    }
-  };
-  limiter.request(reqOptions, (err, res) => {
-    if (err) {
-      return onError('failed to get place info', err, callback);
-    }
-
-    let response = res.body;
-
-    if (format === 'json') {
-      try {
-        response = JSON.parse(res.body);
-      }
-      catch (e) {
-        return onError(`failed to parse JSON: ${res.body}`, e, callback);
-      }
-
-      if (response.error || !response.places) {
-        return onError('failed to get place info', new Error(err || JSON.stringify(response, null, 2)), callback);
-      }
-
-      response = response.places;
-    }
-
-    callback(null, response);
-  });
-}
-
-function addToPlacesByPlacetype(placetype, place, places) {
-  places[placetype] = places[placetype] || [];
-  places[placetype] = places[placetype].concat(place);
-}
 
 /**
  * Download all records list in idsByPlacetype object to target directory.
@@ -95,7 +31,7 @@ function downloadPlaces(params, callback) {
   const placesByPlacetype = params.places;
 
   const _download = (places, placetype, placetypeCallback) => {
-    console.log(`downloading ${placetype}`);
+    logger.info(`downloading ${placetype}`);
 
     const parallelDownloadStream = parallelStream(
       maxInFlight,
@@ -116,8 +52,7 @@ function downloadById(params, callback) {
   const placeId = params.placeId;
 
   if (!placeId) {
-    console.log(`Invalid ID: ${placeId}`);
-    return callback(new Error(`Invalid ID`));
+    return onError(`Invalid ID: ${placeId}`, new Error(`Invalid ID`), callback);
   }
 
   let strId = placeId.toString();
@@ -133,9 +68,6 @@ function downloadById(params, callback) {
   const sourceUrl = `${_defaultHost}/data/${subPath.join('/')}/${filename}`;
   const targetDirFull = path.join(targetDir, subPath.join(path.sep));
 
-  // console.log('sourceUrl', sourceUrl);
-  // console.log('targetPath', targetDirFull);
-
   fs.ensureDir(targetDirFull, (error) => {
     if (error) {
       return onError(error, `error making directory ${targetDirFull}`, callback);
@@ -148,23 +80,18 @@ function downloadById(params, callback) {
         return onError(error, `error downloading ${sourceUrl}`, callback);
       }
 
-      //console.log(`done downloading ${sourceUrl}`);
+      logger.debug(`done downloading ${sourceUrl}`);
       callback();
     });
   });
 }
 
 function onError(error, message, callback) {
-  console.error(message, error.message);
+  logger.error(message, error.message);
   if (typeof callback === 'function') {
     callback(error);
   }
 }
 
-module.exports = {
-  getPlaceByIds: getPlaceByIds,
-  addToPlacesByPlacetype: addToPlacesByPlacetype,
-  downloadPlaces: downloadPlaces,
-  getParents: getParents
-};
+module.exports.downloadPlaces = downloadPlaces;
 
