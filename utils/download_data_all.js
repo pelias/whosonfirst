@@ -57,4 +57,4 @@ function download(callback) {
   });
 }
 
-module.export.download = download;
+module.exports.download = download;
