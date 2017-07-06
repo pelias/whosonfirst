@@ -50,15 +50,16 @@ The following configuration options are supported by this importer.
 | key | required | default | description |
 | --- | --- | --- | --- |
 | `imports.whosonfirst.datapath` | yes | | full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data) |
-| `imports.whosonfirst.api_key` | no | | used by the filtered download script, must be set if using `imports.whosonfirst.importPlace` config option |
+| `imports.whosonfirst.api_key` | no | | used by the filtered download script, must be set if using `imports.whosonfirst.importPlace` config option. Visit the [Mapzen Developers dashboard](https://mapzen.com/developers) to get a working api key |
 | `imports.whosonfirst.importPostalcodes` | no | false | set to `true` to include postalcodes in the data download and import process |
 | `imports.whosonfirst.importVenues` | no | false | set to `true` to include venues in the data download and import process |
-| `imports.whosonfirst.importPlace` | no | | set to a WOF id string indicating the region of interest, only data pertaining to that place shall be downloaded  |
+| `imports.whosonfirst.importPlace` | no | | set to a WOF id string indicating the region of interest, only data pertaining to that place shall be downloaded. Use the WOF [spelunker tool](https://whosonfirst.mapzen.com/spelunker/) search for an ID of a place. |
 | `imports.whosonfirst.missingFilesAreFatal` | no | false | set to `true` for missing files from [Who's on First bundles](https://whosonfirst.mapzen.com/bundles/) to stop the import process |
 
 ## Downloading the Data
 
-* The enclosed script `download_data.js` will download the required bundles and place the data into the datapath configured in [pelias-config](https://github.com/pelias/config) in the required directory layout.  To install the required node module dependencies and run the download script:
+* The `download` script will download the required bundles and place the data into the datapath configured in [pelias-config](https://github.com/pelias/config) in the required directory layout.  
+To install the required node module dependencies and run the download script:
 
 ```bash
 npm install
