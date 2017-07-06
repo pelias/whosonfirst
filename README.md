@@ -1,5 +1,7 @@
 # Pelias Who's on First Data Importer
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/whosonfirst.svg)](https://greenkeeper.io/)
+
 This repository is part of the [Pelias](https://github.com/pelias/pelias)
 project. Pelias is an open-source, open-data geocoder built by
 [Mapzen](https://www.mapzen.com/) that also powers [Mapzen Search](https://mapzen.com/projects/search). Our
