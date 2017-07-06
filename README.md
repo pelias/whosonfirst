@@ -73,6 +73,11 @@ npm run download -- --admin-only # to only download hierarchy data, without venu
 When running an instance intended to provide coverage for an area smaller than the entire world,
 it is recommended that the `importPlace` config parameter is used to limit the data download to records
 that are parents or descendants of the specified place. See the configuration details in the above section of this document.
+We currently only support a single ID at a time. If multiple places need to be downloaded, the script can be executed multiple times;
+one for each desired place.
+
+**Warning**: It is recommended to only use the download filtering option for places more granular than `country`. 
+The filtering script is intended for small areas and so has not been tested fully for large ones.  
 
 **Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
 Additionally, Who's on First uses one file per record. In addition to lots of disk space,
