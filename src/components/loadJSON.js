@@ -10,6 +10,7 @@ module.exports.create = function create(wofRoot, missingFilesAreFatal) {
   return parallelStream(maxInFlight, function(record, enc, next) {
 
     if (!record.path || record.path === 'path') {
+      logger.warn('WOF record has no path', record);
       return next();
     }
 
