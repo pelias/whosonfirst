@@ -35,8 +35,8 @@ function getPlaceByIds(apiKey, ids, format, callback) {
     }
   };
   limiter.request(reqOptions, (err, res) => {
-    if (err) {
-      return onError('failed to get place info', err, callback);
+    if (err || res.statusCode !== 200) {
+      return onError('failed to get place info', err || res.statusCode, callback);
     }
 
     let response = res.body;
@@ -49,7 +49,7 @@ function getPlaceByIds(apiKey, ids, format, callback) {
         return onError(`failed to parse JSON: ${res.body}`, e, callback);
       }
 
-      if (response.error || !response.places) {
+      if (response.error || !response.places || response.stat !== 'ok') {
         return onError('failed to get place info', new Error(err || JSON.stringify(response, null, 2)), callback);
       }
 
