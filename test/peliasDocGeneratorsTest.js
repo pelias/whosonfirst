@@ -296,89 +296,6 @@ tape('create', function(test) {
 
   });
 
-  test.test('country record without abbreviation should not set alpha3', function(t) {
-    var wofRecords = {
-      1: {
-        id: 1,
-        name: 'name 1',
-        lat: 12.121212,
-        lon: 21.212121,
-        place_type: 'country'
-      }
-    };
-
-    // extract all the values from wofRecords to an array since that's how test_stream works
-    // sure, this could be done with map, but this is clearer
-    var input = [
-      wofRecords['1']
-    ];
-
-    var expected = [
-      new Document( 'whosonfirst', 'country', '1')
-        .setName('default', 'name 1')
-        .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .addParent('country', 'name 1', '1')
-    ];
-
-    var hierarchies_finder = function() {
-      return [
-        [
-          wofRecords['1']
-        ]
-      ];
-    };
-
-    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
-
-    test_stream(input, docGenerator, function(err, actual) {
-      t.deepEqual(actual, expected, 'there should be no alpha3');
-      t.end();
-    });
-
-  });
-
-  test.test('country record with unknown abbreviation should not set alpha3', function(t) {
-    var wofRecords = {
-      1: {
-        id: 1,
-        name: 'name 1',
-        lat: 12.121212,
-        lon: 21.212121,
-        place_type: 'country',
-        abbreviation: 'this is not a known ISO2 country code'
-      }
-    };
-
-    // extract all the values from wofRecords to an array since that's how test_stream works
-    // sure, this could be done with map, but this is clearer
-    var input = [
-      wofRecords['1']
-    ];
-
-    var expected = [
-      new Document( 'whosonfirst', 'country', '1')
-        .setName('default', 'name 1')
-        .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .addParent('country', 'name 1', '1')
-    ];
-
-    var hierarchies_finder = function() {
-      return [
-        [
-          wofRecords['1']
-        ]
-      ];
-    };
-
-    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
-
-    test_stream(input, docGenerator, function(err, actual) {
-      t.deepEqual(actual, expected, 'there should be no alpha3');
-      t.end();
-    });
-
-  });
-
   test.test('undefined population should not set population in doc', function(t) {
     var wofRecords = {
       1: {
@@ -403,7 +320,6 @@ tape('create', function(test) {
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
         .addParent('country', 'United States', '1', 'USA')
-        .setAlpha3( 'USA' )
     ];
 
     var hierarchies_finder = function() {
@@ -447,7 +363,6 @@ tape('create', function(test) {
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
         .addParent('country', 'United States', '1', 'USA')
-        .setAlpha3( 'USA' )
         .setPopulation(98765)
     ];
 
@@ -492,7 +407,6 @@ tape('create', function(test) {
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
         .addParent('country', 'United States', '1', 'USA')
-        .setAlpha3( 'USA' )
     ];
 
     var hierarchies_finder = function() {
@@ -536,7 +450,6 @@ tape('create', function(test) {
         .setName('default', 'United States')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
         .addParent('country', 'United States', '1', 'USA')
-        .setAlpha3( 'USA' )
         .setPopularity(87654)
     ];
 
