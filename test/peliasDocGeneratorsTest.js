@@ -188,6 +188,49 @@ tape('create', function(test) {
 
   });
 
+  test.test('country with abbreviation known as iso3 should use iso3 as abbreviation', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'record name',
+        abbreviation: 'FR',
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country'
+      }
+    };
+
+    // extract all the values from wofRecords to an array since that's how test_stream works
+    // sure, this could be done with map, but this is clearer
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'country', '1')
+        .setName('default', 'record name')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent( 'country', 'record name', '1', 'FRA')
+    ];
+
+    var hierarchies_finder = function() {
+      return [
+        [
+          wofRecords['1']
+        ]
+      ];
+    };
+
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
+    });
+
+    t.end();
+
+  });
+
   test.test('wofRecord with bounding_box should have bounding box in Document', function(t) {
     var wofRecords = {
       1: {
