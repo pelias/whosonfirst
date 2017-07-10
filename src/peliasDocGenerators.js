@@ -32,10 +32,6 @@ function assignField(hierarchyElement, wofDoc) {
       if (iso3166.is2(hierarchyElement.abbreviation)) {
         var iso3 = iso3166.to3(hierarchyElement.abbreviation);
 
-        // only set iso3 for country records
-        if (hierarchyElement.place_type === 'country') {
-          wofDoc.setAlpha3(iso3);
-        }
         wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString(), iso3);
 
       } else {
