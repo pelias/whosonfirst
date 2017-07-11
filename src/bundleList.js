@@ -5,6 +5,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const downloadFileSync = require('download-file-sync');
 const _ = require('lodash');
+const klawSync = require('klaw-sync');
 
 const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 
@@ -56,22 +57,42 @@ function getPlacetypes() {
   return roles;
 }
 
-function getBundleList(callback) {
-  const metaDataPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'meta');
+function ensureBundleIndexExists(metaDataPath) {
   const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
   const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
 
   //ensure required directory structure exists
   fs.ensureDirSync(metaDataPath);
 
-  // if the bundle index file is not found, download it
   if (!fs.existsSync(bundleIndexFile)) {
-    fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
+
+    const klawOptions = {
+      nodir: true,
+      filter: (f) => (f.path.indexOf('-latest.csv') !== -1)
+    };
+    const metaFiles = _.map(klawSync(metaDataPath, klawOptions),
+      (f) => (path.basename(f.path)));
+
+    // if there are no existing meta files and the bundle index file is not found,
+    // download bundle index
+    if (_.isEmpty(metaFiles)) {
+      fs.writeFileSync(bundleIndexFile, downloadFileSync(bundleIndexUrl));
+    }
+    else {
+      fs.writeFileSync(bundleIndexFile, metaFiles.join('\n'));
+    }
   }
+}
+
+function getBundleList(callback) {
+  const metaDataPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'meta');
+  const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
+
+  ensureBundleIndexExists(metaDataPath);
 
   const roles = getPlacetypes();
 
-  // the order in which the bundles are list is critical to the correct execution
+  // the order in which the bundles are listed is critical to the correct execution
   // of the admin hierarchy lookup code in whosonfirst importer,
   // so in order to preserve the order specified by the roles list
   // we must collect the bundles from the index files by buckets
