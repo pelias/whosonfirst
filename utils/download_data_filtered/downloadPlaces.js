@@ -7,9 +7,8 @@ const async = require('async');
 const logger = require('pelias-logger').get('download_data_filtered');
 const parallelStream = require('pelias-parallel-stream');
 const streamArray = require('stream-array');
-const os = require('os');
 
-const maxInFlight = os.cpus().length * 10;
+const maxInFlight = 4;
 
 const _defaultHost = 'https://whosonfirst.mapzen.com';
 
