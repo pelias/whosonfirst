@@ -8,6 +8,12 @@ const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
 module.exports.create = function create(wofRoot, missingFilesAreFatal) {
   return parallelStream(maxInFlight, function(record, enc, next) {
+
+    if (!record.path || record.path === 'path') {
+      logger.warn('WOF record has no path', record);
+      return next();
+    }
+
     const full_file_path = path.join(wofRoot, 'data', record.path);
 
     fs.readFile(full_file_path, (err, data) => {
