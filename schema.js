@@ -15,7 +15,7 @@ module.exports = Joi.object().keys({
   imports: Joi.object().keys({
     whosonfirst: Joi.object().keys({
       datapath: Joi.string(),
-      importPlace: Joi.string(),
+      importPlace: Joi.number().integer(),
       api_key: Joi.string(),
       importVenues: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
