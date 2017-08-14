@@ -28,7 +28,7 @@ function download(callback) {
   // 3.) move the meta file to the meta files directory
   function generateCommand(bundle, directory) {
     const csvFilename = bundle.replace(/-\d{8}T\d{6}-/, '-latest-') // support timestamped downloads
-                             .replace('-bundle.tar.bz2', '.csv');
+                              .replace('-bundle.tar.bz2', '.csv');
 
     return 'curl https://whosonfirst.mapzen.com/bundles/' + bundle + ' | tar -xj --strip-components=1 --exclude=README.txt -C ' +
       directory + ' && mv ' + path.join(directory, csvFilename) + ' ' + path.join(directory, 'meta');
