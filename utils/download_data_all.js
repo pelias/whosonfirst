@@ -27,10 +27,11 @@ function download(callback) {
   //     the README file is ignored (it just would get overridden by subsequent bundles)
   // 3.) move the meta file to the meta files directory
   function generateCommand(bundle, directory) {
-    const targetPath = bundle.replace('-bundle.tar.bz2', '.csv');
+    const csvFilename = bundle.replace(/-\d{8}T\d{6}-/, '-latest-') // support timestamped downloads
+                             .replace('-bundle.tar.bz2', '.csv');
 
     return 'curl https://whosonfirst.mapzen.com/bundles/' + bundle + ' | tar -xj --strip-components=1 --exclude=README.txt -C ' +
-      directory + ' && mv ' + path.join(directory, targetPath) + ' ' + path.join(directory, 'meta');
+      directory + ' && mv ' + path.join(directory, csvFilename) + ' ' + path.join(directory, 'meta');
   }
 
   bundles.generateBundleList((err, bundlesToDownload) => {
