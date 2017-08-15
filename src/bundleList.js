@@ -40,6 +40,10 @@ const venueRoles = [
   'venue'
 ];
 
+// the bundle index contains timestamped bundles and non tar.bz2 files.
+// this regex is used to filter the bundle list, removing invalid entries.
+// see: https://whosonfirst.mapzen.com/bundles/index.txt
+const validBundleRegex = /-latest-bundle\.tar\.bz2$/;
 
 function getPlacetypes() {
   let roles = hierarchyRoles;
@@ -127,6 +131,13 @@ function initBundleBuckets(roles) {
 function sortBundleByBuckets(roles, bundle, bundleBuckets) {
   roles.forEach((role) => {
     if (bundle.indexOf('-' + role + '-') !== -1) {
+
+      // skip invalid bundle names
+      if( !validBundleRegex.test( bundle ) ){
+        console.error( 'skip bundle', bundle );
+        return;
+      }
+
       bundleBuckets[role].push(bundle);
     }
   });
