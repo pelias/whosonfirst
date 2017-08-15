@@ -134,7 +134,7 @@ function sortBundleByBuckets(roles, bundle, bundleBuckets) {
 
       // skip invalid bundle names
       if( !validBundleRegex.test( bundle ) ){
-        console.error( 'skip bundle', bundle );
+        console.error( 'info: invalid bundle name skipped', bundle );
         return;
       }
 
