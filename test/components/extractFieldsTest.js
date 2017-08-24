@@ -439,8 +439,8 @@ tape('readStreamComponents', function(test) {
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'dependency',
-          'wof:country': 'value from wof:country',
-          'wof:abbreviation': 'value from wof:abbreviation'
+          'wof:country': 'XY',
+          'wof:abbreviation': 'YZ'
         }
       }
     ];
@@ -455,7 +455,7 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: 'value from wof:abbreviation',
+        abbreviation: 'XY',
         hierarchies: []
       }
     ];

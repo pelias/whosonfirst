@@ -65,8 +65,12 @@ function getName(properties) {
   }
 }
 
+function isDependencyOrCountry(placetype) {
+  return placetype === 'dependency' || placetype === 'country';
+}
+
 function getAbbreviation(properties) {
-  if (properties['wof:placetype'] === 'country' && properties['wof:country']) {
+  if (isDependencyOrCountry(properties['wof:placetype']) && properties['wof:country']) {
     return properties['wof:country'];
   }
   return properties['wof:abbreviation'];
