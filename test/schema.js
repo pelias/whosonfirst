@@ -239,3 +239,80 @@ tape('tests for looking up hierarchies', function(test) {
   });
 
 });
+
+tape('battery of importPlace tests', test => {
+  test.test('string importPlace should be cast as number', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: '123'
+        }
+      }
+    };
+
+    const validated = Joi.validate(config, schema);
+
+    t.equals(validated.value.imports.whosonfirst.importPlace, 123);
+    t.end();
+
+  });
+
+  test.test('non-string importPlace should remain as number', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: 123
+        }
+      }
+    };
+
+    const validated = Joi.validate(config, schema);
+
+    t.equals(validated.value.imports.whosonfirst.importPlace, 123);
+    t.end();
+
+  });
+
+  test.test('non-string/integer importPlace values should not validate', t => {
+    [null, false, {}, [], 'string'].forEach((value) => {
+      const config = {
+        imports: {
+          whosonfirst: {
+            datapath: '/path/to/data',
+            importPlace: value
+          }
+        }
+      };
+
+      const result = Joi.validate(config, schema);
+
+      t.equals(result.error.details.length, 1);
+      t.equals(result.error.details[0].message, '"importPlace" must be a number');
+
+    });
+
+    t.end();
+
+  });
+
+  test.test('non-integer importPlace values should not validate', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: 17.3
+        }
+      }
+    };
+
+    const result = Joi.validate(config, schema);
+
+    t.equals(result.error.details.length, 1);
+    t.equals(result.error.details[0].message, '"importPlace" must be an integer');
+    t.end();
+
+  });
+
+});
