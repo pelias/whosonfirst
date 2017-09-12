@@ -20,7 +20,9 @@ const ADMIN = [
   'localadmin',
   'locality',
   'borough',
-  'neighbourhood'
+  'neighbourhood',
+  'ocean',
+  'marinearea'
 ];
 
 const POSTALCODES = [

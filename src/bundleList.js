@@ -29,7 +29,9 @@ const hierarchyRoles = [
   'locality',
   'borough',
   'macrohood',
-  'neighbourhood'
+  'neighbourhood',
+  'ocean',
+  'marinearea'
 ];
 
 const postalcodeRoles = [
