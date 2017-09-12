@@ -17,7 +17,10 @@ const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 //
 // downloading can be done in any order, but the same order might as well be used
 const hierarchyRoles = [
+  'ocean',
+  'marinearea',
   'continent',
+  'empire',
   'country',
   'dependency',
   'disputed',
@@ -29,9 +32,7 @@ const hierarchyRoles = [
   'locality',
   'borough',
   'macrohood',
-  'neighbourhood',
-  'ocean',
-  'marinearea'
+  'neighbourhood'
 ];
 
 const postalcodeRoles = [

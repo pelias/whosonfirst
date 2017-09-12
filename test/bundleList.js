@@ -9,7 +9,10 @@ proxyquire.noPreserveCache();
 proxyquire.noCallThru();
 
 const ADMIN = [
+  'ocean',
+  'marinearea',
   'continent',
+  'empire',
   'country',
   'dependency',
   'disputed',
@@ -20,9 +23,7 @@ const ADMIN = [
   'localadmin',
   'locality',
   'borough',
-  'neighbourhood',
-  'ocean',
-  'marinearea'
+  'neighbourhood'
 ];
 
 const POSTALCODES = [
