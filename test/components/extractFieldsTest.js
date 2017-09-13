@@ -108,6 +108,87 @@ tape('readStreamComponents', function(test) {
 
   });
 
+  test.test('empty wof:hierarchy should synthesize from wof:placetype and id', t => {
+    const input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'wof:hierarchy': []
+        }
+      }
+    ];
+
+    const expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        population: undefined,
+        popularity: undefined,
+        abbreviation: undefined,
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: [
+          {
+            'place type 1_id': 12345
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
+  test.test('missing wof:hierarchy should synthesize from wof:placetype and id', t => {
+    const input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+        }
+      }
+    ];
+
+    const expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        population: undefined,
+        popularity: undefined,
+        abbreviation: undefined,
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: [
+          {
+            'place type 1_id': 12345
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
   test.test('misc:photo_sum not found should not include popularity', function(t) {
     var input = [
       {
@@ -134,7 +215,11 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
-        hierarchies: []
+        hierarchies: [
+          {
+            'place type 1_id': 12345
+          }
+        ]
       }
     ];
 
@@ -172,7 +257,11 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [
+          {
+            'county_id': 12345
+          }
+        ]
       }
     ];
 
@@ -208,7 +297,11 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [
+          {
+            'county_id': 12345
+          }
+        ]
       }
     ];
 
@@ -245,7 +338,11 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [
+          {
+            'county_id': 12345
+          }
+        ]
       }
     ];
 
@@ -421,7 +518,11 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: 'XY',
-        hierarchies: []
+        hierarchies: [
+          {
+            'country_id': 12345
+          }
+        ]
       }
     ];
 
@@ -456,7 +557,11 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: 'XY',
-        hierarchies: []
+        hierarchies: [
+          {
+            'dependency_id': 12345
+          }
+        ]
       }
     ];
 
@@ -491,7 +596,11 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: 'YZ',
-        hierarchies: []
+        hierarchies: [
+          {
+            'country_id': 12345
+          }
+        ]
       }
     ];
 
@@ -538,7 +647,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -581,7 +690,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -623,7 +732,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -664,7 +773,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -704,7 +813,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -743,7 +852,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -781,7 +890,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -818,7 +927,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -854,7 +963,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -889,7 +998,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -923,7 +1032,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -956,7 +1065,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1000,7 +1109,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1044,7 +1153,7 @@ tape('population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1091,7 +1200,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1134,7 +1243,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1176,7 +1285,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1217,7 +1326,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1257,7 +1366,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1296,7 +1405,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1334,7 +1443,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1371,7 +1480,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1407,7 +1516,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1442,7 +1551,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 
@@ -1476,7 +1585,7 @@ tape('negative population fallback tests', (test) => {
         popularity: undefined,
         bounding_box: undefined,
         abbreviation: undefined,
-        hierarchies: []
+        hierarchies: [ { country_id: 12345 }]
       }
     ];
 

@@ -83,7 +83,9 @@ tape('readStream', (test) => {
             bounding_box: '-13.691314,49.909613,1.771169,60.847886',
             population: 98765,
             popularity: 87654,
-            hierarchies: []
+            hierarchies: [
+              { 'place type 1_id': 123 }
+            ]
           },
           '456': {
             id: 456,
@@ -95,7 +97,9 @@ tape('readStream', (test) => {
             bounding_box: '-24.539906,34.815009,69.033946,81.85871',
             population: undefined,
             popularity: undefined,
-            hierarchies: []
+            hierarchies: [
+              { 'place type 2_id': 456 }
+            ]
           }
         });
 
