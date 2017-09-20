@@ -109,7 +109,7 @@ function getBundleList(callback) {
 
   }).on('close', () => {
 
-    const bundles = combineBundleBuckets(roles, bundleBuckets);
+    const bundles = _.sortedUniq(combineBundleBuckets(roles, bundleBuckets));
 
     callback(null, bundles);
 
