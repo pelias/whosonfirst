@@ -76,6 +76,21 @@ function getAbbreviation(properties) {
   return properties['wof:abbreviation'];
 }
 
+function getHierarchies(id, properties) {
+  // if there are no hierarchies but there's a placetype, synthesize a hierarchy
+  if (_.isEmpty(_.get(properties, 'wof:hierarchy')) && _.has(properties, 'wof:placetype')) {
+    const hierarchy = {};
+    hierarchy[properties['wof:placetype'] + '_id'] = id;
+
+    return [hierarchy];
+
+  }
+
+  // otherwise just return the hierarchies as-is
+  return _.defaultTo(properties['wof:hierarchy'], []);
+
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -94,7 +109,7 @@ module.exports.create = function map_fields_stream() {
       bounding_box: getBoundingBox(json_object.properties),
       population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum'],
-      hierarchies: _.get(json_object, 'properties.wof:hierarchy', [])
+      hierarchies: getHierarchies(json_object.id, json_object.properties)
     };
 
     // use the QS altname if US county and available

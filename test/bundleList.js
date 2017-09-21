@@ -9,7 +9,10 @@ proxyquire.noPreserveCache();
 proxyquire.noCallThru();
 
 const ADMIN = [
+  'ocean',
+  'marinearea',
   'continent',
+  'empire',
   'country',
   'dependency',
   'disputed',
