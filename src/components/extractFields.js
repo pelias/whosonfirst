@@ -77,6 +77,7 @@ function getAbbreviation(properties) {
 }
 
 function getHierarchies(id, properties) {
+  // if there are no hierarchies but there's a placetype, synthesize a hierarchy
   if (_.isEmpty(_.get(properties, 'wof:hierarchy')) && _.has(properties, 'wof:placetype')) {
     const hierarchy = {};
     hierarchy[properties['wof:placetype'] + '_id'] = id;
@@ -85,6 +86,7 @@ function getHierarchies(id, properties) {
 
   }
 
+  // otherwise just return the hierarchies as-is
   return _.defaultTo(properties['wof:hierarchy'], []);
 
 }
@@ -108,10 +110,7 @@ module.exports.create = function map_fields_stream() {
       population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum'],
       hierarchies: getHierarchies(json_object.id, json_object.properties)
-      // hierarchies: _.get(json_object, 'properties.wof:hierarchy', [])
     };
-
-    // console.error(record.hierarchies);
 
     // use the QS altname if US county and available
     if (isUsCounty(record, json_object.properties['wof:country'], json_object.properties['qs:a2_alt'])) {
