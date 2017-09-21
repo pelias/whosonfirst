@@ -3,6 +3,7 @@
 const tape = require('tape');
 const proxyquire = require('proxyquire');
 const fs = require('fs-extra');
+const _ = require('lodash');
 
 proxyquire.noPreserveCache();
 proxyquire.noCallThru();
@@ -136,6 +137,8 @@ tape('bundlesList tests', (test) => {
         t.assert(found, type + ' bundle(s) missing');
         return found;
       });
+
+      t.deepEquals(bundlesList, _.sortedUniq(bundlesList), 'no duplicates should exist in the bundle list');
 
       unexpected.every((type) => {
         const found = bundlesList.some((bundle) => {
