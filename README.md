@@ -31,12 +31,15 @@ Currently, the supported hierarchy types are:
 - county
 - dependency
 - disputed
+- [empire](https://www.youtube.com/watch?v=-bzWSJG93P8)
 - localadmin
 - locality
 - macrocounty
 - macrohood
 - macroregion
+- marinearea
 - neighbourhood
+- ocean
 - region
 - postalcodes (optional, see configuration)
 

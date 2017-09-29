@@ -17,7 +17,10 @@ const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 //
 // downloading can be done in any order, but the same order might as well be used
 const hierarchyRoles = [
+  'ocean',
+  'marinearea',
   'continent',
+  'empire',
   'country',
   'dependency',
   'disputed',
@@ -109,7 +112,7 @@ function getBundleList(callback) {
 
   }).on('close', () => {
 
-    const bundles = combineBundleBuckets(roles, bundleBuckets);
+    const bundles = _.sortedUniq(combineBundleBuckets(roles, bundleBuckets));
 
     callback(null, bundles);
 

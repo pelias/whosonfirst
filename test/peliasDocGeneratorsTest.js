@@ -13,7 +13,9 @@ function test_stream(input, testedStream, callback) {
 tape('create', function(test) {
   test.test('non-country place_types should be returned as Document with that place_type', function(t) {
     var place_types = ['neighbourhood', 'locality', 'borough', 'localadmin',
-                        'county', 'macrocounty', 'region', 'macroregion', 'dependency', 'postalcode'];
+                        'county', 'macrocounty', 'region', 'macroregion',
+                        'dependency', 'postalcode', 'ocean', 'marinearea',
+                        'continent', 'empire'];
 
     place_types.forEach(function(place_type) {
       var wofRecords = {
