@@ -38,7 +38,7 @@
     "klaw-sync": "^3.0.0",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
-    "pelias-config": "2.12.1",
+    "pelias-config": "2.13.0",
     "pelias-dbclient": "2.2.5",
     "pelias-logger": "0.2.1",
     "pelias-model": "5.1.0",
