@@ -41,7 +41,7 @@
     "pelias-config": "2.12.1",
     "pelias-dbclient": "2.2.5",
     "pelias-logger": "0.2.1",
-    "pelias-model": "5.1.0",
+    "pelias-model": "5.2.0",
     "pelias-parallel-stream": "0.1.0",
     "request-rate-limiter": "^1.0.2",
     "stream-array": "^1.1.2",
