@@ -1,4 +1,6 @@
 const filter = require('through2-filter');
+const concurrent = require('through2-concurrent');
+const through = require('through2');
 const _ = require('lodash');
 
 function isNullIsland(record) {
@@ -12,7 +14,12 @@ function isPostalCodeOnNullIsland(record) {
 }
 
 module.exports.create = function create() {
-  return filter.obj((record) => {
-    return !isNullIsland(record) && !isPostalCodeOnNullIsland(record);
+  return concurrent.obj(function(record, enc, next) {
+    const that = this;
+
+    if ( !isNullIsland(record) && !isPostalCodeOnNullIsland(record)) {
+      that.push(record);
+    }
+    next();
   });
 };

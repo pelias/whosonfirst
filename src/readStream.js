@@ -2,6 +2,7 @@ var combinedStream = require('combined-stream');
 var fs = require('fs');
 var through2 = require('through2');
 var path = require('path');
+var sink = require("through2-sink")
 
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
@@ -12,6 +13,7 @@ const recordHasIdAndProperties = require('./components/recordHasIdAndProperties'
 const isActiveRecord = require('./components/isActiveRecord');
 const extractFields = require('./components/extractFields');
 const recordHasName = require('./components/recordHasName');
+const heapdump = require('heapdump');
 
 /*
  * Convert a base directory and list of types into a list of meta file paths
@@ -47,6 +49,13 @@ function createMetaRecordStream(metaFilePaths, types) {
   metaFilePaths.forEach((metaFilePath) => {
     metaRecordStream.append( (next) => {
       logger.info( `Loading ${path.basename(metaFilePath)} records from ${path.dirname(metaFilePath)}` );
+
+      if (['wof-postalcode-ga-latest.csv', 'wof-neighbourhood-latest.csv', 'wof-postalcode-gb-latest.csv', 'wof-ocean-latest.csv', 'wof-macrocounty-latest.csv', 'wof-postalcode-ca-latest.csv'].includes(path.basename(metaFilePath))) {
+        heapdump.writeSnapshot(function(err, filename) {
+          console.log('dump written to', filename);
+        });
+      }
+
       next(createOneMetaRecordStream(metaFilePath));
     });
   });
@@ -64,20 +73,21 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
   const metaFilePaths = getMetaFilePaths(wofRoot, types);
 
   return createMetaRecordStream(metaFilePaths, types)
-  .pipe(isNotNullIslandRelated.create())
+  //.pipe(isNotNullIslandRelated.create())
   .pipe(loadJSON.create(wofRoot, wofConfig.missingFilesAreFatal))
-  .pipe(recordHasIdAndProperties.create())
-  .pipe(isActiveRecord.create())
-  .pipe(extractFields.create())
-  .pipe(recordHasName.create())
-  .pipe(through2.obj(function(wofRecord, enc, callback) {
-    // store admin records in memory to traverse the heirarchy
-    if (wofRecord.place_type !== 'venue' && wofRecord.place_type !== 'postalcode') {
-      wofAdminRecords[wofRecord.id] = wofRecord;
-    }
+  //.pipe(recordHasIdAndProperties.create())
+  //.pipe(isActiveRecord.create())
+  //.pipe(extractFields.create())
+  //.pipe(recordHasName.create())
+  //.pipe(through2.obj(function(wofRecord, enc, callback) {
+    //// store admin records in memory to traverse the heirarchy
+    //if (wofRecord.place_type !== 'venue' && wofRecord.place_type !== 'postalcode') {
+      //wofAdminRecords[wofRecord.id] = wofRecord;
+    //}
 
-    callback(null, wofRecord);
-  }));
+    //callback(null, wofRecord);
+  //}));
+  .pipe(sink.obj(() => {}));
 }
 
 module.exports = {

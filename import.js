@@ -32,13 +32,13 @@ bundles.generateBundleList((err, bundlesToImport) => {
     wofAdminRecords);
 
   // how to convert WOF records to Pelias Documents
-  var documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
+  //var documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
 
   // the final destination of Pelias Documents
-  var dbClientStream = peliasDbclient();
+  //var dbClientStream = peliasDbclient();
 
   // import WOF records into ES
-  importStream(readStream, documentGenerator, dbClientStream, function () {
-    logger.info('import finished');
-  });
+  //importStream(readStream, documentGenerator, dbClientStream, function () {
+    //logger.info('import finished');
+  //});
 });

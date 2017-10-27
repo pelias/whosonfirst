@@ -1,4 +1,4 @@
-const parse = require('csv-stream');
+const parse = require('csv-parser');
 const EOL = require('os').EOL;
 
 // this CSV parser assumes that:
@@ -6,11 +6,11 @@ const EOL = require('os').EOL;
 // - the delimiter is a comma
 
 const options = {
-  escapeChar : '"', // default is an empty string
-  enclosedChar : '"', // default is an empty string
-  endLine: EOL
+  //escape: '"',
+  //quote: '"',
+  //endLine: EOL
 };
 
 module.exports.create = function create() {
-  return parse.createStream(options);
+  return parse(options);
 };
