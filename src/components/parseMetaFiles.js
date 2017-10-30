@@ -1,4 +1,4 @@
-const parse = require('csv-stream');
+const csv_stream = require('csv-stream');
 const EOL = require('os').EOL;
 
 // this CSV parser assumes that:
@@ -12,5 +12,11 @@ const options = {
 };
 
 module.exports.create = function create() {
-  return parse.createStream(options);
+  const csv_parse_stream = csv_stream.createStream(options);
+
+  // override default encoding which is not set properly for Node.js 8
+  // see https://github.com/lbdremy/node-csv-stream/issues/13
+  csv_parse_stream._encoding = undefined;
+
+  return csv_parse_stream;
 };
