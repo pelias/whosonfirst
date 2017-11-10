@@ -68,6 +68,30 @@ tape('bundlesList tests', (test) => {
     });
   });
 
+  test.test('region venue bundles', (t) => {
+    const config = {
+      generate: () => {
+        return {
+          imports: {
+            whosonfirst: {
+              datapath: 'foo',
+              importVenues: true,
+              importPostalcodes: true
+            }
+          }
+        };
+      }
+    };
+
+    const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
+
+    bundles.generateBundleList((err, bundlesList) => {
+      t.assert(bundlesList.includes('wof-venue-us-ca-latest-bundle.tar.bz2'), 'venue bundle for regions are included');
+      fs.removeSync('foo');
+      t.end();
+    });
+  });
+
   test.test('admin only bundles', (t) => {
 
     const config = {
