@@ -131,7 +131,7 @@ function sortBundleByBuckets(roles, bundle, bundleBuckets) {
   roles.forEach((role) => {
     // search for the occurrence of role-latest-bundle, like region-latest-bundle
     // timestamped bundles should be skipped as they are of the format role-timestamp-bundle
-    const validBundleRegex = new RegExp(`${role}-(\\w{2}-)?latest`);
+    const validBundleRegex = new RegExp(`${role}-[\\w-]*latest`);
     if (validBundleRegex.test( bundle ) ) {
       bundleBuckets[role].push(bundle);
     }
