@@ -91,6 +91,16 @@ function getHierarchies(id, properties) {
 
 }
 
+function getPolygonCoords(object){
+  if(object.geometry){
+    if(object.geometry.coordinates){
+      if(object.geometry.coordinates.length === 1 && object.geometry.coordinates[0][0].length > 1){
+        return object.geometry.coordinates[0][0]
+      }
+    }
+  }
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -109,16 +119,21 @@ module.exports.create = function map_fields_stream() {
       bounding_box: getBoundingBox(json_object.properties),
       population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum'],
-      hierarchies: getHierarchies(json_object.id, json_object.properties)
+      hierarchies: getHierarchies(json_object.id, json_object.properties),
     };
 
+    var coords = getPolygonCoords(json_object);
+    if(coords){
+      record.coordinates = coords;
+    }
     // use the QS altname if US county and available
     if (isUsCounty(record, json_object.properties['wof:country'], json_object.properties['qs:a2_alt'])) {
       record.name = json_object.properties['qs:a2_alt'];
     }
-
+    
     return callback(null, record);
 
   });
 
 };
+

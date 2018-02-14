@@ -57,7 +57,9 @@ function setupDocument(record, hierarchy) {
     wofDoc.setName('default', record.name);
   }
   wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
-
+  if (record.coordinates) {
+    wofDoc.setPolygon({coordinates: record.coordinates});
+  }
   // only set population if available
   if (record.population) {
     wofDoc.setPopulation(record.population);
@@ -99,7 +101,7 @@ function setupDocument(record, hierarchy) {
   if (record.place_type === 'postalcode') {
     assignField(record, wofDoc);
   }
-
+   
   return wofDoc;
 
 }
