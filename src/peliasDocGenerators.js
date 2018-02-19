@@ -57,6 +57,8 @@ function setupDocument(record, hierarchy) {
     wofDoc.setName('default', record.name);
   }
   wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
+
+  //Only if coordinates are present
   if (record.coordinates) {
     wofDoc.setPolygon({coordinates: record.coordinates});
   }
@@ -94,7 +96,7 @@ function setupDocument(record, hierarchy) {
   if (!_.isUndefined(hierarchy)) {
     hierarchy.forEach(function(hierarchyElement) {
       assignField(hierarchyElement, wofDoc);
-    });
+    }); 
   }
 
   // add self to parent hierarchy for postalcodes only

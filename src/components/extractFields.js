@@ -1,6 +1,6 @@
-var through2 = require('through2');
-var _ = require('lodash');
-
+const through2 = require('through2');
+const _ = require('lodash');
+const config = require( 'pelias-config' ).generate(require('../schema'));
 // hierarchy in importance-descending order of population fields
 const population_hierarchy = [
   'mz:population',
@@ -109,7 +109,7 @@ function getPolygonCoords(object){
 */
 module.exports.create = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
-    var record = {
+    const record = {
       id: json_object.id,
       name: getName(json_object.properties),
       abbreviation: getAbbreviation(json_object.properties),
@@ -122,9 +122,12 @@ module.exports.create = function map_fields_stream() {
       hierarchies: getHierarchies(json_object.id, json_object.properties),
     };
 
-    var coords = getPolygonCoords(json_object);
-    if(coords){
-      record.coordinates = coords;
+    //Check config for polygon flag
+    if(config.imports.whosonfirst.polygons){
+      const coords = getPolygonCoords(json_object);
+      if(coords){
+        record.coordinates = coords;
+      }
     }
     // use the QS altname if US county and available
     if (isUsCounty(record, json_object.properties['wof:country'], json_object.properties['qs:a2_alt'])) {
