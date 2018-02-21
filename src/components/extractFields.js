@@ -1,6 +1,6 @@
 const through2 = require('through2');
 const _ = require('lodash');
-const config = require( 'pelias-config' ).generate(require('../schema'));
+const config = require( 'pelias-config' ).generate(require('../../schema'));
 // hierarchy in importance-descending order of population fields
 const population_hierarchy = [
   'mz:population',
