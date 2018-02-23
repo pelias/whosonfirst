@@ -58,7 +58,7 @@ The following configuration options are supported by this importer.
 | `imports.whosonfirst.api_key` | no | | used by the filtered download script, must be set if using `imports.whosonfirst.importPlace` config option. Visit the [Mapzen Developers dashboard](https://mapzen.com/developers) to get a working api key |
 | `imports.whosonfirst.importPostalcodes` | no | false | set to `true` to include postalcodes in the data download and import process |
 | `imports.whosonfirst.importVenues` | no | false | set to `true` to include venues in the data download and import process |
-| `imports.whosonfirst.importPlace` | no | | set to a WOF id (number or string) indicating the region of interest, only data pertaining to that place shall be downloaded. Use the WOF [spelunker tool](https://whosonfirst.mapzen.com/spelunker/) search for an ID of a place. |
+| `imports.whosonfirst.importPlace` | no | | set to a WOF id (number or string) indicating the region of interest, only data pertaining to that place shall be downloaded. Use the WOF [spelunker tool](https://spelunker.whosonfirst.org/) search for an ID of a place. |
 | `imports.whosonfirst.missingFilesAreFatal` | no | false | set to `true` for missing files from [Who's on First bundles](https://whosonfirst.mapzen.com/bundles/) to stop the import process |
 
 ## Downloading the Data
