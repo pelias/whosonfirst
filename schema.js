@@ -19,7 +19,10 @@ module.exports = Joi.object().keys({
       api_key: Joi.string(),
       importVenues: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true)
+      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
+      sqlite_files: Joi.array().items(Joi.object().keys({
+        filename: Joi.string()
+      }).requiredKeys('filename').unknown(true)),
     }).requiredKeys('datapath').unknown(false)
   }).requiredKeys('whosonfirst').unknown(true)
 }).requiredKeys('imports').unknown(true);
