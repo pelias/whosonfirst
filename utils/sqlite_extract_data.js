@@ -109,7 +109,7 @@ function MetaDataFiles(){
 
       // create write stream
       streams[row.placetype] = fs.createWriteStream(
-        path.join( metaDir, `${row.placetype}.csv` )
+        path.join( metaDir, `wof-${row.placetype}-latest.csv` )
       );
 
       // write csv header
