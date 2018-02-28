@@ -113,9 +113,10 @@ function MetaDataFiles(){
 
     // write csv row
     streams[row.placetype].write( keys.map(key => {
-      // quote fields containing comma or newline
+      // quote fields containing comma or newline, escape internal quotes
+      // https://gist.github.com/getify/3667624
       if( /[,\n]/.test( row[key] ) ) {
-        return '"' + row[key] + '"';
+        return '"' + row[key].replace(/\\([\s\S])|(")/g,'\\$1$2') + '"';
       }
       return row[key];
     }).join(',') + '\n' );
