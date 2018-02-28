@@ -21,8 +21,9 @@ fs.ensureDirSync(dataDir);
 
 // sql statements
 const sql = {
-  data: `SELECT id, body FROM geojson
-  WHERE id IN (
+  data: `SELECT spr.id, spr.placetype, geojson.body FROM geojson
+  JOIN spr ON geojson.id = spr.id
+  WHERE spr.id IN (
     SELECT id
     FROM ancestors
     WHERE id = @wofid
@@ -55,11 +56,15 @@ function extract( dbpath ){
 
   // extract all data to disk
   for( let row of db.prepare(sql.data).iterate({ wofid: targetWofId }) ){
+    if( 'postalcode' === row.placetype && true !== config.importPostalcodes ){ return; }
+    if( 'venue' === row.placetype && true !== config.importVenues ){ return; }
     writeJson( row );
   }
 
   // write meta data to disk
   for( let row of db.prepare(sql.meta).iterate({ wofid: targetWofId }) ){
+    if( 'postalcode' === row.placetype && true !== config.importPostalcodes ){ return; }
+    if( 'venue' === row.placetype && true !== config.importVenues ){ return; }
     metafiles.write( row );
   }
 
