@@ -41,6 +41,11 @@ const sql = {
   );`
 };
 
+// open one write stream per metadata file
+// note: important for to ensure meta files are written correctly
+// with only one header per import run
+const metafiles = new MetaDataFiles();
+
 // extract from a single db file
 function extract( dbpath ){
   let targetWofId = config.importPlace;
@@ -54,7 +59,9 @@ function extract( dbpath ){
   }
 
   // write meta data to disk
-  writeMeta( db.prepare(sql.meta).all({ wofid: targetWofId }) );
+  for( let row of db.prepare(sql.meta).iterate({ wofid: targetWofId }) ){
+    metafiles.write( row );
+  }
 
   // close connection
   db.close();
@@ -63,27 +70,7 @@ function extract( dbpath ){
 // extract from all database files
 config.sqlite_files.forEach(file => { extract( file.filename ); });
 
-// write metadata to disk
-function writeMeta( rows ){
-  let placetypeCounts = {};
-
-  rows.forEach( row => {
-    let targetFile = path.join(metaDir, `${row.placetype}.csv`);
-
-    // first time we have seen a record for this placetype
-    if( !placetypeCounts.hasOwnProperty( row.placetype ) ){
-
-      // init the placetype counter
-      placetypeCounts[ row.placetype ] = 0;
-
-      // write csv header line
-      fs.writeFileSync( targetFile, Object.keys(row).join(',') + '\n', 'utf8' );
-    }
-
-    // write csv row
-    fs.appendFile( targetFile, Object.keys(row).map(key => row[key]).join(',') + '\n', 'utf8' );
-  });
-}
+// ----------------------------------------------------------------------------
 
 // write json to disk
 function writeJson( row ){
@@ -104,4 +91,33 @@ function wofIdToPath( id ){
     strId = strId.substr(3);
   }
   return parts;
+}
+
+// handler for all metatdata streams
+function MetaDataFiles(){
+  let streams = {};
+  this.write = function( row ){
+    let keys = Object.keys(row);
+
+    // first time writing to this meta file
+    if( !streams.hasOwnProperty( row.placetype ) ){
+
+      // create write stream
+      streams[row.placetype] = fs.createWriteStream(
+        path.join( metaDir, `${row.placetype}.csv` )
+      );
+
+      // write csv header
+      streams[row.placetype].write( keys.join(',') + '\n' );
+    }
+
+    // write csv row
+    streams[row.placetype].write( keys.map(key => {
+      // quote fields containing comma or newline
+      if( /[,\n]/.test( row[key] ) ) {
+        return '"' + row[key] + '"';
+      }
+      return row[key];
+    }).join(',') + '\n' );
+  };
 }
