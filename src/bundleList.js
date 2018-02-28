@@ -62,7 +62,7 @@ function getPlacetypes() {
 
 function ensureBundleIndexExists(metaDataPath) {
   const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
-  const bundleIndexUrl = 'https://whosonfirst.mapzen.com/bundles/index.txt';
+  const bundleIndexUrl = 'https://dist.whosonfirst.org/bundles/index.txt';
 
   //ensure required directory structure exists
   fs.ensureDirSync(metaDataPath);
