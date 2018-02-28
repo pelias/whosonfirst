@@ -92,11 +92,9 @@ function getHierarchies(id, properties) {
 }
 
 function getPolygonCoords(object){
-  if(object.geometry){
-    if(object.geometry.coordinates){
-      if(object.geometry.coordinates.length === 1 && object.geometry.coordinates[0][0].length > 1){
-        return object.geometry.coordinates[0][0];
-      }
+  if(_.get(object, 'geometry.coordinates')){
+    if(object.geometry.coordinates.length === 1 && object.geometry.coordinates[0][0].length > 1){
+      return object.geometry.coordinates[0][0];
     }
   }
 }
