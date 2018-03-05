@@ -66,6 +66,10 @@ function extract( dbpath ){
   for( let row of db.prepare(sql.meta).iterate({ wofid: targetWofId }) ){
     if( 'postalcode' === row.placetype && true !== config.importPostalcodes ){ return; }
     if( 'venue' === row.placetype && true !== config.importVenues ){ return; }
+    if( !row.hasOwnProperty('path') ){
+      // ensure path property is present (required by some importers)
+      row.path = wofIdToPath(row.id).join(path.sep);
+    }
     metafiles.write( row );
   }
 
