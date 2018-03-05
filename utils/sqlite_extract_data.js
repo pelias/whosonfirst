@@ -25,21 +25,27 @@ const sql = {
   data: `SELECT spr.id, spr.placetype, geojson.body FROM geojson
   JOIN spr ON geojson.id = spr.id
   WHERE spr.id IN (
-    SELECT id
+    SELECT @wofid
+    UNION
+    SELECT DISTINCT id
+    FROM ancestors
+    WHERE ancestor_id = @wofid
+    UNION
+    SELECT DISTINCT ancestor_id
     FROM ancestors
     WHERE id = @wofid
-    OR ancestor_id = @wofid
-    GROUP BY id
-    ORDER BY id ASC
   );`,
   meta: `SELECT * FROM spr
   WHERE id IN (
-    SELECT id
+    SELECT @wofid
+    UNION
+    SELECT DISTINCT id
+    FROM ancestors
+    WHERE ancestor_id = @wofid
+    UNION
+    SELECT DISTINCT ancestor_id
     FROM ancestors
     WHERE id = @wofid
-    OR ancestor_id = @wofid
-    GROUP BY id
-    ORDER BY id ASC
   );`
 };
 
