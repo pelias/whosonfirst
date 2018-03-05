@@ -12,7 +12,7 @@ module.exports.create = function create(wofRoot, missingFilesAreFatal) {
 
     if (!record.path || record.path === 'path') {
       // we can generate the record path if column not present in metadata
-      record.path = wofIdToPath(record.id).concat(record.id+'.json').join(path.sep);
+      record.path = wofIdToPath(record.id).concat(record.id+'.geojson').join(path.sep);
 
       // failed to infer the data disk path
       if(!path.length){
