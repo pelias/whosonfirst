@@ -68,7 +68,7 @@ function extract( dbpath ){
     if( 'venue' === row.placetype && true !== config.importVenues ){ return; }
     if( !row.hasOwnProperty('path') ){
       // ensure path property is present (required by some importers)
-      row.path = wofIdToPath(row.id).join(path.sep);
+      row.path = wofIdToPath(row.id).concat(row.id+'.json').join(path.sep);
     }
     metafiles.write( row );
   }
