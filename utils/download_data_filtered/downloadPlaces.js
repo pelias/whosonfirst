@@ -7,6 +7,7 @@ const async = require('async');
 const logger = require('pelias-logger').get('download_data_filtered');
 const parallelStream = require('pelias-parallel-stream');
 const streamArray = require('stream-array');
+const wofIdToPath = require('../../src/wofIdToPath');
 
 const maxInFlight = 4;
 
@@ -54,15 +55,7 @@ function downloadById(params, callback) {
     return onError(`Invalid ID: ${placeId}`, new Error(`Invalid ID`), callback);
   }
 
-  let strId = placeId.toString();
-  let subPath = [];
-
-  while (strId.length){
-    let part = strId.substr(0, 3);
-    subPath.push(part);
-    strId = strId.substr(3);
-  }
-
+  let subPath = wofIdToPath(placeId);
   const filename = `${placeId}.geojson`;
   const sourceUrl = `${_defaultHost}/data/${subPath.join('/')}/${filename}`;
   const targetDirFull = path.join(targetDir, subPath.join(path.sep));
@@ -93,4 +86,3 @@ function onError(error, message, callback) {
 }
 
 module.exports.downloadPlaces = downloadPlaces;
-

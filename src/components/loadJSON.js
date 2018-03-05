@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const parallelStream = require('pelias-parallel-stream');
+const wofIdToPath = require('../wofIdToPath');
 
 const maxInFlight = 10;
 
@@ -10,8 +11,14 @@ module.exports.create = function create(wofRoot, missingFilesAreFatal) {
   return parallelStream(maxInFlight, function(record, enc, next) {
 
     if (!record.path || record.path === 'path') {
-      logger.warn('WOF record has no path', record);
-      return next();
+      // we can generate the record path if column not present in metadata
+      record.path = wofIdToPath(record.id).join(path.sep);
+
+      // failed to infer the data disk path
+      if(!path.length){
+        logger.warn('WOF record has no path', record);
+        return next();
+      }
     }
 
     const full_file_path = path.join(wofRoot, 'data', record.path);

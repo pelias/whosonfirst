@@ -2,6 +2,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const Sqlite3 = require('better-sqlite3');
+const wofIdToPath = require('../src/wofIdToPath');
 
 // load configuration variables
 const config = require( 'pelias-config' ).generate(require('../schema')).imports.whosonfirst;
@@ -84,18 +85,6 @@ function writeJson( row ){
     if( error ){ console.error(`error making directory ${targetDir}`); }
     fs.writeFileSync( path.join(targetDir, `${row.id}.geojson`), row.body, 'utf8' );
   });
-}
-
-// convert wofid integer to array of path components
-function wofIdToPath( id ){
-  let strId = id.toString();
-  let parts = [];
-  while( strId.length ){
-    let part = strId.substr(0, 3);
-    parts.push(part);
-    strId = strId.substr(3);
-  }
-  return parts;
 }
 
 // handler for all metatdata streams
