@@ -10,6 +10,7 @@ const Joi = require('joi');
 // * imports.whosonfirst.importPlace (string) (default: none)
 // * imports.whosonfirst.api_key (string) (default: none)
 // * imports.whosonfirst.missingFilesAreFatal (boolean) (default: false)
+// * imports.whosonfirst.sqliteDatabases array of objects containing filename (optional)
 
 module.exports = Joi.object().keys({
   imports: Joi.object().keys({
@@ -20,7 +21,7 @@ module.exports = Joi.object().keys({
       importVenues: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      sqlite_files: Joi.array().items(Joi.object().keys({
+      sqliteDatabases: Joi.array().items(Joi.object().keys({
         filename: Joi.string()
       }).requiredKeys('filename').unknown(true)),
     }).requiredKeys('datapath').unknown(false)

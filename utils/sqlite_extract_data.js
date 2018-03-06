@@ -2,17 +2,12 @@
 const fs = require('fs-extra');
 const path = require('path');
 const Sqlite3 = require('better-sqlite3');
+const common = require('./sqlite_common');
 const wofIdToPath = require('../src/wofIdToPath');
 
 // load configuration variables
-const config = require( 'pelias-config' ).generate(require('../schema')).imports.whosonfirst;
-const sqliteFiles = config.sqlite_files;
-
-// ensure sqlite_files array is specified in config
-if( !Array.isArray( config.sqlite_files ) || !config.sqlite_files.length ){
-  console.error('you must specify the imports.whosonfirst.sqlite_files array in your pelias.json');
-  process.exit(1);
-}
+const config = require('pelias-config').generate(require('../schema')).imports.whosonfirst;
+common.validateConfig(config, true);
 
 // ensure required directory structure exists
 const metaDir = path.join(config.datapath, 'meta');
@@ -90,7 +85,7 @@ const sql = {
 // open one write stream per metadata file
 // note: important for to ensure meta files are written correctly
 // with only one header per import run
-const metafiles = new MetaDataFiles();
+const metafiles = new common.MetaDataFiles( metaDir );
 
 // extract from a single db file
 function extract( dbpath ){
@@ -122,7 +117,17 @@ function extract( dbpath ){
 }
 
 // extract from all database files
-config.sqlite_files.forEach(file => { extract( file.filename ); });
+config.sqliteDatabases.forEach( entry => {
+  extract( path.join( entry.path, entry.filename ) );
+});
+
+// print stats
+console.error( '--- sqlite extract complete ---' );
+if( Object.keys( metafiles.stats ).length ){
+  Object.keys( metafiles.stats ).forEach( key => console.error( key, metafiles.stats[key]) );
+} else {
+  console.error( 'failed to extract any records!' );
+}
 
 // ----------------------------------------------------------------------------
 
@@ -133,34 +138,4 @@ function writeJson( row ){
     if( error ){ console.error(`error making directory ${targetDir}`); }
     fs.writeFileSync( path.join(targetDir, `${row.id}.geojson`), row.body, 'utf8' );
   });
-}
-
-// handler for all metatdata streams
-function MetaDataFiles(){
-  let streams = {};
-  this.write = function( row ){
-    let keys = Object.keys(row);
-
-    // first time writing to this meta file
-    if( !streams.hasOwnProperty( row.placetype ) ){
-
-      // create write stream
-      streams[row.placetype] = fs.createWriteStream(
-        path.join( metaDir, `wof-${row.placetype}-latest.csv` )
-      );
-
-      // write csv header
-      streams[row.placetype].write( keys.join(',') + '\n' );
-    }
-
-    // write csv row
-    streams[row.placetype].write( keys.map(key => {
-      // quote fields containing comma or newline, escape internal quotes
-      // https://gist.github.com/getify/3667624
-      if( /[,\n]/.test( row[key] ) ) {
-        return '"' + row[key].replace(/\\([\s\S])|(")/g,'\\$1$2') + '"';
-      }
-      return row[key];
-    }).join(',') + '\n' );
-  };
 }
