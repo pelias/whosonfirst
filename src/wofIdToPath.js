@@ -1,3 +1,4 @@
+'use strict';
 
 // convert wofid integer to array of path components
 function wofIdToPath( id ){
