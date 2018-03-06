@@ -35,7 +35,45 @@ const sql = {
     FROM ancestors
     WHERE id = @wofid
   );`,
-  meta: `SELECT * FROM spr
+  meta: `SELECT
+    json_extract(body, '$.bbox[0]') || ',' ||
+    json_extract(body, '$.bbox[1]') || ',' ||
+    json_extract(body, '$.bbox[2]') || ',' ||
+    json_extract(body, '$.bbox[3]') AS bbox,
+    json_extract(body, '$.properties.edtf:cessation') AS cessation,
+    json_extract(body, '$.properties.wof:hierarchy[0].country_id') AS country_id,
+    json_extract(body, '$.properties.edtf:deprecated') AS deprecated,
+    "" AS file_hash,
+    "" AS fullname,
+    json_extract(body, '$.properties.geom:hash') AS geom_hash,
+    json_extract(body, '$.properties.geom:latitude') AS geom_latitude,
+    json_extract(body, '$.properties.geom:longitude') AS geom_longitude,
+    json_extract(body, '$.properties.wof:id') AS id,
+    json_extract(body, '$.properties.edtf:inception') AS inception,
+    json_extract(body, '$.properties.iso:country') AS iso,
+    json_extract(body, '$.properties.iso:country') AS iso_country,
+    json_extract(body, '$.properties.wof:lastmodified') AS lastmodified,
+    json_extract(body, '$.properties.lbl:latitude') AS lbl_latitude,
+    json_extract(body, '$.properties.lbl:longitude') AS lbl_longitude,
+    json_extract(body, '$.properties.wof:hierarchy[0].locality_id') AS locality_id,
+    json_extract(body, '$.properties.wof:name') AS name,
+    json_extract(body, '$.properties.wof:parent_id') AS parent_id,
+    REPLACE(
+      REPLACE(
+        SUBSTR(json_extract(body, '$.properties.wof:id'),1,3) ||'/'||
+        SUBSTR(json_extract(body, '$.properties.wof:id'),4,3) ||'/'||
+        SUBSTR(json_extract(body, '$.properties.wof:id'),7,3) ||'/'||
+        SUBSTR(json_extract(body, '$.properties.wof:id'),10)  ||'/'||
+        json_extract(body, '$.properties.wof:id') || '.geojson',
+      '//', '/'),
+    '//','/') AS path,
+    json_extract(body, '$.properties.wof:placetype') AS placetype,
+    json_extract(body, '$.properties.wof:hierarchy[0].region_id') AS region_id,
+    json_extract(body, '$.properties.src:geom') AS source,
+    json_extract(body, '$.properties.wof:superseded_by[0]') AS superseded_by,
+    json_extract(body, '$.properties.wof:supersedes[0]') AS supersedes,
+    json_extract(body, '$.properties.wof:country') AS wof_country
+  FROM geojson
   WHERE id IN (
     SELECT @wofid
     UNION
