@@ -1,42 +1,52 @@
-const config = require( 'pelias-config' ).generate(require('../schema'));
+
+const config = require( 'pelias-config' ).generate(require('../schema')).imports.whosonfirst;
 
 function on_done() {
   console.log('All done!');
 }
 
-if (config.imports.whosonfirst.sqliteDatabases) {
-  require('./sqlite_download').download(() => {
-    require('./sqlite_extract_data').extract({ unlink: true }, on_done);
+if( config.importPlace ) {
+  const download = require('./sqlite_download').download;
+  const extract = require('./sqlite_extract_data').extract;
+  const findSubdivisions = require('./sqlite_extract_data').findSubdivisions;
+  const databases = [ 'whosonfirst-data-latest.db' ];
+
+  // download main sqlite database file
+  download({ databases: databases }, () => {
+
+    // enumerate additional sqlite databases required
+    const subdivisions = findSubdivisions( 'whosonfirst-data-latest.db' );
+    subdivisions.forEach( subdivision => {
+      let parts = subdivision.split('-');
+      if( parts.length > 1 ){
+        if( true === config.importVenues ){
+          if( 'us' === parts[0] ){
+            databases.push(`whosonfirst-data-venue-${subdivision}-latest.db`);
+          } else {
+            console.error(`whosonfirst-data-venue-${parts[0]}-latest.db`);
+          }
+        }
+      }
+      else {
+        if( true === config.importPostalcodes ){
+          databases.push(`whosonfirst-data-postalcode-${subdivision}-latest.db`);
+        }
+        if( true === config.importConstituencies ){
+          databases.push(`whosonfirst-data-constituency-${subdivision}-latest.db`);
+        }
+        if( true === config.importIntersections ){
+          databases.push(`whosonfirst-data-intersection-${subdivision}-latest.db`);
+        }
+      }
+    });
+
+    // download additonal database files
+    download({ databases: databases }, () => {
+
+      // extract all files
+      extract({ unlink: true, databases: databases }, on_done);
+    });
   });
-}
-else if (config.imports.whosonfirst.importPlace) {
-  console.error(`
-    The whosonfirst API is currently offline (due to the shutdown of mapzen).
-
-    We recommend updating your ~/pelias.json to use the new sqlite extract scripts instead.
-    The sqlite databases are the preferred method of sourcing regional extracts going forward.
-
-    Visit: https://dist.whosonfirst.org/sqlite/
-    Select the database file(s) you would like to use and add them to your ~/pelias.json
-    You may then rerun this script, the databases will be downloaded/updated for you.
-
-    example config section:
-
-    "whosonfirst": {
-      "datapath": "/tmp",
-      "importVenues": false,
-      "importPostalcodes": true,
-      "importPlace": "101715829",
-      "sqliteDatabases": [
-        { "filename": "whosonfirst-data-latest.db" },
-        { "filename": "whosonfirst-data-postalcode-us-latest.db" }
-      ]
-    }
-
-    see: https://github.com/pelias/whosonfirst/pull/324 for more info`
-  );
-  process.exit(1);
-  // require('./download_data_filtered/index').download(on_done);
 }
 else {
   require('./download_data_all').download(on_done);

@@ -24,7 +24,7 @@ REMOTE_PATH="${REMOTE}/${DB_FILENAME}.bz2"
 info() { echo -e "\e[33m[$1]\t\e[0m $2" >&2; }
 err() { echo -e "\e[31m[$1]\t\e[0m \e[91m$2\e[0m" >&2; }
 extract_file() {
-  info 'extract' "${LOCAL_BZ2_PATH}"
+  info 'decompress' "${LOCAL_BZ2_PATH}"
   bunzip2 -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
 }
 generate_timestamp() {
@@ -34,7 +34,7 @@ generate_timestamp() {
 download_handler() {
   HTTP_STATUS="${1}"
   if [[ "${HTTP_STATUS}" == "200" ]]; then
-    extract_file; generate_timestamp
+    extract_file && generate_timestamp
   elif [[ "${HTTP_STATUS}" == "304" ]]; then
     info 'not modified' "${DB_FILENAME}"
   else

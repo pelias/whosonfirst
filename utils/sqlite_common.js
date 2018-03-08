@@ -2,37 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports.validateConfig = function validateConfig( config, mustExist ){
-
-  // ensure sqliteDatabases array is specified in config
-  if( !Array.isArray( config.sqliteDatabases ) || !config.sqliteDatabases.length ){
-    console.error('you must specify the imports.whosonfirst.sqliteDatabases array in your pelias.json');
-    process.exit(1);
-  }
-
-  // ensure importPlace is specified in config
-  if( !config.hasOwnProperty('importPlace') ){
-    console.error('you must specify a wofid as imports.whosonfirst.importPlace in your pelias.json');
-    process.exit(1);
-  }
-
-  // ensure entries are valid
-  config.sqliteDatabases = config.sqliteDatabases.map(entry => {
-    if( entry.filename !== path.basename( entry.filename ) ){
-      throw new Error( 'config: sqlite filename should not include path: ' + entry.filename );
-    }
-    if( !entry.path ){ entry.path = config.datapath; }
-    if( !fs.existsSync( entry.path ) ){
-      throw new Error( 'config: sqlite path not found: ' + entry.path );
-    }
-    let absPath = path.join( entry.path, entry.filename );
-    if( true === mustExist && !fs.existsSync( absPath ) ){
-      throw new Error( 'config: sqlite file not found: ' + absPath );
-    }
-    return entry;
-  });
-};
-
 // handler for all metatdata streams
 module.exports.MetaDataFiles = function MetaDataFiles( metaDir ){
   let streams = {};

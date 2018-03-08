@@ -7,10 +7,11 @@ const Joi = require('joi');
 // optional:
 // * imports.whosonfirst.importVenues (boolean) (default: false)
 // * imports.whosonfirst.importPostalcodes (boolean) (default: false)
+// * imports.whosonfirst.importConstituencies (boolean) (default: false)
+// * imports.whosonfirst.importIntersections (boolean) (default: false)
 // * imports.whosonfirst.importPlace (string) (default: none)
-// * imports.whosonfirst.api_key (string) (default: none)
+// * imports.whosonfirst.api_key (string) (default: none) DEPRECATED
 // * imports.whosonfirst.missingFilesAreFatal (boolean) (default: false)
-// * imports.whosonfirst.sqliteDatabases array of objects containing filename (optional)
 
 module.exports = Joi.object().keys({
   imports: Joi.object().keys({
@@ -20,10 +21,9 @@ module.exports = Joi.object().keys({
       api_key: Joi.string(),
       importVenues: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      sqliteDatabases: Joi.array().items(Joi.object().keys({
-        filename: Joi.string()
-      }).requiredKeys('filename').unknown(true)),
+      importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
+      importIntersections: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
+      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true)
     }).requiredKeys('datapath').unknown(false)
   }).requiredKeys('whosonfirst').unknown(true)
 }).requiredKeys('imports').unknown(true);
