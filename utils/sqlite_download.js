@@ -16,15 +16,15 @@ const downloadFunctions = config.sqliteDatabases.map(entry => {
   return (done) => {
 
     // build shell command
+    const options = { cwd: path.basename(__dirname) };
     const cmd = util.format(
-      'curl https://dist.whosonfirst.org/sqlite/%s.bz2 | bunzip2 > %s',
+      './sqlite_download.sh %s %s',
       entry.filename,
       path.join( entry.path, entry.filename )
     );
 
-    console.log('downloading: ' + entry.filename);
-    child_process.exec(cmd, (error, stdout, stderr) => {
-      console.log('done downloading: ' + entry.filename);
+    child_process.exec(cmd, options, (error, stdout, stderr) => {
+      if( stderr.trim().length ){ console.log( stderr.trim() ); }
       if( error ){
         console.error('error downloading: ' + entry.filename + ': ' + error);
         console.error( stderr );
@@ -41,6 +41,10 @@ const downloadFunctions = config.sqliteDatabases.map(entry => {
 const simultaneousDownloads = Math.max(4, Math.min(1, os.cpus().length / 2));
 
 // download all files
-async.parallelLimit(downloadFunctions, simultaneousDownloads, () => {
-  console.error( 'done!' );
-});
+async.parallelLimit(downloadFunctions, simultaneousDownloads, () => {});
+
+// no databases specified
+if( !downloadFunctions.length ){
+  console.error('no sqlite databases specified!');
+  process.exit(1);
+}
