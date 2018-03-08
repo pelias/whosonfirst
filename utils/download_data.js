@@ -9,13 +9,14 @@ if( config.importPlace ) {
   const download = require('./sqlite_download').download;
   const extract = require('./sqlite_extract_data').extract;
   const findSubdivisions = require('./sqlite_extract_data').findSubdivisions;
-  const databases = [ 'whosonfirst-data-latest.db' ];
+  const mainDataDB = 'whosonfirst-data-latest.db';
 
   // download main sqlite database file
-  download({ databases: databases }, () => {
+  download({ databases: [ mainDataDB ] }, () => {
 
     // enumerate additional sqlite databases required
-    const subdivisions = findSubdivisions( 'whosonfirst-data-latest.db' );
+    let databases = [];
+    const subdivisions = findSubdivisions( mainDataDB );
     subdivisions.forEach( subdivision => {
       let parts = subdivision.split('-');
       if( parts.length > 1 ){
@@ -26,6 +27,13 @@ if( config.importPlace ) {
             console.error(`whosonfirst-data-venue-${parts[0]}-latest.db`);
           }
         }
+        if( true === config.importIntersections ){
+          if( 'us' === parts[0] ){
+            databases.push(`whosonfirst-data-intersection-${subdivision}-latest.db`);
+          } else {
+            console.error(`whosonfirst-data-intersection-${parts[0]}-latest.db`);
+          }
+        }
       }
       else {
         if( true === config.importPostalcodes ){
@@ -34,9 +42,6 @@ if( config.importPlace ) {
         if( true === config.importConstituencies ){
           databases.push(`whosonfirst-data-constituency-${subdivision}-latest.db`);
         }
-        if( true === config.importIntersections ){
-          databases.push(`whosonfirst-data-intersection-${subdivision}-latest.db`);
-        }
       }
     });
 
@@ -44,7 +49,11 @@ if( config.importPlace ) {
     download({ databases: databases }, () => {
 
       // extract all files
-      extract({ unlink: true, databases: databases }, on_done);
+      console.error('extracting data...');
+      extract({
+        unlink: true,
+        databases: [ mainDataDB ].concat( databases )
+      }, on_done);
     });
   });
 }
