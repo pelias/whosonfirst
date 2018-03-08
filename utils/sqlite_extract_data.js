@@ -177,10 +177,12 @@ function extract(options, callback){
   // write json to disk
   function writeJson( row ){
     let targetDir = path.join(dataDir, wofIdToPath(row.id).join(path.sep));
-    fs.ensureDir(targetDir, (error) => {
-      if( error ){ console.error(`error making directory ${targetDir}`); }
+    try {
+      fs.ensureDirSync(targetDir);
       fs.writeFileSync( path.join(targetDir, `${row.id}.geojson`), row.body, 'utf8' );
-    });
+    } catch( error ){
+      if( error ){ console.error(`error making directory ${targetDir}`); }
+    }
   }
 }
 
