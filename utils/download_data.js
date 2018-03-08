@@ -24,14 +24,14 @@ if( config.importPlace ) {
           if( 'us' === parts[0] ){
             databases.push(`whosonfirst-data-venue-${subdivision}-latest.db`);
           } else {
-            console.error(`whosonfirst-data-venue-${parts[0]}-latest.db`);
+            databases.push(`whosonfirst-data-venue-${parts[0]}-latest.db`);
           }
         }
         if( true === config.importIntersections ){
           if( 'us' === parts[0] ){
             databases.push(`whosonfirst-data-intersection-${subdivision}-latest.db`);
           } else {
-            console.error(`whosonfirst-data-intersection-${parts[0]}-latest.db`);
+            databases.push(`whosonfirst-data-intersection-${parts[0]}-latest.db`);
           }
         }
       }
