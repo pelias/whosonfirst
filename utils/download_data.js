@@ -19,6 +19,7 @@ if( config.importPlace ) {
     const subdivisions = findSubdivisions( mainDataDB );
     subdivisions.forEach( subdivision => {
       let parts = subdivision.split('-');
+      if( 'xx' === parts[0] ){ return; } // ignore 'xx' unspecified subdivisions
       if( parts.length > 1 ){
         if( true === config.importVenues ){
           if( 'us' === parts[0] ){
