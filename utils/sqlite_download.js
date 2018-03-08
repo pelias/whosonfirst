@@ -55,7 +55,7 @@ function download(callback){
   const simultaneousDownloads = Math.max(4, Math.min(1, os.cpus().length / 2));
 
   // download all files
-  async.parallelLimit(downloadFunctions, simultaneousDownloads, () => {});
+  async.parallelLimit(downloadFunctions, simultaneousDownloads, callback);
 
   // no databases specified
   if( !downloadFunctions.length ){

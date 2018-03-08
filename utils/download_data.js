@@ -5,7 +5,9 @@ function on_done() {
 }
 
 if (config.imports.whosonfirst.sqliteDatabases) {
-  require('./sqlite_download').download(on_done);
+  require('./sqlite_download').download(() => {
+    require('./sqlite_extract_data').extract({ unlink: true }, on_done);
+  });
 }
 else if (config.imports.whosonfirst.importPlace) {
   console.error(`
