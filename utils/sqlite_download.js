@@ -53,12 +53,6 @@ function download(options, callback){
 
   // download all files
   async.parallelLimit(downloadFunctions, simultaneousDownloads, callback);
-
-  // no databases specified
-  if( !downloadFunctions.length ){
-    console.error('no sqlite databases specified!');
-    process.exit(1);
-  }
 }
 
 module.exports.download = download;
