@@ -46,6 +46,9 @@ if( config.importPlace ) {
       }
     });
 
+    // dedupe array
+    databases = databases.filter((item, pos) => databases.indexOf(item) === pos);
+
     // download additonal database files
     download({ databases: databases }, () => {
 
