@@ -10,6 +10,12 @@ module.exports.validateConfig = function validateConfig( config, mustExist ){
     process.exit(1);
   }
 
+  // ensure importPlace is specified in config
+  if( !config.hasOwnProperty('importPlace') ){
+    console.error('you must specify a wofid as imports.whosonfirst.importPlace in your pelias.json');
+    process.exit(1);
+  }
+
   // ensure entries are valid
   config.sqliteDatabases = config.sqliteDatabases.map(entry => {
     if( entry.filename !== path.basename( entry.filename ) ){
