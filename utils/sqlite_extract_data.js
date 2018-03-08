@@ -98,6 +98,7 @@ function extract(options, callback){
   // location of data and meta dirs
   const metaDir = path.join(config.datapath, 'meta');
   const dataDir = path.join(config.datapath, 'data');
+  const sqliteDir = path.join(config.datapath, 'sqlite');
 
   // unlink (truncate meta and data dirs)
   if( options && true === options.unlink ){
@@ -108,6 +109,7 @@ function extract(options, callback){
   // ensure required directory structure exists
   fs.ensureDirSync(metaDir);
   fs.ensureDirSync(dataDir);
+  fs.ensureDirSync(sqliteDir);
 
   // open one write stream per metadata file
   // note: important for to ensure meta files are written correctly
@@ -150,7 +152,7 @@ function extract(options, callback){
   // extract from all database files
   options.databases.forEach( filename => {
 
-    let dbpath = path.join( config.datapath, filename );
+    let dbpath = path.join( sqliteDir, filename );
     if( !fs.existsSync( dbpath ) ){
       console.error('not found:', dbpath);
       return;
@@ -191,10 +193,11 @@ function findSubdivisions( filename ){
 
   // load configuration variables
   const config = require('pelias-config').generate(require('../schema')).imports.whosonfirst;
+  const sqliteDir = path.join(config.datapath, 'sqlite');
   let targetWofId = config.importPlace;
 
   // connect to sql db
-  let db = new Sqlite3( path.join( config.datapath, filename ), { readonly: true } );
+  let db = new Sqlite3( path.join( sqliteDir, filename ), { readonly: true } );
 
   // query db
   // console.error( sql.subdiv.replace(/@wofid/g, targetWofId) );

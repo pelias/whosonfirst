@@ -11,6 +11,8 @@ function download(options, callback){
 
   // load configuration variables
   const config = require('pelias-config').generate(require('../schema')).imports.whosonfirst;
+  const sqliteDir = path.join(config.datapath, 'sqlite');
+  fs.ensureDirSync(sqliteDir);
 
   // generate a download function per database listed in config
   const downloadFunctions = options.databases.map(filename => {
@@ -19,7 +21,7 @@ function download(options, callback){
       // build shell command
       const options = { cwd: path.basename(__dirname) };
       const cmd = './sqlite_download.sh';
-      const args = [ filename, path.join( config.datapath, filename ) ];
+      const args = [ filename, path.join( sqliteDir, filename ) ];
       const child = child_process.spawn(cmd, args, options);
 
       // handle stdio
