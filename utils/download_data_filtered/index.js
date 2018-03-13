@@ -15,6 +15,15 @@ const downloadPlaces = require('./downloadPlaces').downloadPlaces;
 // const Berlin = '101748799';
 
 function download(callback) {
+
+  // array support for 'importPlace' was added after this downloader was written.
+  // backwards compatibility support since the schema validation changed to support arrays.
+  if( Array.isArray( config.imports.whosonfirst.importPlace ) ){
+    console.error('this download method only supports a single entry for whosonfirst.importPlace');
+    config.imports.whosonfirst.importPlace = config.imports.whosonfirst.importPlace[0];
+    console.error('only using the first value in the array:', config.imports.whosonfirst.importPlace );
+  }
+
   const context = {
     apiKey: config.imports.whosonfirst.api_key,
     // path to data directory where the data will be downloaded to, it will be created if doesn't exist
