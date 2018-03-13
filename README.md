@@ -55,7 +55,6 @@ The following configuration options are supported by this importer.
 | key | required | default | description |
 | --- | --- | --- | --- |
 | `imports.whosonfirst.datapath` | yes | | full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data) |
-| `imports.whosonfirst.api_key` | no | | used by the filtered download script, must be set if using `imports.whosonfirst.importPlace` config option. Visit the [Mapzen Developers dashboard](https://mapzen.com/developers) to get a working api key |
 | `imports.whosonfirst.importPostalcodes` | no | false | set to `true` to include postalcodes in the data download and import process |
 | `imports.whosonfirst.importVenues` | no | false | set to `true` to include venues in the data download and import process |
 | `imports.whosonfirst.importPlace` | no | | set to a WOF id (number or string) indicating the region of interest, only data pertaining to that place shall be downloaded. Use the WOF [spelunker tool](https://spelunker.whosonfirst.org/) search for an ID of a place. |
@@ -63,7 +62,7 @@ The following configuration options are supported by this importer.
 
 ## Downloading the Data
 
-* The `download` script will download the required bundles and place the data into the datapath configured in [pelias-config](https://github.com/pelias/config) in the required directory layout.  
+* The `download` script will download the required bundles/sqlite databases and place the data into the datapath configured in [pelias-config](https://github.com/pelias/config) in the required directory layout.
 To install the required node module dependencies and run the download script:
 
 ```bash
