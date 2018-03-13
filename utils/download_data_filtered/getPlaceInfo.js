@@ -1,4 +1,3 @@
-'use strict';
 
 const RateLimiter = require('request-rate-limiter');
 const logger = require('pelias-logger').get('download_data_filtered');

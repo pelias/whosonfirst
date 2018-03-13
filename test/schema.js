@@ -1,4 +1,3 @@
-'use strict';
 
 const tape = require('tape');
 
@@ -258,6 +257,23 @@ tape('battery of importPlace tests', test => {
 
   });
 
+  test.test('array of strings importPlace should be cast as number', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: ['123','456']
+        }
+      }
+    };
+
+    const validated = Joi.validate(config, schema);
+
+    t.deepEquals(validated.value.imports.whosonfirst.importPlace, [123,456]);
+    t.end();
+
+  });
+
   test.test('non-string importPlace should remain as number', t => {
     const config = {
       imports: {
@@ -275,8 +291,25 @@ tape('battery of importPlace tests', test => {
 
   });
 
+  test.test('array of non-string importPlace should remain as number', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: [123, 456]
+        }
+      }
+    };
+
+    const validated = Joi.validate(config, schema);
+
+    t.deepEquals(validated.value.imports.whosonfirst.importPlace, [123, 456]);
+    t.end();
+
+  });
+
   test.test('non-string/integer importPlace values should not validate', t => {
-    [null, false, {}, [], 'string'].forEach((value) => {
+    [null, false, {}, 'string'].forEach((value) => {
       const config = {
         imports: {
           whosonfirst: {
@@ -288,8 +321,32 @@ tape('battery of importPlace tests', test => {
 
       const result = Joi.validate(config, schema);
 
-      t.equals(result.error.details.length, 1);
+      t.equals(result.error.details.length, 2);
       t.equals(result.error.details[0].message, '"importPlace" must be a number');
+      t.equals(result.error.details[1].message, '"importPlace" must be an array');
+
+    });
+
+    t.end();
+
+  });
+
+  test.test('arra of non-string/integer importPlace values should not validate', t => {
+    [null, false, {}, 'string'].forEach((value) => {
+      const config = {
+        imports: {
+          whosonfirst: {
+            datapath: '/path/to/data',
+            importPlace: [value]
+          }
+        }
+      };
+
+      const result = Joi.validate(config, schema);
+
+      t.equals(result.error.details.length, 2);
+      t.equals(result.error.details[0].message, '"importPlace" must be a number');
+      t.equals(result.error.details[1].message, '"0" must be a number');
 
     });
 
@@ -309,8 +366,28 @@ tape('battery of importPlace tests', test => {
 
     const result = Joi.validate(config, schema);
 
-    t.equals(result.error.details.length, 1);
+    t.equals(result.error.details.length, 2);
     t.equals(result.error.details[0].message, '"importPlace" must be an integer');
+    t.equals(result.error.details[1].message, '"importPlace" must be an array');
+    t.end();
+
+  });
+
+  test.test('array of non-integer importPlace values should not validate', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: [17.3, 18.2]
+        }
+      }
+    };
+
+    const result = Joi.validate(config, schema);
+
+    t.equals(result.error.details.length, 2);
+    t.equals(result.error.details[0].message, '"importPlace" must be a number');
+    t.equals(result.error.details[1].message, '"0" must be an integer');
     t.end();
 
   });
