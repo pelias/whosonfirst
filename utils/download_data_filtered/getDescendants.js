@@ -1,4 +1,3 @@
-'use strict';
 
 const RateLimiter = require('request-rate-limiter');
 const async = require('async');

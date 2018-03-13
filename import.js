@@ -1,4 +1,3 @@
-'use strict';
 
 var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
 var readStreamModule = require('./src/readStream');
