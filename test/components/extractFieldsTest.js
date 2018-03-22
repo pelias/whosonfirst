@@ -1594,6 +1594,47 @@ tape('negative population fallback tests', (test) => {
       t.end();
     });
 
+
+  test.test('should define coordinates if polygon data present', t => {
+    const input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'name 1',
+          'wof:placetype': 'place type 1',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+          'geom:coordinates': ''
+        }
+      }
+    ];
+
+    const expected = [
+      {
+        id: 12345,
+        name: 'name 1',
+        place_type: 'place type 1',
+        lat: 12.121212,
+        lon: 21.212121,
+        population: undefined,
+        popularity: undefined,
+        abbreviation: undefined,
+        bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+        hierarchies: [
+          {
+            'place type 1_id': 12345
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
   });
 
 });
