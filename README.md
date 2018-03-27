@@ -9,7 +9,7 @@ official user documentation is [here](https://mapzen.com/documentation/search/).
 
 ## Overview
 
-pelias-whosonfirst is a tool used for importing [Who's On First data](https://whosonfirst.mapzen.com/) from local files into a Pelias ElasticSearch store.
+pelias-whosonfirst is a tool used for importing [Who's On First data](https://dist.whosonfirst.org/) from local files into a Pelias ElasticSearch store.
 
 ## Requirements
 
@@ -57,7 +57,7 @@ The following configuration options are supported by this importer.
 | `imports.whosonfirst.datapath` | yes | | full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data) |
 | `imports.whosonfirst.importPostalcodes` | no | false | set to `true` to include postalcodes in the data download and import process |
 | `imports.whosonfirst.importVenues` | no | false | set to `true` to include venues in the data download and import process |
-| `imports.whosonfirst.importPlace` | no | | set to a WOF id (number or string) indicating the region of interest, only data pertaining to that place shall be downloaded. Use the WOF [spelunker tool](https://spelunker.whosonfirst.org/) search for an ID of a place. |
+| `imports.whosonfirst.importPlace` | no | | set to a WOF id (number or string) indicating the region of interest, only data pertaining to that place shall be downloaded. Use the WOF [spelunker tool](https://spelunker.whosonfirst.org) search for an ID of a place. |
 | `imports.whosonfirst.missingFilesAreFatal` | no | false | set to `true` for missing files from [Who's on First bundles](https://dist.whosonfirst.org/bundles/) to stop the import process |
 
 ## Downloading the Data
