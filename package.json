@@ -12,8 +12,7 @@
     "test": "node test/test | tap-dot",
     "lint": "jshint .",
     "validate": "npm ls",
-    "travis": "npm run test",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "travis": "npm run test"
   },
   "repository": {
     "type": "git",

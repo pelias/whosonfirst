@@ -12,7 +12,7 @@ script: npm run travis
 before_install:
   - npm i -g npm
 after_success:
-  - npm run semantic-release
+  - npx semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
