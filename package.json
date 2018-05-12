@@ -12,9 +12,8 @@
     "test": "node test/test | tap-dot",
     "lint": "jshint .",
     "validate": "npm ls",
-    "travis": "npm run check-dependencies && npm run test",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "check-dependencies": "node_modules/.bin/npm-check --production"
+    "travis": "npm run test",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
@@ -54,7 +53,6 @@
   "devDependencies": {
     "event-stream": "^3.3.2",
     "jshint": "^2.5.6",
-    "npm-check": "git://github.com/orangejulius/npm-check.git#disable-update-check",
     "pelias-mock-logger": "^1.1.0",
     "precommit-hook": "^3.0.0",
     "proxyquire": "^2.0.0",
@@ -66,7 +64,6 @@
   "pre-commit": [
     "lint",
     "validate",
-    "test",
-    "check-dependencies"
+    "test"
   ]
 }
