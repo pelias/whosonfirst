@@ -39,7 +39,7 @@
     "node-version-checker": "^2.0.0",
     "parallel-transform": "^1.1.0",
     "pelias-config": "2.14.0",
-    "pelias-dbclient": "2.4.0",
+    "pelias-dbclient": "2.4.1",
     "pelias-logger": "0.3.1",
     "pelias-model": "5.3.2",
     "request-rate-limiter": "^1.0.2",
