@@ -2,7 +2,7 @@
 const RateLimiter = require('request-rate-limiter');
 const async = require('async');
 const logger = require('pelias-logger').get('download_data_filtered');
-const parallelStream = require('pelias-parallel-stream');
+const parallelTransform = require('parallel-transform');
 const streamArray = require('stream-array');
 const addToPlacesByPlacetype = require('./getPlaceInfo').addToPlacesByPlacetype;
 
@@ -24,7 +24,7 @@ function getDescendants(params, callback) {
   logger.info('Getting descendants');
 
   streamArray(PLACETYPES)
-    .pipe(parallelStream(maxInFlight, (placetype, enc, next) => {
+    .pipe(parallelTransform(maxInFlight, (placetype, next) => {
       getDescendantsByPlacetype(params.apiKey, params.placeId, placetype, (err, places) => {
         if (err) {
           return onError('failed to get descendants for ' + placetype, err, next);

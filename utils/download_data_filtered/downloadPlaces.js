@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const async = require('async');
 const logger = require('pelias-logger').get('download_data_filtered');
-const parallelStream = require('pelias-parallel-stream');
+const parallelTransform = require('parallel-transform');
 const streamArray = require('stream-array');
 const wofIdToPath = require('../../src/wofIdToPath');
 
@@ -32,9 +32,9 @@ function downloadPlaces(params, callback) {
   const _download = (places, placetype, placetypeCallback) => {
     logger.info(`downloading ${placetype}`);
 
-    const parallelDownloadStream = parallelStream(
+    const parallelDownloadStream = parallelTransform(
       maxInFlight,
-      (place, enc, next) => {
+      (place, next) => {
         downloadById({ targetDir: `${targetDir}/data`, placeId: place['wof:id'] }, next);
       },
       placetypeCallback);

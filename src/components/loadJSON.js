@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const parallelStream = require('pelias-parallel-stream');
+const parallelTransform = require('parallel-transform');
 const wofIdToPath = require('../wofIdToPath');
 
 const maxInFlight = 10;
@@ -8,7 +8,7 @@ const maxInFlight = 10;
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
 module.exports.create = function create(wofRoot, missingFilesAreFatal) {
-  return parallelStream(maxInFlight, function(record, enc, next) {
+  return parallelTransform(maxInFlight, function(record, next) {
 
     if (!record.path || record.path === 'path') {
       // we can generate the record path if column not present in metadata
