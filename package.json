@@ -40,7 +40,7 @@
     "parallel-transform": "^1.1.0",
     "pelias-config": "3.0.2",
     "pelias-dbclient": "2.5.4",
-    "pelias-logger": "0.4.1",
+    "pelias-logger": "0.4.2",
     "pelias-model": "5.5.1",
     "request-rate-limiter": "^1.0.2",
     "stream-array": "^1.1.2",
