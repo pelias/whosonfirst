@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 # whosonfirst sqlite database downloader
 # this script handles the download & extract of whosonfirst bundles.

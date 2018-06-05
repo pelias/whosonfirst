@@ -2,7 +2,7 @@
 const fs = require('fs-extra');
 const _ = require('lodash');
 const logger = require('pelias-logger').get('download_data_filtered');
-const parallelStream = require('pelias-parallel-stream');
+const parallelTransform = require('parallel-transform');
 const streamArray = require('stream-array');
 const getPlaceByIds = require('./getPlaceInfo').getPlaceByIds;
 const converter = require('csv-string');
@@ -22,10 +22,10 @@ function generateMetafiles(params, callback) {
   }
 
   streamArray(PLACETYPES).pipe(
-    parallelStream(1, generatePlacetypeMetafile.bind(null, params), onFinish));
+    parallelTransform(1, generatePlacetypeMetafile.bind(null, params), onFinish));
 }
 
-function generatePlacetypeMetafile(params, placetype, enc, next) {
+function generatePlacetypeMetafile(params, placetype, next) {
 
   const context = {
     metaFile: `${params.targetDir}/meta/wof-${placetype}-latest.csv`,
