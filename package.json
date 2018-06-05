@@ -38,7 +38,7 @@
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
     "parallel-transform": "^1.1.0",
-    "pelias-config": "3.0.1",
+    "pelias-config": "3.0.2",
     "pelias-dbclient": "2.5.4",
     "pelias-logger": "0.4.1",
     "pelias-model": "5.5.1",
