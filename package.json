@@ -31,7 +31,7 @@
     "csv-stream": "^0.2.0",
     "csv-string": "^3.1.2",
     "download-file-sync": "^1.0.4",
-    "fs-extra": "^6.0.0",
+    "fs-extra": "^7.0.0",
     "iso3166-1": "^0.3.0",
     "joi": "^13.1.2",
     "klaw-sync": "^4.0.0",
