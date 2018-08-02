@@ -45,7 +45,7 @@
     "request-rate-limiter": "^1.0.2",
     "stream-array": "^1.1.2",
     "through2": "^2.0.0",
-    "through2-filter": "^2.0.0",
+    "through2-filter": "^3.0.0",
     "through2-map": "^3.0.0",
     "through2-sink": "^1.0.0"
   },
