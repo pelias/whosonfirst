@@ -66,8 +66,8 @@ function getName(properties) {
 }
 
 function getAbbreviation(properties) {
-  if (properties['wof:placetype'] === 'country' && properties['wof:country']) {
-    return properties['wof:country'];
+  if (properties['wof:placetype'] === 'country' && properties['wof:country_alpha3']) {
+    return properties['wof:country_alpha3'];
   }
 
   // TODO: remove this section once WOF no-longer puts dependency abbreviations in `wof:country`
