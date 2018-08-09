@@ -19,7 +19,7 @@ function download(options, callback){
     return (done) => {
 
       // build shell command
-      const options = { cwd: path.basename(__dirname) };
+      const options = { cwd: __dirname };
       const cmd = './sqlite_download.sh';
       const args = [ filename, path.join( sqliteDir, filename ) ];
       const child = child_process.spawn(cmd, args, options);
