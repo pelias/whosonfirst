@@ -31,7 +31,8 @@ const hierarchyRoles = [
   'locality',
   'borough',
   'macrohood',
-  'neighbourhood'
+  'neighbourhood',
+  'microhood'
 ];
 
 const postalcodeRoles = [
