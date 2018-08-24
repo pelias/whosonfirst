@@ -85,7 +85,7 @@ tape('bundlesList tests', (test) => {
     const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
     bundles.generateBundleList((err, bundlesList) => {
-      t.assert(bundlesList.includes('wof-venue-us-ca-latest-bundle.tar.bz2'), 'venue bundle for regions are included');
+      t.assert(bundlesList.includes('whosonfirst-data-venue-us-ca-latest.tar.bz2'), 'venue bundle for regions are included');
       fs.removeSync('foo');
       t.end();
     });
