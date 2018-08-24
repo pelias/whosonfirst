@@ -107,7 +107,10 @@ function getBundleList(callback) {
 
   rl.on('line', (line) => {
 
-    sortBundleByBuckets(roles, line, bundleBuckets);
+    const parts = line.split(' ');
+    const record = parts[parts.length - 1];
+
+    sortBundleByBuckets(roles, record, bundleBuckets);
 
   }).on('close', () => {
 
