@@ -23,7 +23,7 @@ bundles.generateBundleList((err, bundlesToImport) => {
     throw new Error(err.message);
   }
 
-  const bundlesMetaFiles = bundlesToImport.map( (bundle) => { return bundle.replace('-bundle.tar.bz2', '.csv'); });
+  const bundlesMetaFiles = bundlesToImport.map( (bundle) => { return bundle.replace('.tar.bz2', '.csv'); });
 
   const readStream = readStreamModule.create(
     peliasConfig.imports.whosonfirst,
