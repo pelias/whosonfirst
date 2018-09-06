@@ -1,4 +1,5 @@
-var peliasModel = require( 'pelias-model' );
+const peliasModel = require('pelias-model');
+const blacklistStream = require('pelias-blacklist-stream');
 
 /*
   This function performs the import based on the collection of WOF records
@@ -12,6 +13,7 @@ var peliasModel = require( 'pelias-model' );
 function fullImport(wof_record_stream, document_generator, destination_pipe, callback) {
   wof_record_stream
     .pipe(document_generator)
+    .pipe(blacklistStream())
     .pipe(peliasModel.createDocumentMapperStream())
     .pipe(destination_pipe)
     .on('finish', callback);
