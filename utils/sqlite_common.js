@@ -14,7 +14,7 @@ module.exports.MetaDataFiles = function MetaDataFiles( metaDir ){
 
       // create write stream
       streams[row.placetype] = fs.createWriteStream(
-        path.join( metaDir, `wof-${row.placetype}-latest.csv` )
+        path.join( metaDir, `whosonfirst-data-${row.placetype}-latest.csv` )
       );
 
       // init stats

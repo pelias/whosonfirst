@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node import.js",
     "download": "node ./utils/download_data.js",
-    "test": "node test/test | tap-dot",
+    "test": "./bin/units",
     "lint": "jshint .",
     "validate": "npm ls",
     "travis": "npm run test"
