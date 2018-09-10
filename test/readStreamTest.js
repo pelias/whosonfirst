@@ -17,7 +17,7 @@ tape('readStream', (test) => {
       fs.mkdirSync(path.join(temp_dir, 'meta'));
       fs.mkdirSync(path.join(temp_dir, 'data'));
 
-      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type1-latest.csv'), 'id,path\n123,123.geojson\n');
+      fs.writeFileSync(path.join(temp_dir, 'meta', 'whosonfirst-data-type1-latest.csv'), 'id,path\n123,123.geojson\n');
       fs.writeFileSync(path.join(temp_dir, 'data', '123.geojson'), JSON.stringify({
         id: 123,
         properties: {
@@ -33,7 +33,7 @@ tape('readStream', (test) => {
       }));
 
       // write out second meta and data files
-      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type2-latest.csv'), 'id,path\n456,456.geojson\n');
+      fs.writeFileSync(path.join(temp_dir, 'meta', 'whosonfirst-data-type2-latest.csv'), 'id,path\n456,456.geojson\n');
       fs.writeFileSync(path.join(temp_dir, 'data', '456.geojson'), JSON.stringify({
         id: 456,
         properties: {
@@ -49,7 +49,7 @@ tape('readStream', (test) => {
       // write out third meta and data files that are ignored
       // it will be ignored since 'type3' is not passed as a supported type
       // this shows that types are supported instead of all files being globbed
-      fs.writeFileSync(path.join(temp_dir, 'meta', 'wof-type3-latest.csv'), 'id,path\n789,789.geojson\n');
+      fs.writeFileSync(path.join(temp_dir, 'meta', 'whosonfirst-data-type3-latest.csv'), 'id,path\n789,789.geojson\n');
       fs.writeFileSync(path.join(temp_dir, 'data', '789.geojson'), JSON.stringify({
         id: 789,
         properties: {
@@ -67,7 +67,8 @@ tape('readStream', (test) => {
       };
 
       const wofAdminRecords = {};
-      const stream = readStream.create(wofConfig, ['wof-type1-latest.csv', 'wof-type2-latest.csv'], wofAdminRecords);
+      const filenames = ['whosonfirst-data-type1-latest.csv', 'whosonfirst-data-type2-latest.csv'];
+      const stream = readStream.create(wofConfig, filenames, wofAdminRecords);
 
       stream.on('finish', _ => {
         temp.cleanupSync();
@@ -104,8 +105,8 @@ tape('readStream', (test) => {
         });
 
         t.deepEquals(logger.getInfoMessages(), [
-          `Loading wof-type1-latest.csv records from ${temp_dir}/meta`,
-          `Loading wof-type2-latest.csv records from ${temp_dir}/meta`
+          `Loading whosonfirst-data-type1-latest.csv records from ${temp_dir}/meta`,
+          `Loading whosonfirst-data-type2-latest.csv records from ${temp_dir}/meta`
         ]);
         t.end();
 
