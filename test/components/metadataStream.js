@@ -12,7 +12,7 @@ tape('metadataStream tests', (test) => {
 
       // write some data to a file that will be read
       fs.writeFileSync(
-        path.join(temp_dir, 'meta', 'wof-my_placetype-latest.csv'),
+        path.join(temp_dir, 'meta', 'whosonfirst-data-my_placetype-latest.csv'),
         'some metadata');
 
       const metadataStream = require('../../src/components/metadataStream')(temp_dir);
