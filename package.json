@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "start": "./bin/start",
-    "download": "node ./utils/download_data.js",
+    "download": "./bin/download",
     "test": "./bin/units",
     "lint": "jshint .",
     "validate": "npm ls",
