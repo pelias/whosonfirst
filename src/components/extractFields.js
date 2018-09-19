@@ -65,14 +65,16 @@ function getName(properties) {
   }
 }
 
-function isDependencyOrCountry(placetype) {
-  return placetype === 'dependency' || placetype === 'country';
-}
-
 function getAbbreviation(properties) {
-  if (isDependencyOrCountry(properties['wof:placetype']) && properties['wof:country']) {
+  if (properties['wof:placetype'] === 'country' && properties['wof:country']) {
     return properties['wof:country'];
   }
+
+  // TODO: remove this section once WOF no-longer puts dependency abbreviations in `wof:country`
+  if (properties['wof:placetype'] === 'dependency') {
+    return properties['wof:abbreviation'] || properties['wof:country'];
+  }
+
   return properties['wof:abbreviation'];
 }
 
