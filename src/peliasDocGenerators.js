@@ -1,6 +1,5 @@
 var through2 = require('through2');
 var _ = require('lodash');
-var iso3166 = require('iso3166-1');
 
 var Document = require('pelias-model').Document;
 
@@ -32,16 +31,12 @@ function assignField(hierarchyElement, wofDoc) {
       break;
     case 'dependency':
     case 'country':
-      // this is country or dependency, so lookup and set the iso3 from abbreviation
-      if (iso3166.is2(hierarchyElement.abbreviation)) {
-        var iso3 = iso3166.to3(hierarchyElement.abbreviation);
-
-        wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString(), iso3);
-
+      // this is country or dependency, so set the ISO-3166-1 alpha3 code from abbreviation
+      if (hierarchyElement.abbreviation) {
+        wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString(), hierarchyElement.abbreviation);
       } else {
         // there's no known abbreviation
         wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
-
       }
 
       break;
