@@ -7,8 +7,8 @@
   "description": "Importer for Who's on First",
   "main": "index.js",
   "scripts": {
-    "start": "node import.js",
-    "download": "node ./utils/download_data.js",
+    "start": "./bin/start",
+    "download": "./bin/download",
     "test": "./bin/units",
     "lint": "jshint .",
     "validate": "npm ls",
