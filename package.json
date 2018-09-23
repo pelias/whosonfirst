@@ -33,7 +33,7 @@
     "fs-extra": "^7.0.0",
     "iso3166-1": "^0.4.0",
     "joi": "^13.1.2",
-    "klaw-sync": "^5.0.0",
+    "klaw-sync": "^6.0.0",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
     "parallel-transform": "^1.1.0",
