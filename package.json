@@ -7,8 +7,8 @@
   "description": "Importer for Who's on First",
   "main": "index.js",
   "scripts": {
-    "start": "node import.js",
-    "download": "node ./utils/download_data.js",
+    "start": "./bin/start",
+    "download": "./bin/download",
     "test": "./bin/units",
     "lint": "jshint .",
     "validate": "npm ls",
@@ -31,9 +31,9 @@
     "csv-stream": "^0.2.0",
     "download-file-sync": "^1.0.4",
     "fs-extra": "^7.0.0",
-    "iso3166-1": "^0.3.0",
+    "iso3166-1": "^0.4.0",
     "joi": "^13.1.2",
-    "klaw-sync": "^4.0.0",
+    "klaw-sync": "^6.0.0",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
     "parallel-transform": "^1.1.0",
@@ -48,7 +48,7 @@
     "through2-sink": "^1.0.0"
   },
   "devDependencies": {
-    "event-stream": "^3.3.2",
+    "event-stream": "^4.0.0",
     "jshint": "^2.5.6",
     "pelias-mock-logger": "^1.1.0",
     "precommit-hook": "^3.0.0",

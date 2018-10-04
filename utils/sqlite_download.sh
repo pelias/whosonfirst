@@ -26,7 +26,7 @@ REMOTE_PATH="${REMOTE}/${DB_FILENAME}.bz2"
 info() { echo -e "\e[33m[$1]\t\e[0m $2" >&2; }
 err() { echo -e "\e[31m[$1]\t\e[0m \e[91m$2\e[0m" >&2; }
 extract_file() {
-  info 'decompress' "${LOCAL_BZ2_PATH}"
+  info 'whosonfirst-sqlite-decompress' "${LOCAL_BZ2_PATH}"
   bunzip2 -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
 }
 generate_timestamp() {
@@ -45,7 +45,7 @@ download_handler() {
   fi
 }
 download_sqlite_db() {
-  info 'download' "${REMOTE_PATH}"
+  info 'whosonfirst-sqlite-download' "${REMOTE_PATH}"
   if [[ ! -f "${LOCAL_TS_PATH}" ]]; then
     # first download
     download_handler $(curl "${REMOTE_PATH}" \

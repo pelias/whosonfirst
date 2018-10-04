@@ -494,6 +494,81 @@ tape('readStreamComponents', function(test) {
 
   });
 
+  test.test('wof:placetype=locality (general abbreviation case) should use wof:shortcode over wof:abbreviation', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'locality',
+          'wof:abbreviation': 'undesired',
+          'wof:shortcode': 'desired'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'locality',
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: 'desired',
+        hierarchies: [
+          {
+            'locality_id': 12345
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:shortcode is used for abbreviation');
+      t.end();
+    });
+  });
+
+  test.test('wof:placetype=locality (general abbreviation case) should use wof:abbreviation if wof:shortcode not present', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'locality',
+          'wof:abbreviation': 'desired'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'locality',
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: 'desired',
+        hierarchies: [
+          {
+            'locality_id': 12345
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:shortcode is used for abbreviation');
+      t.end();
+    });
+  });
+
   test.test('wof:placetype=country should use wof:country value for abbreviation', function(t) {
     var input = [
       {
@@ -533,15 +608,16 @@ tape('readStreamComponents', function(test) {
 
   });
 
-  test.test('wof:placetype=dependency should use wof:country value for abbreviation', function(t) {
+  test.test('wof:placetype=dependency should use wof:shortcode value for abbreviation if present', function(t) {
     var input = [
       {
         id: 12345,
         properties: {
           'wof:name': 'wof:name value',
           'wof:placetype': 'dependency',
-          'wof:country': 'XY',
-          'wof:abbreviation': 'YZ'
+          'wof:country': 'value from wof:country',
+          'wof:abbreviation': 'value from wof:abbreviation',
+          'wof:shortcode': 'value from wof:shortcode'
         }
       }
     ];
@@ -556,7 +632,82 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         bounding_box: undefined,
-        abbreviation: 'XY',
+        abbreviation: 'value from wof:shortcode',
+        hierarchies: [
+          {
+            'dependency_id': 12345
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:shortcode is used for abbreviation');
+      t.end();
+    });
+  });
+
+  test.test('wof:placetype=dependency should use wof:abbreviation value for abbreviation if wof:shortcode not present', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'dependency',
+          'wof:country': 'value from wof:country',
+          'wof:abbreviation': 'value from wof:abbreviation'
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'dependency',
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: 'value from wof:abbreviation',
+        hierarchies: [
+          {
+            'dependency_id': 12345
+          }
+        ]
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual, expected, 'wof:abbreviation is used for abbreviation');
+      t.end();
+    });
+  });
+
+  test.test('wof:placetype=dependency should use wof:country for abbreviation if wof:shortcode/wof:abbreviation not present', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:placetype': 'dependency',
+          'wof:country': 'value from wof:country',
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'wof:name value',
+        place_type: 'dependency',
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: undefined,
+        abbreviation: 'value from wof:country',
         hierarchies: [
           {
             'dependency_id': 12345
