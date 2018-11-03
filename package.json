@@ -2,7 +2,7 @@
   "name": "pelias-whosonfirst",
   "version": "0.0.0-development",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "description": "Importer for Who's on First",
   "main": "index.js",
