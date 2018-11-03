@@ -41,6 +41,13 @@ tape('create', function(test) {
           .addParent( place_type, 'record name', '1')
       ];
 
+      // index a version of postcode which doesn't contain whitespace
+      if (place_type === 'postalcode'){
+        expected[0].setNameAlias('default', 'recordname')
+                   .clearParent(place_type)
+                   .addParent(place_type, 'record name', '1', 'recordname');
+      }
+
       var hierarchies_finder = function() {
         return [
           [

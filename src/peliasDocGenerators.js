@@ -19,9 +19,16 @@ function assignField(hierarchyElement, wofDoc) {
     case 'continent':
     case 'ocean':
     case 'marinearea':
-    case 'postalcode':
       // the above place_types don't have abbrevations (yet)
       wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
+      break;
+    case 'postalcode':
+      var sans_whitespace = (hierarchyElement.name||'').replace(/\s/g, '');
+      if (sans_whitespace !== hierarchyElement.name) {
+        wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString(), sans_whitespace);
+      } else {
+        wofDoc.addParent(hierarchyElement.place_type, hierarchyElement.name, hierarchyElement.id.toString());
+      }
       break;
     case 'region':
       if (hierarchyElement.hasOwnProperty('abbreviation')) {
@@ -55,6 +62,14 @@ function setupDocument(record, hierarchy) {
 
   if (record.name) {
     wofDoc.setName('default', record.name);
+
+    // index a version of postcode which doesn't contain whitespace
+    if (record.place_type === 'postalcode' && typeof record.name === 'string') {
+      var sans_whitespace = record.name.replace(/\s/g, '');
+      if (sans_whitespace !== record.name) {
+        wofDoc.setNameAlias('default', sans_whitespace);
+      }
+    }
   }
   wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
 
