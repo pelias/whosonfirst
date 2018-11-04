@@ -62,6 +62,7 @@ The following configuration options are supported by this importer.
 | `imports.whosonfirst.importPlace` | no | | set to a WOF id (number or string) indicating the region of interest, only data pertaining to that place shall be downloaded. Use the WOF [spelunker tool](https://spelunker.whosonfirst.org) search for an ID of a place. |
 | `imports.whosonfirst.missingFilesAreFatal` | no | false | set to `true` for missing files from [Who's on First bundles](https://dist.whosonfirst.org/bundles/) to stop the import process |
 | `imports.whosonfirst.maxDownloads` | no | 4 | the maximum number of files to download simultaneously. Higher values can be faster, but can also cause donwload errors |
+| `imports.whosonfirst.dataHost` | no | `https://dist.whosonfirst.org/` | The location to download Who's on First data from. Changing this can be useful to use custom data, pin data to a specific date, etc |
 
 ## Downloading the Data
 

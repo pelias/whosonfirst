@@ -8,6 +8,8 @@ const path = require('path');
 const bundles = require('../src/bundleList');
 const config = require( 'pelias-config' ).generate(require('../schema'));
 
+const wofDataHost = config.get('imports.whosonfirst.dataHost') || 'https://dist.whosonfirst.org';
+
 function download(callback) {
   //ensure required directory structure exists
   fs.ensureDirSync(path.join(config.imports.whosonfirst.datapath, 'meta'));
@@ -30,8 +32,8 @@ function download(callback) {
     const csvFilename = bundle.replace(/-\d{8}T\d{6}-/, '-latest-') // support timestamped downloads
                               .replace('.tar.bz2', '.csv');
 
-    return 'curl https://dist.whosonfirst.org/bundles/' + bundle + ' | tar -xj --strip-components=1 --exclude=README.txt -C ' +
-      directory + ' && mv ' + path.join(directory, csvFilename) + ' ' + path.join(directory, 'meta');
+    return `curl ${wofDataHost}/bundles/${bundle} | tar -xj --strip-components=1 --exclude=README.txt -C ` +
+      `${directory} && mv ${path.join(directory, csvFilename)} ${path.join(directory, 'meta')}`;
   }
 
   bundles.generateBundleList((err, bundlesToDownload) => {

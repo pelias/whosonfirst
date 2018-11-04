@@ -1,4 +1,3 @@
-
 const readline = require('readline');
 const fs = require('fs-extra');
 const path = require('path');
@@ -60,8 +59,9 @@ function getPlacetypes() {
 }
 
 function ensureBundleIndexExists(metaDataPath) {
+  const wofDataHost = peliasConfig.get('imports.whosonfirst.dataHost') || 'https://dist.whosonfirst.org';
   const bundleIndexFile = path.join(metaDataPath, 'whosonfirst_bundle_index.txt');
-  const bundleIndexUrl = 'https://dist.whosonfirst.org/bundles/index.txt';
+  const bundleIndexUrl = `${wofDataHost}/bundles/index.txt`;
 
   //ensure required directory structure exists
   fs.ensureDirSync(metaDataPath);

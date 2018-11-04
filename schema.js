@@ -15,6 +15,7 @@ const Joi = require('joi');
 module.exports = Joi.object().keys({
   imports: Joi.object().keys({
     whosonfirst: Joi.object().keys({
+      dataHost: Joi.string(),
       datapath: Joi.string(),
       importPlace: [
         Joi.number().integer(),
