@@ -7,14 +7,9 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/pelias/whosonfirst.svg)](https://greenkeeper.io/)
 
-This repository is part of the [Pelias](https://github.com/pelias/pelias)
-project. Pelias is an open-source, open-data geocoder built by
-[Mapzen](https://www.mapzen.com/) that also powers [Mapzen Search](https://mapzen.com/projects/search). Our
-official user documentation is [here](https://mapzen.com/documentation/search/).
-
 ## Overview
 
-pelias-whosonfirst is a tool used for importing [Who's On First data](https://dist.whosonfirst.org/) from local files into a Pelias ElasticSearch store.
+pelias-whosonfirst is a tool used for importing data from the [Who's On First](https://whosonfirst.org/) project from local files into a Pelias ElasticSearch store.
 
 ## Requirements
 
@@ -87,9 +82,6 @@ it is recommended that the `importPlace` config parameter is used to limit the d
 that are parents or descendants of the specified place. See the configuration details in the above section of this document.
 We currently only support a single ID at a time. If multiple places need to be downloaded, the script can be executed multiple times;
 one for each desired place.
-
-**Warning**: It is recommended to only use the download filtering option for places more granular than `country`.
-The filtering script is intended for small areas and so has not been tested fully for large ones.  
 
 **Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
 Additionally, Who's on First uses one file per record. In addition to lots of disk space,
