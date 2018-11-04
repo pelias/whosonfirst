@@ -1,4 +1,3 @@
-
 const child_process = require('child_process');
 const async = require('async');
 const fs = require('fs-extra');
@@ -14,10 +13,12 @@ function download(callback) {
   fs.ensureDirSync(path.join(config.imports.whosonfirst.datapath, 'meta'));
 
   // download one bundle for every other CPU (tar and bzip2 can both max out one core)
-  // (but not more than 4, to keep things from getting too intense)
+  // (the maximum is configurable, to keep things from getting too intense, and defaults to 4)
   //lower this number to make the downloader more CPU friendly
   //raise this number to (possibly) make it faster
-  const simultaneousDownloads = Math.max(4, Math.min(1, os.cpus().length / 2));
+  const maxSimultaneousDownloads = config.get('imports.whosonfirst.maxDownloads') || 4;
+  const cpuCount = os.cpus().length;
+  const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
 
   // generate a shell command that does the following:
   // 1.) use curl to download the bundle, piping directly to tar (this avoids the
