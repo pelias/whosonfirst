@@ -25,7 +25,8 @@ module.exports = Joi.object().keys({
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       importIntersections: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true)
+      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
+      maxDownloads: Joi.number().integer()
     }).requiredKeys('datapath').unknown(false)
   }).requiredKeys('whosonfirst').unknown(true)
 }).requiredKeys('imports').unknown(true);
