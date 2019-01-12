@@ -22,11 +22,12 @@ bundles.generateBundleList((err, bundlesToImport) => {
     throw new Error(err.message);
   }
 
-  const bundlesMetaFiles = bundlesToImport.map( (bundle) => { return bundle.replace('.tar.bz2', '.csv'); });
+  // This can be either csv or db files, the read stream module will do the job
+  const bundlesFiles = bundlesToImport.map( (bundle) => { return bundle.replace('.tar.bz2', '.csv'); });
 
   const readStream = readStreamModule.create(
     peliasConfig.imports.whosonfirst,
-    bundlesMetaFiles,
+    bundlesFiles,
     wofAdminRecords);
 
   // how to convert WOF records to Pelias Documents
