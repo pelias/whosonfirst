@@ -36,6 +36,7 @@ const VENUES = [
 ];
 
 const SQLITE_EXAMPLE = [
+  'whosonfirst-data-constituency-us-ct-1481486175.db',
   'whosonfirst-data-latest.db',
   'whosonfirst-data-postalcode-fr-latest.db',
   'whosonfirst-data-postalcode-jp-latest.db'

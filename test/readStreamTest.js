@@ -4,6 +4,7 @@ const path = require('path');
 const temp = require('temp').track();
 const proxyquire = require('proxyquire').noCallThru();
 const through2 = require('through2');
+const generateWOFDB = require('./generateWOFDB');
 
 tape('readStream', (test) => {
   test.test('readStream should return from all requested types and populate wofAdminRecords', (t) => {
@@ -176,5 +177,64 @@ tape('readStream', (test) => {
     });
   });
   test.end();
+
+  test.test('load sqlite', t => {
+    temp.mkdir('tmp_sqlite', (err, temp_dir) => {
+      const db = generateWOFDB(path.join(temp_dir, 'sqlite', 'whosonfirst-data-latest.db'), [
+        {
+          id: 0,
+          'wof:placetype': 'country',
+          properties: {
+            'wof:name': 'null island',
+            'geom:latitude': 0,
+            'geom:longitude': 0,
+            'edtf:deprecated': 0,
+            'wof:superseded_by': []
+          }
+        },
+        {
+          id: 421302191,
+          'wof:placetype': 'region',
+          properties: {
+            'wof:name': 'name 421302191',
+            'geom:latitude': 45.240295,
+            'geom:longitude': 3.916216,
+            'wof:superseded_by': []
+          }
+        },
+        {
+          id: 421302147,
+          'wof:placetype': 'region',
+          properties: {
+            'wof:name': 'name 421302191',
+            'geom:latitude': 45.240295,
+            'geom:longitude': 3.916216,
+            'wof:superseded_by': ['421302191']
+          }
+        }
+      ]);
+      const records = {};
+      require('../src/readStream')
+        .create({datapath: temp_dir, sqlite: true}, ['whosonfirst-data-latest.db'], records)
+        .on('finish', (err) => {
+          t.notOk(err);
+          t.deepEquals(records, {
+            '421302191': {
+              id: 421302191,
+              name: 'name 421302191',
+              abbreviation: undefined,
+              place_type: undefined,
+              lat: 45.240295,
+              lon: 3.916216,
+              bounding_box: undefined,
+              population: undefined,
+              popularity: undefined,
+              hierarchies: []
+            }
+          });
+          t.end();
+        });
+    });
+  });
 
 });
