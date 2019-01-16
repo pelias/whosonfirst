@@ -6,5 +6,6 @@ module.exports = {
   parseMetaFiles: require('./src/components/parseMetaFiles').create,
   recordHasIdAndProperties: require('./src/components/recordHasIdAndProperties').create,
   recordHasName: require('./src/components/recordHasName').create,
-  conformsTo: require('./src/components/conformsTo').create
+  conformsTo: require('./src/components/conformsTo').create,
+  sqliteStream: require('./src/components/sqliteStream')
 };
