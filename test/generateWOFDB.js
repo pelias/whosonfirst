@@ -37,8 +37,9 @@ module.exports = (dbPath, entries) => {
     entries.forEach(e => {
       db
       .exec(`INSERT INTO geojson(id, body) VALUES (${e.id}, '${JSON.stringify(e)}')`)
-      .exec(`INSERT INTO spr(id, placetype, latitude, longitude, is_deprecated, is_superseded) VALUES (
+      .exec(`INSERT INTO spr(id, name, placetype, latitude, longitude, is_deprecated, is_superseded) VALUES (
         ${e.id},
+        '${e.properties['wof:name'] || ''}',
         '${e['wof:placetype']}',
         ${e.properties['geom:latitude']},
         ${e.properties['geom:longitude']},

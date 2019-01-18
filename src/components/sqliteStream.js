@@ -32,6 +32,8 @@ SELECT geojson.id, geojson.body
       AND
     spr.is_superseded = 0
       AND
+    spr.name <> ''
+      AND
     (spr.latitude != 0 OR spr.longitude != 0)`;
 }
 
@@ -39,6 +41,7 @@ SELECT geojson.id, geojson.body
  * Add filter and placetypes
  */
 function findGeoJSONByPlacetype(placetypes) {
+  placetypes = typeof placetypes === 'string' ? [placetypes] : placetypes;
   return findGeoJSON() + `
       AND
     spr.placetype IN ('${placetypes.join('\',\'')}')

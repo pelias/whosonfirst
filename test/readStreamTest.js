@@ -211,6 +211,15 @@ tape('readStream', (test) => {
             'geom:longitude': 3.916216,
             'wof:superseded_by': ['421302191']
           }
+        },
+        {
+          id: 421302897,
+          'wof:placetype': 'locality',
+          properties: {
+            'geom:latitude': 4.2564,
+            'geom:longitude': -41.916216,
+            'wof:superseded_by': []
+          }
         }
       ]);
       const records = {};
