@@ -26,7 +26,7 @@ function getMetaFilePaths(wofRoot, bundles) {
 }
 
 /*
- * Convert a base directory and list of types into a list of sqlite file paths
+ * Convert a base directory and list of databases names into a list of sqlite file paths
  */
 function getSqliteFilePaths(wofRoot, databases) {
   return databases.map((database) => {
@@ -93,7 +93,7 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
   const metaFilePaths = getMetaFilePaths(wofRoot, types);
 
   // Select correct stream between meta and SQLite based on config and do specialized stuff
-  const stream = wofConfig.sqlite ?
+  const stream = wofConfig.sqlite === true ?
     createSQLiteRecordStream(getSqliteFilePaths(wofRoot, types))
       .pipe(toJSONStream.create()) :
     createMetaRecordStream(metaFilePaths, types)

@@ -41,7 +41,9 @@ SELECT geojson.id, geojson.body
  * Add filter and placetypes
  */
 function findGeoJSONByPlacetype(placetypes) {
-  placetypes = typeof placetypes === 'string' ? [placetypes] : placetypes;
+  if(!Array.isArray(placetypes)) {
+    placetypes = [ placetypes ];
+  }
   return findGeoJSON() + `
       AND
     spr.placetype IN ('${placetypes.join('\',\'')}')

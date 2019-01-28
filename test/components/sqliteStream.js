@@ -30,6 +30,7 @@ tape('SQLiteStream', (test) => {
       });
     });
   });
+
   test.test('Should be used with combinedStream', (t) => {
     temp.mkdir('tmp_SQLite_combinedStream', (err, temp_dir) => {
       const stream = combinedStream.create();
@@ -57,5 +58,17 @@ tape('SQLiteStream', (test) => {
         });
       });
     });
+  });
+
+  test.test('Should generate correct sqlite statement when findGeoJSONByPlacetype is used', t => {
+    t.ok(SQLiteStream.findGeoJSONByPlacetype(undefined).indexOf(`spr.placetype IN ('')`) >= 0,
+        'Should change undefined value to empty string');
+    t.ok(SQLiteStream.findGeoJSONByPlacetype(42).indexOf(`spr.placetype IN ('42')`) >= 0,
+        'Should change number to string');
+    t.ok(SQLiteStream.findGeoJSONByPlacetype('placetype').indexOf(`spr.placetype IN ('placetype')`) >= 0,
+        'Should format correctly strings');
+    t.ok(SQLiteStream.findGeoJSONByPlacetype(['locality', 'localadmin']).indexOf(`spr.placetype IN ('locality','localadmin')`) >= 0,
+        'Should format correctly array of strings');
+    t.end();
   });
 });
