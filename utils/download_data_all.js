@@ -32,7 +32,7 @@ function download(callback) {
     const csvFilename = bundle.replace(/-\d{8}T\d{6}-/, '-latest-') // support timestamped downloads
                               .replace('.tar.bz2', '.csv');
 
-    return `curl ${wofDataHost}/bundles/${bundle} | tar -xj --strip-components=1 --exclude=README.txt -C ` +
+    return `curl -s ${wofDataHost}/bundles/${bundle} | tar -xj --strip-components=1 --exclude=README.txt -C ` +
       `${directory} && mv ${path.join(directory, csvFilename)} ${path.join(directory, 'meta')}`;
   }
 

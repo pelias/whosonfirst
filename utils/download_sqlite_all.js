@@ -27,7 +27,7 @@ function download(callback) {
        // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
       // Postalcodes only when importPostalcodes is ture and without --admin-only arg
-      .filter(e => e.name_compressed.indexOf('postalcode') < 0 || 
+      .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
         (config.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only'))
       // Venues only when importVenues is true and without --admin-only arg
       .filter(e => e.name_compressed.indexOf('venue') < 0 ||
@@ -53,11 +53,11 @@ function download(callback) {
       extract = `bunzip2`;
     } else if(/\.db\.tar\.bz2$/.test(sqlite.name_compressed)) {
       extract = `tar -xjO`;
-    } else { 
+    } else {
       throw new Error('What is this extension ?!?');
     }
 
-    return `curl ${wofDataHost}/sqlite/${sqlite.name_compressed} | ${extract} > ${path.join(directory, 'sqlite', sqlite.name)}`;
+    return `curl -s ${wofDataHost}/sqlite/${sqlite.name_compressed} | ${extract} > ${path.join(directory, 'sqlite', sqlite.name)}`;
   };
 
   const downloadFunctions = generateSQLites().map(function (sqlite) {
