@@ -236,6 +236,7 @@ tape('tests for looking up hierarchies', function(test) {
     t.end();
 
   });
+  test.end();
 
 });
 
@@ -391,5 +392,6 @@ tape('battery of importPlace tests', test => {
     t.end();
 
   });
+  test.end();
 
 });

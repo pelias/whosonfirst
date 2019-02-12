@@ -179,4 +179,5 @@ tape('bundlesList tests', (test) => {
       process.argv[2] = previousValue;
     });
   });
+  test.end();
 });

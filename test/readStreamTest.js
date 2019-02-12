@@ -175,5 +175,6 @@ tape('readStream', (test) => {
 
     });
   });
+  test.end();
 
 });

@@ -41,5 +41,6 @@ tape('importStream', function(test) {
     });
 
   });
+  test.end();
 
 });

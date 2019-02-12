@@ -44,7 +44,6 @@ tape('recordHasName', function(test) {
     });
 
   });
-
-
+  test.end();
 
 });

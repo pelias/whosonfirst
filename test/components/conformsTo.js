@@ -72,5 +72,6 @@ tape('conformsTo', (test) => {
     });
 
   });
+  test.end();
 
 });

@@ -38,4 +38,6 @@ tape('wofIdToPath', (t) => {
     t.deepEqual(wofIdToPath(0), ['0']);
     t.end();
   });
+  t.end();
+
 });
