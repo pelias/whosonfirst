@@ -30,11 +30,12 @@ tape('metadataStream tests', (test) => {
           t.deepEqual(contents, 'some metadata', 'should be equal');
           t.end();
         });
-        
+
       });
 
     });
 
   });
+  test.end();
 
 });

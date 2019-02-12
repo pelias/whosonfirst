@@ -37,5 +37,6 @@ tape('recordHasIdAndProperties', function(test) {
       t.end();
     });
   });
+  test.end();
 
 });

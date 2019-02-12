@@ -761,6 +761,7 @@ tape('readStreamComponents', function(test) {
     });
 
   });
+  test.end();
 
 });
 
@@ -1314,6 +1315,7 @@ tape('population fallback tests', (test) => {
     });
 
   });
+  test.end();
 
 });
 
@@ -1746,5 +1748,6 @@ tape('negative population fallback tests', (test) => {
     });
 
   });
+  test.end();
 
 });

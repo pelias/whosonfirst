@@ -587,5 +587,6 @@ tape('create', function(test) {
     });
 
   });
+  test.end();
 
 });

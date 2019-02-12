@@ -137,5 +137,6 @@ tape('loadJSON tests', (test) => {
     });
 
   });
+  test.end();
 
 });

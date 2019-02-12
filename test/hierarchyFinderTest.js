@@ -118,5 +118,6 @@ tape('tests for looking up hierarchies', function(test) {
     t.end();
 
   });
+  test.end();
 
 });

@@ -28,5 +28,6 @@ tape('parseMetaFiles tests', (test) => {
     });
 
   });
+  test.end();
 
 });

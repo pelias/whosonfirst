@@ -34,6 +34,7 @@ tape('isNotNullIslandRelated tests', (test) => {
     });
 
   });
+  test.end();
 
 });
 
@@ -120,4 +121,5 @@ tape('recordHasName', (test) => {
       t.end();
     });
   });
+  test.end();
 });

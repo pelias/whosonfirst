@@ -102,5 +102,6 @@ tape('isActiveRecord', function(test) {
     });
 
   });
+  test.end();
 
 });
