@@ -1,4 +1,3 @@
-
 var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
 var readStreamModule = require('./src/readStream');
 var importStream = require('./src/importStream');
@@ -34,7 +33,7 @@ bundles.generateBundleList((err, bundlesToImport) => {
   var documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
 
   // the final destination of Pelias Documents
-  var dbClientStream = peliasDbclient();
+  var dbClientStream = peliasDbclient({name: 'whosonfirst'});
 
   // import WOF records into ES
   importStream(readStream, documentGenerator, dbClientStream, function () {
