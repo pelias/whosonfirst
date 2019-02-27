@@ -16,6 +16,12 @@ const population_hierarchy = [
   'ne:pop_est'
 ];
 
+// WOF fields to use for aliases
+const name_alias_fields = [
+  'name:eng_x_preferred',
+  'name:eng_x_variant'
+];
+
 // this function is used to verify that a US county QS altname is available
 function isUsCounty(base_record, wof_country, qs_a2_alt) {
   return 'US' === wof_country &&
@@ -65,6 +71,17 @@ function getName(properties) {
   }
 }
 
+function getNameAliases(properties) {
+  let aliases = [];
+  name_alias_fields.forEach(field => {
+    if( Array.isArray(properties[field]) && properties[field].length ){
+      aliases = aliases.concat(properties[field]);
+    }
+  });
+  // dedupe array
+  return aliases.filter((item, pos, self) => self.indexOf(item) === pos);
+}
+
 function getAbbreviation(properties) {
   if (properties['wof:placetype'] === 'country' && properties['wof:country']) {
     return properties['wof:country'];
@@ -104,6 +121,7 @@ module.exports.create = function map_fields_stream() {
     var record = {
       id: json_object.id,
       name: getName(json_object.properties),
+      name_aliases: getNameAliases(json_object.properties),
       abbreviation: getAbbreviation(json_object.properties),
       place_type: json_object.properties['wof:placetype'],
       lat: getLat(json_object.properties),

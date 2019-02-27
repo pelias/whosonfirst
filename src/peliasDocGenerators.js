@@ -70,6 +70,13 @@ function setupDocument(record, hierarchy) {
         wofDoc.setNameAlias('default', sans_whitespace);
       }
     }
+
+    // index name aliases for all other records (where available)
+    else if (record.name_aliases.length) {
+      record.name_aliases.forEach(alias => {
+        wofDoc.setNameAlias('default', alias);
+      });
+    }
   }
   wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
 

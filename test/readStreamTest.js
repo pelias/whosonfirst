@@ -78,6 +78,7 @@ tape('readStream', (test) => {
           '123': {
             id: 123,
             name: 'name 1',
+            name_aliases: [],
             place_type: 'place type 1',
             lat: 12.121212,
             lon: 21.212121,
@@ -92,6 +93,7 @@ tape('readStream', (test) => {
           '456': {
             id: 456,
             name: 'name 2',
+            name_aliases: [],
             place_type: 'place type 2',
             lat: 13.131313,
             lon: 31.313131,
@@ -231,6 +233,7 @@ tape('readStream', (test) => {
             '421302191': {
               id: 421302191,
               name: 'name 421302191',
+              name_aliases: [],
               abbreviation: undefined,
               place_type: undefined,
               lat: 45.240295,
