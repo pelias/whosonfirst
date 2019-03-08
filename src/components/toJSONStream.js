@@ -1,10 +1,8 @@
-const parallelTransform = require('parallel-transform');
+const through2 = require('through2');
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
-const maxInFlight = 10;
-
 module.exports.create = () => {
-  return parallelTransform(maxInFlight, function(record, next) {
+  return through2.obj((record, enc, next) => {
     try {
       next(null, JSON.parse(record.body));
     } catch (parse_err) {
