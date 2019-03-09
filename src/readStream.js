@@ -70,13 +70,16 @@ function createMetaRecordStream(metaFilePaths, types) {
  * given a list of databases file paths, create a combined stream that reads all the
  * records via the SQLite reader stream
  */
-function createSQLiteRecordStream(dbPaths) {
+function createSQLiteRecordStream(dbPaths, importPlace) {
   const sqliteStream = combinedStream.create();
+  const sqliteStatement = importPlace ?
+    SQLiteStream.findGeoJSONByPlacetypeAndWOFId(getPlacetypes(), importPlace) :
+    SQLiteStream.findGeoJSONByPlacetype(getPlacetypes());
 
   dbPaths.forEach((dbPath) => {
     sqliteStream.append( (next) => {
       logger.info( `Loading ${path.basename(dbPath)} records from ${path.dirname(dbPath)}` );
-      next(new SQLiteStream(dbPath, SQLiteStream.findGeoJSONByPlacetype(getPlacetypes())));
+      next(new SQLiteStream(dbPath, sqliteStatement));
     });
   });
 
@@ -94,7 +97,7 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
 
   // Select correct stream between meta and SQLite based on config and do specialized stuff
   const stream = wofConfig.sqlite === true ?
-    createSQLiteRecordStream(getSqliteFilePaths(wofRoot, types))
+    createSQLiteRecordStream(getSqliteFilePaths(wofRoot, types), wofConfig.importPlace)
       .pipe(toJSONStream.create()) :
     createMetaRecordStream(metaFilePaths, types)
       .pipe(isNotNullIslandRelated.create())
