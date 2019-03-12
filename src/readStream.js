@@ -78,7 +78,7 @@ function createSQLiteRecordStream(dbPaths, importPlace) {
 
   dbPaths.forEach((dbPath) => {
     sqliteStream.append( (next) => {
-      logger.info( `Loading ${path.basename(dbPath)} records from ${path.dirname(dbPath)}` );
+      logger.info( `Loading ${path.basename(dbPath)} database from ${path.dirname(dbPath)}` );
       next(new SQLiteStream(dbPath, sqliteStatement));
     });
   });
