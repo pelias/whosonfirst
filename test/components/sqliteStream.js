@@ -12,7 +12,8 @@ tape('SQLiteStream', (test) => {
     temp.mkdir('tmp_SQLite_db', (err, temp_dir) => {
       const dbPath = path.join(temp_dir, 'stream_test.db');
       const tmpDB = new Sqlite3(dbPath)
-        .exec('CREATE TABLE wof(id INT)')
+        .exec('CREATE TABLE wof(id INTEGER)')
+        .exec('CREATE TABLE spr(id INTEGER, is_deprecated INTEGER, is_superseded INTEGER)')
         .exec('INSERT INTO wof(id) VALUES (0), (1), (2)');
       const sqliteStream = new SQLiteStream(dbPath, 'SELECT * FROM wof');
       const res = [];
@@ -38,7 +39,8 @@ tape('SQLiteStream', (test) => {
         const delta = idx === 0 ? 0 : 3;
         const dbPath = path.join(temp_dir, e);
         const tmpDB = new Sqlite3(dbPath)
-          .exec('CREATE TABLE wof(id INT)')
+          .exec('CREATE TABLE wof(id INTEGER)')
+          .exec('CREATE TABLE spr(id INTEGER, is_deprecated INTEGER, is_superseded INTEGER)')
           .exec(`INSERT INTO wof(id) VALUES (${delta + 0}), (${delta + 1}), (${delta + 2})`);
         stream.append(next => {
           next(new SQLiteStream(dbPath, 'SELECT * FROM wof'));
