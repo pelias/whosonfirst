@@ -5,6 +5,14 @@ const logger = require('pelias-logger').get('whosonfirst:sqliteStream');
 class SQLiteStream extends Readable {
   constructor(dbPath, sql) {
     super({ objectMode: true, autoDestroy: true, highWaterMark: 32 });
+
+    // ensure indices exist
+    // note: this can be removed once the upstream PR is merged:
+    // https://github.com/whosonfirst/go-whosonfirst-sqlite-features/pull/4
+    new Sqlite3(dbPath)
+      .exec('CREATE INDEX IF NOT EXISTS spr_obsolete ON spr (is_deprecated, is_superseded)')
+      .close();
+
     this._db = new Sqlite3(dbPath, { readonly: true });
     this._iterator = this._db.prepare(sql).iterate();
     this.on('error', (e) => { logger.error(e); });
@@ -29,16 +37,14 @@ function findGeoJSON() {
 SELECT geojson.id, geojson.body
   FROM geojson JOIN spr
   ON geojson.id = spr.id
-  WHERE
-    geojson.id != 1
-      AND
-    spr.is_deprecated = 0
-      AND
-    spr.is_superseded = 0
-      AND
-    spr.name <> ''
-      AND
-    (spr.latitude != 0 OR spr.longitude != 0)`;
+  WHERE geojson.id != 1
+  AND spr.is_deprecated = 0
+  AND spr.is_superseded = 0
+  AND NOT TRIM( IFNULL(spr.name, '') ) = ''
+  AND NOT (
+    spr.latitude = 0 AND
+    spr.longitude = 0
+  )`;
 }
 
 /**

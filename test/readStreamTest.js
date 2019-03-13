@@ -180,7 +180,7 @@ tape('readStream', (test) => {
 
   test.test('load sqlite', t => {
     temp.mkdir('tmp_sqlite', (err, temp_dir) => {
-      const db = generateWOFDB(path.join(temp_dir, 'sqlite', 'whosonfirst-data-latest.db'), [
+      generateWOFDB(path.join(temp_dir, 'sqlite', 'whosonfirst-data-latest.db'), [
         {
           id: 0,
           'wof:placetype': 'country',
