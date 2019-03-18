@@ -62,5 +62,9 @@ if( config.importPlace ) {
   });
 }
 else {
-  require('./download_data_all').download(on_done);
+  if ( config.sqlite ) {
+    require('./download_sqlite_all').download(on_done);
+  } else {
+    require('./download_data_all').download(on_done);
+  }
 }

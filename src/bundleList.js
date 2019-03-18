@@ -41,6 +41,7 @@ const venueRoles = [
   'venue'
 ];
 
+const SQLITE_REGEX = /whosonfirst-data-[a-z0-9-]+\.db$/;
 
 function getPlacetypes() {
   let roles = hierarchyRoles;
@@ -121,6 +122,25 @@ function getBundleList(callback) {
   });
 }
 
+function getDBList(callback) {
+  const databasesPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'sqlite');
+  //ensure required directory structure exists
+  fs.ensureDirSync(databasesPath);
+  const dbList = fs.readdirSync(databasesPath).filter(d => SQLITE_REGEX.test(d));
+
+  if (_.isEmpty(dbList)) {
+    return callback(`No database found in ${databasesPath}`);
+  }
+  callback(null, dbList);
+}
+
+function getList(callback) {
+  if (peliasConfig.imports.whosonfirst.sqlite) {
+    return getDBList(callback);
+  }
+  getBundleList(callback);
+}
+
 function initBundleBuckets(roles) {
   const bundleBuckets = {};
   roles.forEach( (role) => {
@@ -151,4 +171,4 @@ function combineBundleBuckets(roles, bundleBuckets) {
 }
 
 module.exports.getPlacetypes = getPlacetypes;
-module.exports.generateBundleList = getBundleList;
+module.exports.generateBundleList = getList;

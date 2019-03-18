@@ -26,7 +26,8 @@ module.exports = Joi.object().keys({
       importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       importIntersections: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
       missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      maxDownloads: Joi.number().integer()
+      maxDownloads: Joi.number().integer(),
+      sqlite: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true)
     }).requiredKeys('datapath').unknown(false)
   }).requiredKeys('whosonfirst').unknown(true)
 }).requiredKeys('imports').unknown(true);

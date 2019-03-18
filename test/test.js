@@ -7,6 +7,7 @@ require ('./components/metadataStream.js');
 require ('./components/parseMetaFiles.js');
 require ('./components/recordHasIdAndPropertiesTest.js');
 require ('./components/recordHasNameTest.js');
+require ('./components/sqliteStream.js');
 require ('./components/wofIdToPath.js');
 require ('./hierarchyFinderTest.js');
 require ('./importStreamTest.js');
