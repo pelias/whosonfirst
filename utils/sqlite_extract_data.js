@@ -10,19 +10,7 @@ const wofIdToPath = require('../src/wofIdToPath');
 const sql = {
   data: `SELECT spr.id, spr.placetype, geojson.body FROM geojson
   JOIN spr ON geojson.id = spr.id
-  WHERE spr.id IN (
-    SELECT DISTINCT id
-    FROM ancestors
-    WHERE id IN (@wofids)
-    UNION
-    SELECT DISTINCT id
-    FROM ancestors
-    WHERE ancestor_id IN (@wofids)
-    UNION
-    SELECT DISTINCT ancestor_id
-    FROM ancestors
-    WHERE id IN (@wofids)
-  );`,
+  WHERE spr.id @placefilter;`,
   meta: `SELECT
     json_extract(body, '$.bbox[0]') || ',' ||
     json_extract(body, '$.bbox[1]') || ',' ||
@@ -62,25 +50,15 @@ const sql = {
     json_extract(body, '$.properties.wof:supersedes[0]') AS supersedes,
     json_extract(body, '$.properties.wof:country') AS wof_country
   FROM geojson
-  WHERE id IN (
-    SELECT DISTINCT id
-    FROM ancestors
-    WHERE id IN (@wofids)
-    UNION
-    SELECT DISTINCT id
-    FROM ancestors
-    WHERE ancestor_id IN (@wofids)
-    UNION
-    SELECT DISTINCT ancestor_id
-    FROM ancestors
-    WHERE id IN (@wofids)
-  );`,
+  WHERE id @placefilter;`,
   subdiv: `SELECT DISTINCT LOWER( IFNULL(
     json_extract(body, '$.properties."wof:subdivision"'),
     json_extract(body, '$.properties."iso:country"')
   )) AS subdivision
   FROM geojson
-  WHERE id IN (
+  WHERE id @placefilter
+  AND subdivision != '';`,
+  placefilter: `IN (
     SELECT DISTINCT id
     FROM ancestors
     WHERE id IN (@wofids)
@@ -92,8 +70,7 @@ const sql = {
     SELECT DISTINCT ancestor_id
     FROM ancestors
     WHERE id IN (@wofids)
-  )
-  AND subdivision != '';`,
+  )`
 };
 
 function extract(options, callback){
@@ -129,11 +106,17 @@ function extract(options, callback){
     // connect to sql db
     let db = new Sqlite3( dbpath, { readonly: true } );
 
+    // convert ids to integers and remove any which fail to convert
+    let cleanIds = targetWofIds.map(id => parseInt(id, 10)).filter(id => !isNaN(id));
+
+    // placefilter is used to select only records targeted by the 'importPlace' config option
+    // note: if no 'importPlace' ids are provided then we process all ids which aren't 0
+    let placefilter = (cleanIds.length > 0) ? sql.placefilter : '!= 0';
+
     // note: we need to use replace instead of bound params in order to be able
     // to query an array of values using IN.
-    let cleanIds = targetWofIds.map(id => parseInt(id, 10));
-    let dataQuery = sql.data.replace(/@wofids/g, cleanIds.join(','));
-    let metaQuery = sql.meta.replace(/@wofids/g, cleanIds.join(','));
+    let dataQuery = sql.data.replace(/@placefilter/g, placefilter).replace(/@wofids/g, cleanIds.join(','));
+    let metaQuery = sql.meta.replace(/@placefilter/g, placefilter).replace(/@wofids/g, cleanIds.join(','));
 
     // extract all data to disk
     for( let row of db.prepare(dataQuery).iterate() ){
@@ -211,11 +194,17 @@ function findSubdivisions( filename ){
   // connect to sql db
   let db = new Sqlite3( path.join( sqliteDir, filename ), { readonly: true } );
 
+  // convert ids to integers and remove any which fail to convert
+  let cleanIds = targetWofIds.map(id => parseInt(id, 10)).filter(id => !isNaN(id));
+
+  // placefilter is used to select only records targeted by the 'importPlace' config option
+  // note: if no 'importPlace' ids are provided then we process all ids which aren't 0
+  let placefilter = (cleanIds.length > 0) ? sql.placefilter : '!= 0';
+
   // query db
   // note: we need to use replace instead of using bound params in order to
   // be able to query an array of values using IN.
-  let cleanIds = targetWofIds.map(id => parseInt(id, 10));
-  let query = sql.subdiv.replace(/@wofids/g, cleanIds.join(','));
+  let query = sql.subdiv.replace(/@placefilter/g, placefilter).replace(/@wofids/g, cleanIds.join(','));
   return db.prepare(query).all().map( row => row.subdivision.toLowerCase());
 }
 
