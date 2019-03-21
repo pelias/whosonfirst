@@ -53,6 +53,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'name 1',
+        name_aliases: [],
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
@@ -90,6 +91,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 23456,
         name: undefined,
+        name_aliases: [],
         place_type: undefined,
         lat: undefined,
         lon: undefined,
@@ -127,6 +129,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'name 1',
+        name_aliases: [],
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
@@ -167,6 +170,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'name 1',
+        name_aliases: [],
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
@@ -208,6 +212,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'name 1',
+        name_aliases: [],
         place_type: 'place type 1',
         lat: 12.121212,
         lon: 21.212121,
@@ -250,6 +255,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'qs:a2_alt value',
+        name_aliases: [],
         place_type: 'county',
         lat: 12.121212,
         lon: 21.212121,
@@ -290,6 +296,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'county',
         lat: 12.121212,
         lon: 21.212121,
@@ -331,6 +338,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'county',
         lat: 12.121212,
         lon: 21.212121,
@@ -371,6 +379,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: undefined,
         lat: 14.141414,
         lon: 23.232323,
@@ -406,6 +415,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
@@ -441,6 +451,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
@@ -476,6 +487,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:label value',
+        name_aliases: [],
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
@@ -511,6 +523,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'locality',
         lat: undefined,
         lon: undefined,
@@ -548,6 +561,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'locality',
         lat: undefined,
         lon: undefined,
@@ -586,6 +600,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -626,6 +641,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'dependency',
         lat: undefined,
         lon: undefined,
@@ -664,6 +680,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'dependency',
         lat: undefined,
         lon: undefined,
@@ -701,6 +718,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'dependency',
         lat: undefined,
         lon: undefined,
@@ -740,6 +758,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -792,6 +811,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -835,6 +855,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -877,6 +898,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -918,6 +940,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -958,6 +981,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -997,6 +1021,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1035,6 +1060,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1072,6 +1098,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1108,6 +1135,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1143,6 +1171,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1177,6 +1206,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1210,6 +1240,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1254,6 +1285,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1298,6 +1330,7 @@ tape('population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1346,6 +1379,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1389,6 +1423,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1431,6 +1466,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1472,6 +1508,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1512,6 +1549,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1551,6 +1589,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1589,6 +1628,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1626,6 +1666,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1662,6 +1703,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1697,6 +1739,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1731,6 +1774,7 @@ tape('negative population fallback tests', (test) => {
       {
         id: 12345,
         name: 'wof:name value',
+        name_aliases: [],
         place_type: 'country',
         lat: undefined,
         lon: undefined,
@@ -1748,6 +1792,42 @@ tape('negative population fallback tests', (test) => {
     });
 
   });
+
+  test.test('name alias fields should return populate name_aliases array', function (t) {
+    var input = [
+      {
+        id: 23456,
+        properties: {
+          'name:eng_x_preferred': ['preferred1', 'preferred2', 'preferred1'],
+          'name:eng_x_variant': ['variant1', 'variant2', 'variant1'],
+          'name:eng_x_colloquial': ['colloquial1', 'colloquial2', 'colloquial1']
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 23456,
+        name: undefined,
+        name_aliases: ['preferred1', 'preferred2', 'variant1', 'variant2'],
+        place_type: undefined,
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        abbreviation: undefined,
+        bounding_box: undefined,
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.end();
+    });
+
+  });
+
   test.end();
 
 });
