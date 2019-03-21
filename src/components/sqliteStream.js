@@ -6,13 +6,6 @@ class SQLiteStream extends Readable {
   constructor(dbPath, sql) {
     super({ objectMode: true, autoDestroy: true, highWaterMark: 32 });
 
-    // ensure indices exist
-    // note: this can be removed once the upstream PR is merged:
-    // https://github.com/whosonfirst/go-whosonfirst-sqlite-features/pull/4
-    new Sqlite3(dbPath)
-      .exec('CREATE INDEX IF NOT EXISTS spr_obsolete ON spr (is_deprecated, is_superseded)')
-      .close();
-
     this._db = new Sqlite3(dbPath, { readonly: true });
     this._iterator = this._db.prepare(sql).iterate();
     this.on('error', (e) => { logger.error(e); });
