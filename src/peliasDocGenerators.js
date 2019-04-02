@@ -1,8 +1,9 @@
-var through2 = require('through2');
-var _ = require('lodash');
-var iso3166 = require('iso3166-1');
+const through2 = require('through2');
+const _ = require('lodash');
+const iso3166 = require('iso3166-1');
+const log = require('pelias-logger').get('openstreetmap');
 
-var Document = require('pelias-model').Document;
+const Document = require('pelias-model').Document;
 
 module.exports = {};
 
@@ -131,14 +132,19 @@ module.exports.create = function(hierarchy_finder) {
     // if there are no hierarchies, then just return the doc as-is
     var hierarchies = hierarchy_finder(record);
 
-    if (hierarchies && hierarchies.length > 0) {
-      hierarchies.forEach(function(hierarchy) {
-        this.push(setupDocument(record, hierarchy));
-      }, this);
+    try {
+      if (hierarchies && hierarchies.length > 0) {
+        hierarchies.forEach(function(hierarchy) {
+          this.push(setupDocument(record, hierarchy));
+        }, this);
 
-    } else {
-      this.push(setupDocument(record));
-
+      } else {
+        this.push(setupDocument(record));
+      }
+    }
+    catch (e) {
+      log.error(`doc generator error: ${e.message}`);
+      log.error(JSON.stringify(record, null, 2));
     }
 
     next();

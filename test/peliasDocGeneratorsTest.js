@@ -653,6 +653,29 @@ tape('create', function(test) {
     });
 
   });
+
+  test.test('errors: should catch model errors and continue', function (t) {
+
+    // trigger model to throw an exception by providing an invalid name
+    var input = [{
+      id: 1,
+      name: 'http://urls_not_allowed_here',
+      place_type: 'country'
+    }];
+
+    t.doesNotThrow(() => {
+      var docGenerator = peliasDocGenerators.create(() => {
+        return [[input[0]]];
+      });
+
+      test_stream(input, docGenerator, function (err, actual) {
+        t.deepEqual(actual, [], 'should throw error and continue');
+        t.end();
+      }, /should not match/, 'should catch + log model errors');
+    });
+
+  });
+
   test.end();
 
 });
