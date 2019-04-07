@@ -23,17 +23,26 @@ function download(callback) {
   const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
 
   // generate a shell command that does the following:
-  // 1.) use curl to download the bundle, piping directly to tar (this avoids the
-  //     need for intermediate storage of the archive file)
+  // 1.) use wget to download the bundle, not piping directly to tar (which would avoid the
+  //     need for intermediate storage of the archive file but seems to cause timouts)
   // 2.) extract the archive so that the data directory goes in the right place and
   //     the README file is ignored (it just would get overridden by subsequent bundles)
-  // 3.) move the meta file to the meta files directory
+  // 3.) remove the tar file
+  // 4.) move the meta file to the meta files directory
+
   function generateCommand(bundle, directory) {
     const csvFilename = bundle.replace(/-\d{8}T\d{6}-/, '-latest-') // support timestamped downloads
                               .replace('.tar.bz2', '.csv');
 
-    return `curl -s ${wofDataHost}/bundles/${bundle} | tar -xj --strip-components=1 --exclude=README.txt -C ` +
-      `${directory} && mv ${path.join(directory, csvFilename)} ${path.join(directory, 'meta')}`;
+//    return `curl -s ${wofDataHost}/bundles/${bundle} | tar -xj --strip-components=1 --exclude=README.txt -C ` +
+//      `${directory} && mv ${path.join(directory, csvFilename)} ${path.join(directory, 'meta')}`;
+
+
+     var command=`wget -q ${wofDataHost}/bundles/${bundle} && tar -xj --strip-components=1 --exclude=README.txt -C ` +
+        `${directory} -f ${bundle} && rm ${bundle} && mv ${path.join(directory, csvFilename)} ${path.join(directory, 'meta')}`;
+     console.log(command);
+     return command;
+
   }
 
   bundles.generateBundleList((err, bundlesToDownload) => {
