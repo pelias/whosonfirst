@@ -1,5 +1,6 @@
-var through2 = require('through2');
-var _ = require('lodash');
+const through2 = require('through2');
+const _ = require('lodash');
+const util = require('util');
 
 // hierarchy in importance-descending order of population fields
 const population_hierarchy = [
@@ -17,9 +18,11 @@ const population_hierarchy = [
 ];
 
 // WOF fields to use for aliases
-const name_alias_fields = [
-  'name:eng_x_preferred',
-  'name:eng_x_variant'
+// note the '%s' is replaced by a language code
+const NAME_ALIAS_FIELDS = [
+  'name:%s_x_preferred',
+  'name:%s_x_variant',
+  'label:%s_x_preferred_longname'
 ];
 
 // this function is used to verify that a US county QS altname is available
@@ -90,11 +93,11 @@ function concatArrayFields(properties, fields){
 // see: https://github.com/whosonfirst-data/whosonfirst-data/pull/1548
 function getName(properties) {
 
-  // look for a label in one of the official languages
+  // consider all official languages + english
   let langs = getLanguages(properties);
-  if (!langs.includes('eng')) { langs.push('eng'); } // otherwise fallback to english
+  if (!langs.includes('eng')) { langs.push('eng'); }
 
-  // find all relevant labels
+  // find the most relevant label
   let labelFields = langs.map(l => `label:${l}_x_preferred_longname`);
   let labels = concatArrayFields(properties, labelFields);
   if( labels.length ){ return labels[0]; }
@@ -105,6 +108,24 @@ function getName(properties) {
   }
   // use the 'wof:name' property
   return properties['wof:name'];
+}
+
+function getNameAliases(properties) {
+
+  // consider all official languages + english
+  let langs = getLanguages(properties);
+  if (!langs.includes('eng')) { langs.push('eng'); }
+
+  // compile a list of relevant name fields
+  let nameFields = [];
+  langs.forEach(l => {
+    nameFields = nameFields.concat(
+      NAME_ALIAS_FIELDS.map(f => util.format(f, l) )
+    );
+  });
+
+  // return an array of name aliases
+  return concatArrayFields(properties, nameFields);
 }
 
 function getAbbreviation(properties) {
@@ -146,7 +167,7 @@ module.exports.create = function map_fields_stream() {
     var record = {
       id: json_object.id,
       name: getName(json_object.properties),
-      name_aliases: concatArrayFields(json_object.properties, name_alias_fields),
+      name_aliases: getNameAliases(json_object.properties),
       abbreviation: getAbbreviation(json_object.properties),
       place_type: json_object.properties['wof:placetype'],
       lat: getLat(json_object.properties),
