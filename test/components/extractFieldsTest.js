@@ -490,7 +490,10 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'label:spa_x_preferred_longname value',
-        name_aliases: [],
+        name_aliases: [
+          'label:spa_x_preferred_longname value',
+          'label:eng_x_preferred_longname value'
+        ],
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
@@ -529,7 +532,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'label:eng_x_preferred_longname value',
-        name_aliases: [],
+        name_aliases: ['label:eng_x_preferred_longname value'],
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
@@ -567,7 +570,7 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'label:eng_x_preferred_longname value',
-        name_aliases: [],
+        name_aliases: ['label:eng_x_preferred_longname value'],
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
@@ -1917,7 +1920,10 @@ tape('negative population fallback tests', (test) => {
         properties: {
           'name:eng_x_preferred': ['preferred1', 'preferred2', 'preferred1'],
           'name:eng_x_variant': ['variant1', 'variant2', 'variant1'],
-          'name:eng_x_colloquial': ['colloquial1', 'colloquial2', 'colloquial1']
+          'name:eng_x_colloquial': ['colloquial1', 'colloquial2', 'colloquial1'],
+          'label:eng_x_preferred_longname': ['englabel1', 'englabel2', 'englabel1'],
+          'label:spa_x_preferred_longname': ['spalabel1', 'spalabel2', 'spalabel1'],
+          'label:fra_x_preferred_longname': ['fralabel1', 'fralabel2', 'fralabel1']
         }
       }
     ];
@@ -1925,8 +1931,8 @@ tape('negative population fallback tests', (test) => {
     var expected = [
       {
         id: 23456,
-        name: undefined,
-        name_aliases: ['preferred1', 'preferred2', 'variant1', 'variant2'],
+        name: 'englabel1',
+        name_aliases: ['preferred1', 'preferred2', 'variant1', 'variant2', 'englabel1', 'englabel2'],
         place_type: undefined,
         lat: undefined,
         lon: undefined,
@@ -1939,7 +1945,52 @@ tape('negative population fallback tests', (test) => {
     ];
 
     test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
+      t.deepEqual(actual, expected, 'name aliases');
+      t.end();
+    });
+
+  });
+
+  test.test('name alias local language support', function (t) {
+    var input = [
+      {
+        id: 23456,
+        properties: {
+          'name:spa_x_preferred': ['preferred1', 'preferred2', 'preferred1'],
+          'name:spa_x_variant': ['variant1', 'variant2', 'variant1'],
+          'name:spa_x_colloquial': ['colloquial1', 'colloquial2', 'colloquial1'],
+          'label:eng_x_preferred_longname': ['englabel1', 'englabel2', 'englabel1'],
+          'label:spa_x_preferred_longname': ['spalabel1', 'spalabel2', 'spalabel1'],
+          'label:fra_x_preferred_longname': ['fralabel1', 'fralabel2', 'fralabel1'],
+          'wof:lang_x_official': ['spa','fra']
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 23456,
+        name: 'spalabel1',
+        name_aliases: [
+          'preferred1', 'preferred2',
+          'variant1', 'variant2',
+          'spalabel1', 'spalabel2',
+          'fralabel1', 'fralabel2',
+          'englabel1', 'englabel2'
+        ],
+        place_type: undefined,
+        lat: undefined,
+        lon: undefined,
+        population: undefined,
+        popularity: undefined,
+        abbreviation: undefined,
+        bounding_box: undefined,
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual, expected, 'name aliases - local languages');
       t.end();
     });
 
