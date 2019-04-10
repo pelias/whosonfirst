@@ -94,10 +94,9 @@ Expect to use a few million inodes for Who's on First. You probably don't want t
 
 ## Usage
 
-To install the required node module dependencies and execute the importer, run:
+To  execute the importer, run:
 
 ```bash
-$> npm install
 $> npm start
 ```
 
