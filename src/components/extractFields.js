@@ -1,5 +1,6 @@
-var through2 = require('through2');
-var _ = require('lodash');
+const through2 = require('through2');
+const _ = require('lodash');
+const util = require('util');
 
 // hierarchy in importance-descending order of population fields
 const population_hierarchy = [
@@ -17,9 +18,11 @@ const population_hierarchy = [
 ];
 
 // WOF fields to use for aliases
-const name_alias_fields = [
-  'name:eng_x_preferred',
-  'name:eng_x_variant'
+// note the '%s' is replaced by a language code
+const NAME_ALIAS_FIELDS = [
+  'name:%s_x_preferred',
+  'name:%s_x_variant',
+  'label:%s_x_preferred_longname'
 ];
 
 // this function is used to verify that a US county QS altname is available
@@ -63,23 +66,66 @@ function getBoundingBox(properties) {
   }
 }
 
-function getName(properties) {
-  if (properties.hasOwnProperty('wof:label')) {
-    return properties['wof:label'];
-  } else {
-    return properties['wof:name'];
+// get an array of language codes spoken at this location
+function getLanguages(properties) {
+  if (!Array.isArray(properties['wof:lang_x_official'])) {
+    return [];
   }
+  return properties['wof:lang_x_official']
+    .filter(l => (typeof l === 'string' && l.length === 3))
+    .map(l => l.toLowerCase());
 }
 
-function getNameAliases(properties) {
-  let aliases = [];
-  name_alias_fields.forEach(field => {
-    if( Array.isArray(properties[field]) && properties[field].length ){
-      aliases = aliases.concat(properties[field]);
+// convenience function to safely concat array fields
+function concatArrayFields(properties, fields){
+  let arr = [];
+  fields.forEach(field => {
+    if (Array.isArray(properties[field]) && properties[field].length) {
+      arr = arr.concat(properties[field]);
     }
   });
   // dedupe array
-  return aliases.filter((item, pos, self) => self.indexOf(item) === pos);
+  return arr.filter((item, pos, self) => self.indexOf(item) === pos);
+}
+
+// note: 'wof:label' has been officially deprecated
+// see: https://github.com/whosonfirst-data/whosonfirst-data/issues/1540
+// see: https://github.com/whosonfirst-data/whosonfirst-data/pull/1548
+function getName(properties) {
+
+  // consider all official languages + english
+  let langs = getLanguages(properties);
+  if (!langs.includes('eng')) { langs.push('eng'); }
+
+  // find the most relevant label
+  let labelFields = langs.map(l => `label:${l}_x_preferred_longname`);
+  let labels = concatArrayFields(properties, labelFields);
+  if( labels.length ){ return labels[0]; }
+
+  // fall back to the deprecated 'wof:label' property
+  if (properties.hasOwnProperty('wof:label')) {
+    return properties['wof:label'];
+  }
+  // use the 'wof:name' property
+  return properties['wof:name'];
+}
+
+function getNameAliases(properties) {
+
+  // consider all official languages + english
+  let langs = getLanguages(properties);
+  if (!langs.includes('eng')) { langs.push('eng'); }
+
+  // compile a list of relevant name fields
+  let nameFields = [];
+  langs.forEach(l => {
+    nameFields = nameFields.concat(
+      NAME_ALIAS_FIELDS.map(f => util.format(f, l) )
+    );
+  });
+
+  // return an array of name aliases
+  return concatArrayFields(properties, nameFields);
 }
 
 function getAbbreviation(properties) {
