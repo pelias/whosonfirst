@@ -469,6 +469,123 @@ tape('readStreamComponents', function(test) {
     });
   });
 
+  test.test('label:{lang}_x_preferred_longname should be used for name when both it and eng label are available', function (t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:label': 'wof:label value',
+          'label:eng_x_preferred_longname': ['label:eng_x_preferred_longname value'],
+          'label:spa_x_preferred_longname': ['label:spa_x_preferred_longname value'],
+          'wof:lang_x_official': ['spa'],
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'label:spa_x_preferred_longname value',
+        name_aliases: [],
+        place_type: undefined,
+        lat: 12.121212,
+        lon: 21.212121,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '',
+        abbreviation: undefined,
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual, expected, 'label:eng_x_preferred_longname is used for name');
+      t.end();
+    });
+
+  });
+
+  test.test('label:eng_x_preferred_longname should be used for name when official language label unavailable', function (t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:label': 'wof:label value',
+          'label:eng_x_preferred_longname': ['label:eng_x_preferred_longname value'],
+          'wof:lang_x_official': ['spa'],
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'label:eng_x_preferred_longname value',
+        name_aliases: [],
+        place_type: undefined,
+        lat: 12.121212,
+        lon: 21.212121,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '',
+        abbreviation: undefined,
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual, expected, 'label:eng_x_preferred_longname is used for name');
+      t.end();
+    });
+
+  });
+
+  test.test('label:eng_x_preferred_longname should be used for name when both it and wof:label are available', function (t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:label': 'wof:label value',
+          'label:eng_x_preferred_longname': ['label:eng_x_preferred_longname value'],
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'label:eng_x_preferred_longname value',
+        name_aliases: [],
+        place_type: undefined,
+        lat: 12.121212,
+        lon: 21.212121,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '',
+        abbreviation: undefined,
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual, expected, 'label:eng_x_preferred_longname is used for name');
+      t.end();
+    });
+
+  });
+
   test.test('wof:label should be used for name when both it and wof:name are available', function(t) {
     var input = [
       {
