@@ -551,7 +551,7 @@ tape('readStreamComponents', function(test) {
 
   });
 
-  test.test('label:eng_x_preferred_longname should be used for name when both it and wof:label are available', function (t) {
+  test.test('label:eng_x_preferred_longname when eng_x_preferred exists', function (t) {
     var input = [
       {
         id: 12345,
@@ -559,6 +559,7 @@ tape('readStreamComponents', function(test) {
           'wof:name': 'wof:name value',
           'wof:label': 'wof:label value',
           'label:eng_x_preferred_longname': ['label:eng_x_preferred_longname value'],
+          'label:eng_x_preferred': ['label:eng_x_preferred value'],
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'lbl:bbox': ''
@@ -570,7 +571,10 @@ tape('readStreamComponents', function(test) {
       {
         id: 12345,
         name: 'label:eng_x_preferred_longname value',
-        name_aliases: ['label:eng_x_preferred_longname value'],
+        name_aliases: [
+          'label:eng_x_preferred_longname value',
+          'label:eng_x_preferred value'
+        ],
         place_type: undefined,
         lat: 12.121212,
         lon: 21.212121,
@@ -584,6 +588,44 @@ tape('readStreamComponents', function(test) {
 
     test_stream(input, extractFields.create(), function (err, actual) {
       t.deepEqual(actual, expected, 'label:eng_x_preferred_longname is used for name');
+      t.end();
+    });
+
+  });
+
+  test.test('label:eng_x_preferred should be used for name when both it and wof:label are available', function (t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:label': 'wof:label value',
+          'label:eng_x_preferred': ['label:eng_x_preferred value'],
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    var expected = [
+      {
+        id: 12345,
+        name: 'label:eng_x_preferred value',
+        name_aliases: ['label:eng_x_preferred value'],
+        place_type: undefined,
+        lat: 12.121212,
+        lon: 21.212121,
+        population: undefined,
+        popularity: undefined,
+        bounding_box: '',
+        abbreviation: undefined,
+        hierarchies: []
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual, expected, 'label:eng_x_preferred is used for name');
       t.end();
     });
 

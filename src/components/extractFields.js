@@ -22,7 +22,8 @@ const population_hierarchy = [
 const NAME_ALIAS_FIELDS = [
   'name:%s_x_preferred',
   'name:%s_x_variant',
-  'label:%s_x_preferred_longname'
+  'label:%s_x_preferred_longname',
+  'label:%s_x_preferred'
 ];
 
 // this function is used to verify that a US county QS altname is available
@@ -89,6 +90,7 @@ function concatArrayFields(properties, fields){
 }
 
 // note: 'wof:label' has been officially deprecated
+// see: https://github.com/whosonfirst-data/whosonfirst-data/issues/1540#issuecomment-481824475
 // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/1540
 // see: https://github.com/whosonfirst-data/whosonfirst-data/pull/1548
 function getName(properties) {
@@ -99,6 +101,7 @@ function getName(properties) {
 
   // find the most relevant label
   let labelFields = langs.map(l => `label:${l}_x_preferred_longname`);
+  labelFields = labelFields.concat(langs.map(l => `label:${l}_x_preferred`));
   let labels = concatArrayFields(properties, labelFields);
   if( labels.length ){ return labels[0]; }
 
