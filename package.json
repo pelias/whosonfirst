@@ -30,7 +30,7 @@
     "combined-stream": "1.0.5",
     "csv-stream": "^0.2.0",
     "download-file-sync": "^1.0.4",
-    "fs-extra": "^8.0.0",
+    "fs-extra": "^8.0.1",
     "iso3166-1": "^0.5.0",
     "joi": "^14.0.0",
     "klaw-sync": "^6.0.0",
