@@ -57,6 +57,18 @@ function assignField(hierarchyElement, wofDoc) {
 
 }
 
+function addMultiLangAliases(wofDoc, name_langs) {
+  for (let lang in name_langs) {
+    for (let i = 0; i < name_langs[lang].length; i++) {
+      if (i === 0) {
+        wofDoc.setName(lang, name_langs[lang][i]);
+      } else {
+        wofDoc.setNameAlias(lang, name_langs[lang][i]);
+      }
+    }
+  }
+}
+
 // method that extracts the logic for Document creation.  `hierarchy` is optional
 function setupDocument(record, hierarchy) {
   var wofDoc = new Document( 'whosonfirst', record.place_type, record.id );
@@ -73,10 +85,15 @@ function setupDocument(record, hierarchy) {
     }
 
     // index name aliases for all other records (where available)
-    else if (record.name_aliases.length) {
-      record.name_aliases.forEach(alias => {
-        wofDoc.setNameAlias('default', alias);
-      });
+    else {
+      if (record.name_aliases.length) {
+        record.name_aliases.forEach(alias => {
+          wofDoc.setNameAlias('default', alias);
+        });
+      }
+      if (record.name_langs) {
+        addMultiLangAliases(wofDoc, record.name_langs);
+      }
     }
   }
   wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
