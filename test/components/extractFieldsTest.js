@@ -259,6 +259,25 @@ tape('readStreamComponents', function(test) {
 
   });
 
+  test.test('latitude and longitude strings should be converted to numbers', function(t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'geom:latitude': '12.121212',
+          'geom:longitude': '21.212121'
+        }
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function(err, actual) {
+      t.deepEqual(actual[0].lat, 12.121212, 'lat is a number');
+      t.deepEqual(actual[0].lon, 21.212121, 'lon is a number');
+      t.end();
+    });
+  });
+
   test.test('label centroid should take precedence over math centroid', function(t) {
     var input = [
       {

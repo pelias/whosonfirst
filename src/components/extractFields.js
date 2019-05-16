@@ -43,20 +43,23 @@ function getPopulation( props ) {
           find((val) => { return val >= 0; } );
 }
 
-function getLat(properties) {
-  if (properties['lbl:latitude']) {
-    return properties['lbl:latitude'];
+// return number or undefined
+function getNumber(value) {
+  const numericValue = parseFloat(value);
+
+  if (isNaN(numericValue) || !isFinite(numericValue)) {
+    return undefined;
   } else {
-    return properties['geom:latitude'];
+    return numericValue;
   }
 }
 
+function getLat(properties) {
+  return getNumber(properties['lbl:latitude']) || getNumber(properties['geom:latitude']);
+}
+
 function getLon(properties) {
-  if (properties['lbl:longitude']) {
-    return properties['lbl:longitude'];
-  } else {
-    return properties['geom:longitude'];
-  }
+  return getNumber(properties['lbl:longitude']) || getNumber(properties['geom:longitude']);
 }
 
 function getBoundingBox(properties) {
