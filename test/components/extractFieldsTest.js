@@ -985,3 +985,75 @@ tape('name alias tests', (test) => {
 
   test.end();
 });
+
+tape('multi-lang index test', (test) => {
+  test.test('all elements in default language should not be in other indexes', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {
+        'wof:name': ['default1', 'default2'],
+        'name:eng_x_preferred': ['preferredENG1'],
+        'name:fra_x_preferred': ['default1', 'preferredFRA1', 'preferredFRA2'],
+        'name:spa_x_variant': ['default2', 'variantSPA1', 'variantSPA2'],
+      }
+    }];
+
+    const expected_name_langs = {
+      'en': ['preferredENG1'],
+      'fr': ['preferredFRA1', 'preferredFRA2'],
+      'es': ['variantSPA1', 'variantSPA2']
+    };
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].name_langs, expected_name_langs, 'name langs populated from fr preferred and SPA variant fields');
+      t.end();
+    });
+  });
+
+  test.test('name langs should be without duplicates', function (t) {
+    var input = [
+      {
+        id: 54321,
+        properties: {
+          'name:fra_x_preferred': ['preferredFRA1', 'preferredFRA2', 'preferredFRA2'],
+          'name:spa_x_preferred': ['variantSPA1', 'variantSPA1', 'variantSPA2'],
+          'wof:name': ['prefered1']
+        }
+      }
+    ];
+
+    const expected_name_langs = {
+      'fr': ['preferredFRA1', 'preferredFRA2'],
+      'es': ['variantSPA1', 'variantSPA2']
+    };
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].name_langs, expected_name_langs, 'should not have duplicates');
+      t.end();
+    });
+  });
+
+  test.test('name langs should concat iso639-2B and iso639-2T', function (t) {
+    var input = [
+      {
+        id: 54321,
+        properties: {
+          'name:fra_x_preferred': ['preferredFRA1', 'preferredFRA2'],
+          'name:fre_x_preferred': ['preferredFRE1'],
+          'wof:name': ['prefered1']
+        }
+      }
+    ];
+
+    const expected_name_langs = {
+      'fr': ['preferredFRA1', 'preferredFRA2', 'preferredFRE1']
+    };
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].name_langs, expected_name_langs, 'should not have duplicates');
+      t.end();
+    });
+  });
+
+  test.end();
+});

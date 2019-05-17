@@ -676,6 +676,60 @@ tape('create', function(test) {
 
   });
 
+  test.test('name langs should be set on doc', function (t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'Japan',
+        name_aliases: [],
+        name_langs: {
+          'jp': [
+            'Nihon'
+          ],
+          'fr': [
+            'Japon', 'Pays Du Soleil Levant'
+          ]
+        },
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'country',
+        abbreviation: 'JP',
+        popularity: 25000
+      }
+    };
+
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document('whosonfirst', 'country', '1')
+        .setName('default', 'Japan')
+        .setName('jp', 'Nihon')
+        .setName('fr', 'Japon')
+        .setNameAlias('fr', 'Pays Du Soleil Levant')
+        .setCentroid({ lat: 12.121212, lon: 21.212121 })
+        .addParent('country', 'Japan', '1', 'JPN')
+        .setPopularity(25000)
+    ];
+
+    var hierarchies_finder = function () {
+      return [
+        [
+          wofRecords['1']
+        ]
+      ];
+    };
+
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function (err, actual) {
+      t.deepEqual(actual, expected, 'population should not be set');
+      t.end();
+    });
+
+  });
+
   test.end();
 
 });

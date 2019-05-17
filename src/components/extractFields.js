@@ -1,7 +1,7 @@
 const through2 = require('through2');
 const _ = require('lodash');
 const util = require('util');
-const iso3166 = require('iso3166-1');
+const iso639 = require('../helpers/iso639');
 
 // hierarchy in importance-descending order of population fields
 const population_hierarchy = [
@@ -139,13 +139,13 @@ function getMultiLangNames(defaultName, properties) {
     .filter(key => WOF_NAMES_REGEX.test(key)) // get only name:.* keys
     .map(key => {
       return {
-        key: key.substring(key.indexOf(':') + 1, key.indexOf(':') + 4).toUpperCase(), // get the iso part of the key name:iso_x_preferred
+        key: key.substring(key.indexOf(':') + 1, key.indexOf(':') + 4), // get the iso part of the key name:iso_x_preferred
         value: properties[key]
                 .filter(name => !defaultName || defaultName.indexOf(name) < 0) // remove duplicate elements found in default name
       };
     }) //
-    .filter(({ key, value }) => value.length > 0 && iso3166.is3(key)) // filter correct iso 3 keys
-    .map(({key, value}) => { return { key: iso3166.to2(key).toLowerCase(), value: value }; })
+    .filter(({ key, value }) => value.length > 0 && iso639[key]) // filter correct iso 3 keys
+    .map(({key, value}) => { return { key: iso639[key], value: value }; })
     .reduce((langs, { key, value }) =>
       _.set(langs, key, _.union(langs[key], value)), {}
     ); // create the lang/value map
