@@ -1,7 +1,7 @@
 const through2 = require('through2');
 const _ = require('lodash');
 const iso3166 = require('iso3166-1');
-const log = require('pelias-logger').get('openstreetmap');
+const logger = require('pelias-logger').get('whosonfirst');
 
 const Document = require('pelias-model').Document;
 
@@ -160,8 +160,8 @@ module.exports.create = function(hierarchy_finder) {
       }
     }
     catch (e) {
-      log.error(`doc generator error: ${e.message}`);
-      log.error(JSON.stringify(record, null, 2));
+      logger.error(`doc generator error: ${e.message}`);
+      logger.error(JSON.stringify(record, null, 2));
     }
 
     next();
