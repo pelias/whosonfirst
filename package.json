@@ -26,7 +26,7 @@
   "homepage": "https://github.com/pelias/whosonfirst#readme",
   "dependencies": {
     "async": "^2.5.0",
-    "better-sqlite3": "^4.1.0",
+    "better-sqlite3": "^5.0.0",
     "combined-stream": "1.0.5",
     "csv-stream": "^0.2.0",
     "download-file-sync": "^1.0.4",
