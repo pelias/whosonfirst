@@ -1,6 +1,7 @@
 const through2 = require('through2');
 const _ = require('lodash');
 const util = require('util');
+const iso639 = require('../helpers/iso639');
 
 // hierarchy in importance-descending order of population fields
 const population_hierarchy = [
@@ -25,6 +26,8 @@ const NAME_ALIAS_FIELDS = [
   'label:%s_x_preferred_longname',
   'label:%s_x_preferred'
 ];
+
+const WOF_NAMES_REGEX = /(name|label):[a-z]{3}_x_(preferred|variant)/;
 
 // this function is used to verify that a US county QS altname is available
 function isUsCounty(base_record, wof_country, qs_a2_alt) {
@@ -131,6 +134,23 @@ function getNameAliases(properties) {
   return concatArrayFields(properties, nameFields);
 }
 
+function getMultiLangNames(defaultName, properties) {
+  return Object.keys(properties)
+    .filter(key => WOF_NAMES_REGEX.test(key)) // get only name:.* keys
+    .map(key => {
+      return {
+        key: key.substring(key.indexOf(':') + 1, key.indexOf(':') + 4), // get the iso part of the key name:iso_x_preferred
+        value: properties[key]
+                .filter(name => !defaultName || defaultName.indexOf(name) < 0) // remove duplicate elements found in default name
+      };
+    }) //
+    .filter(({ key, value }) => value.length > 0 && iso639[key]) // filter correct iso 3 keys
+    .map(({key, value}) => { return { key: iso639[key], value: value }; })
+    .reduce((langs, { key, value }) =>
+      _.set(langs, key, _.union(langs[key], value)), {}
+    ); // create the lang/value map
+}
+
 function getAbbreviation(properties) {
   if (properties['wof:placetype'] === 'country' && properties['wof:country']) {
     return properties['wof:country'];
@@ -167,10 +187,12 @@ function getHierarchies(id, properties) {
 */
 module.exports.create = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
+    const default_names = getName(json_object.properties);
     var record = {
       id: json_object.id,
-      name: getName(json_object.properties),
+      name: default_names,
       name_aliases: getNameAliases(json_object.properties),
+      name_langs: getMultiLangNames(default_names, json_object.properties),
       abbreviation: getAbbreviation(json_object.properties),
       place_type: json_object.properties['wof:placetype'],
       lat: getLat(json_object.properties),
