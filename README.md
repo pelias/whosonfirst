@@ -47,7 +47,7 @@ Currently, the supported hierarchy types are:
 
 Other types may be included in the future.
 
-[This page](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
+[The Who's on First documentation](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
 
 ## Configuration
 
