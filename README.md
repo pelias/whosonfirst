@@ -17,38 +17,6 @@ Node.js is required.
 
 See [Pelias software requirements](https://github.com/pelias/documentation/blob/master/requirements.md) for required and recommended versions.
 
-## Types
-
-There are two major categories of Who's on First data supported: hierarchy (or admin) data, and venues.
-
-Hierarchy data represents things like cities, countries, counties, boroughs, etc.
-
-Venues represent individual places like the Statue of Liberty, a gas station, etc. Venues are subdivided by country, and sometimes regions within a country.
-
-Currently, the supported hierarchy types are:
-
-- borough
-- continent
-- country
-- county
-- dependency
-- disputed
-- [empire](https://www.youtube.com/watch?v=-bzWSJG93P8)
-- localadmin
-- locality
-- macrocounty
-- macrohood
-- macroregion
-- marinearea
-- neighbourhood
-- ocean
-- region
-- postalcodes (optional, see configuration)
-
-Other types may be included in the future.
-
-[The Who's on First documentation](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
-
 ## Configuration
 
 This importer is configured using the [`pelias-config`](https://github.com/pelias/config) module.
@@ -164,6 +132,39 @@ To install the required node module dependencies and execute the importer, run:
 $> npm install
 $> npm start
 ```
+
+## Types
+
+There are two major categories of Who's on First data supported: hierarchy (or admin) data, and venues.
+
+Hierarchy data represents things like cities, countries, counties, boroughs, etc.
+
+Venues represent individual places like the Statue of Liberty, a gas station, etc. Venues are subdivided by country, and sometimes regions within a country.
+
+Currently, the supported hierarchy types are:
+
+- borough
+- continent
+- country
+- county
+- dependency
+- disputed
+- [empire](https://www.youtube.com/watch?v=-bzWSJG93P8)
+- localadmin
+- locality
+- macrocounty
+- macrohood
+- macroregion
+- marinearea
+- neighbourhood
+- ocean
+- region
+- postalcodes (optional, see configuration)
+
+Other types may be included in the future.
+
+[The Who's on First documentation](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
+
 
 ### In Other Projects
 
