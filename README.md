@@ -17,6 +17,16 @@ Node.js is required.
 
 See [Pelias software requirements](https://github.com/pelias/documentation/blob/master/requirements.md) for required and recommended versions.
 
+## Quickstart Usage
+
+To install the required Node.js module dependencies, download data for the entire planet (20GB+) and execute the importer, run:
+
+```bash
+npm install
+npm run download
+npm start
+```
+
 ## Configuration
 
 This importer is configured using the [`pelias-config`](https://github.com/pelias/config) module.
@@ -123,15 +133,6 @@ you need lots of free [inodes](https://en.wikipedia.org/wiki/Inode). On
 Linux/Mac,  `df -ih` can show you how many free inodes you have.
 
 Expect to use a few million inodes for Who's on First. You probably don't want to store multiple copies of the Who's on First data due to its disk requirements.
-
-## Usage
-
-To install the required node module dependencies and execute the importer, run:
-
-```bash
-$> npm install
-$> npm start
-```
 
 ## Types
 
