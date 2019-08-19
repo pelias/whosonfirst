@@ -132,7 +132,8 @@ production ready.
 
 ## Downloading the Data
 
-* The `download` script will download the required bundles/sqlite databases and place the data into the datapath configured in [pelias-config](https://github.com/pelias/config) in the required directory layout.
+The `download` script will download the required bundles/sqlite databases into the datapath configured in `imports.whosonfirst.datapath`.
+
 To install the required node module dependencies and run the download script:
 
 ```bash
@@ -144,11 +145,9 @@ npm run download
 npm run download -- --admin-only # to only download hierarchy data, without venues or postalcodes
 ```
 
-When running an instance intended to provide coverage for an area smaller than the entire world,
-it is recommended that the `importPlace` config parameter is used to limit the data download to records
-that are parents or descendants of the specified place. See the configuration details in the above section of this document.
-We currently only support a single ID at a time. If multiple places need to be downloaded, the script can be executed multiple times;
-one for each desired place.
+**Note:** The download script will always download data for the entire planet. Support for downloading data for specific countries is [a possible future enhancement](https://github.com/pelias/whosonfirst/issues/459).
+
+When using `imports.whosonfirst.importPlace`, a new SQLite database will only be downloaded if new data is available. Otherwise, the existing download will be reused.
 
 **Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
 Additionally, Who's on First uses one file per record. In addition to lots of disk space,
