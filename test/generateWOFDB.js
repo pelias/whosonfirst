@@ -46,7 +46,7 @@ module.exports = (dbPath, entries) => {
         ) VALUES (
           ${e.id},
           '${e.properties['wof:name'] || ''}',
-          '${e['wof:placetype']}',
+          '${e.properties['wof:placetype']}',
           ${e.properties['geom:latitude']},
           ${e.properties['geom:longitude']},
           ${_.isEmpty(e.properties['edtf:deprecated']) ? 0 : 1},

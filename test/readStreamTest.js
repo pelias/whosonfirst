@@ -187,9 +187,9 @@ tape('readStream', (test) => {
       generateWOFDB(path.join(temp_dir, 'sqlite', 'whosonfirst-data-latest.db'), [
         {
           id: 0,
-          'wof:placetype': 'country',
           properties: {
             'wof:name': 'null island',
+            'wof:placetype': 'country',
             'geom:latitude': 0,
             'geom:longitude': 0,
             'edtf:deprecated': 0,
@@ -198,9 +198,9 @@ tape('readStream', (test) => {
         },
         {
           id: 421302191,
-          'wof:placetype': 'region',
           properties: {
             'wof:name': 'name 421302191',
+            'wof:placetype': 'region',
             'geom:latitude': 45.240295,
             'geom:longitude': 3.916216,
             'wof:superseded_by': []
@@ -208,9 +208,9 @@ tape('readStream', (test) => {
         },
         {
           id: 421302147,
-          'wof:placetype': 'region',
           properties: {
             'wof:name': 'name 421302191',
+            'wof:placetype': 'region',
             'geom:latitude': 45.240295,
             'geom:longitude': 3.916216,
             'wof:superseded_by': ['421302191']
@@ -218,8 +218,8 @@ tape('readStream', (test) => {
         },
         {
           id: 421302897,
-          'wof:placetype': 'locality',
           properties: {
+            'wof:placetype': 'locality',
             'geom:latitude': 4.2564,
             'geom:longitude': -41.916216,
             'wof:superseded_by': []
@@ -238,13 +238,13 @@ tape('readStream', (test) => {
               name_aliases: [],
               name_langs: {},
               abbreviation: undefined,
-              place_type: undefined,
+              place_type: 'region',
               lat: 45.240295,
               lon: 3.916216,
               bounding_box: undefined,
               population: undefined,
               popularity: undefined,
-              hierarchies: []
+              hierarchies: [ { 'region_id': 421302191 } ]
             }
           });
           t.end();
