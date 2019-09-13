@@ -32,7 +32,7 @@
     "download-file-sync": "^1.0.4",
     "fs-extra": "^8.0.0",
     "iso3166-1": "^0.5.0",
-    "joi": "^14.0.0",
+    "@hapi/joi": "^15.0.0",
     "klaw-sync": "^6.0.0",
     "lodash": "^4.5.1",
     "node-version-checker": "^2.0.0",
