@@ -27,7 +27,7 @@ const NAME_ALIAS_FIELDS = [
   'label:%s_x_preferred'
 ];
 
-const WOF_NAMES_REGEX = /(name|label):[a-z]{3}_x_(preferred|variant)/;
+const WOF_NAMES_REGEX = /^(name|label):[a-z]{3}_x_(preferred|variant)$/;
 
 // this function is used to verify that a US county QS altname is available
 function isUsCounty(base_record, wof_country, qs_a2_alt) {
@@ -136,7 +136,7 @@ function getNameAliases(properties) {
 
 function getMultiLangNames(defaultName, properties) {
   return Object.keys(properties)
-    .filter(key => WOF_NAMES_REGEX.test(key)) // get only name:.* keys
+    .filter(key => WOF_NAMES_REGEX.test(key)) // get only matching keys
     .map(key => {
       return {
         key: key.substring(key.indexOf(':') + 1, key.indexOf(':') + 4), // get the iso part of the key name:iso_x_preferred
