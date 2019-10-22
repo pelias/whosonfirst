@@ -72,14 +72,16 @@ function createMetaRecordStream(metaFilePaths, types) {
  */
 function createSQLiteRecordStream(dbPaths, importPlace) {
   const sqliteStream = combinedStream.create();
-  const sqliteStatement = importPlace ?
-    SQLiteStream.findGeoJSONByPlacetypeAndWOFId(getPlacetypes(), importPlace) :
-    SQLiteStream.findGeoJSONByPlacetype(getPlacetypes());
 
   dbPaths.forEach((dbPath) => {
-    sqliteStream.append( (next) => {
-      logger.info( `Loading ${path.basename(dbPath)} database from ${path.dirname(dbPath)}` );
-      next(new SQLiteStream(dbPath, sqliteStatement));
+    getPlacetypes().forEach(placetype => {
+      sqliteStream.append( (next) => {
+        logger.debug( `Loading '${placetype}' of ${path.basename(dbPath)} database from ${path.dirname(dbPath)}` );
+        const sqliteStatement = importPlace ?
+          SQLiteStream.findGeoJSONByPlacetypeAndWOFId(placetype, importPlace) :
+          SQLiteStream.findGeoJSONByPlacetype(placetype);
+        next(new SQLiteStream(dbPath, sqliteStatement));
+      });
     });
   });
 
