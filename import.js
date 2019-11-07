@@ -4,13 +4,9 @@ var importStream = require('./src/importStream');
 var peliasDbclient = require( 'pelias-dbclient' );
 var peliasDocGenerators = require('./src/peliasDocGenerators');
 var hierarchyFinder = require('./src/hierarchyFinder');
-var version_checker = require('node-version-checker').default;
 var bundles = require('./src/bundleList');
 
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
-
-// print a warning if an unsupported Node.JS version is used
-version_checker();
 
 // a cache of only admin records, to be used to fill the hierarchy
 // of other, lower admin records as well as venues
