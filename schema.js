@@ -13,21 +13,21 @@ const Joi = require('@hapi/joi');
 // * imports.whosonfirst.missingFilesAreFatal (boolean) (default: false)
 
 module.exports = Joi.object().keys({
-  imports: Joi.object().keys({
-    whosonfirst: Joi.object().keys({
+  imports: Joi.object().required().keys({
+    whosonfirst: Joi.object().required().keys({
       dataHost: Joi.string(),
-      datapath: Joi.string(),
+      datapath: Joi.string().required(),
       importPlace: [
         Joi.number().integer(),
         Joi.array().items(Joi.number().integer())
       ],
-      importVenues: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      importIntersections: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
-      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true),
+      importVenues: Joi.boolean().default(false).truthy('yes').falsy('no'),
+      importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no'),
+      importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no'),
+      importIntersections: Joi.boolean().default(false).truthy('yes').falsy('no'),
+      missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no'),
       maxDownloads: Joi.number().integer(),
-      sqlite: Joi.boolean().default(false).truthy('yes').falsy('no').insensitive(true)
-    }).requiredKeys('datapath').unknown(false)
-  }).requiredKeys('whosonfirst').unknown(true)
-}).requiredKeys('imports').unknown(true);
+      sqlite: Joi.boolean().default(false).truthy('yes').falsy('no')
+    }).unknown(false)
+  }).unknown(true)
+}).unknown(true);
