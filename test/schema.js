@@ -5,11 +5,10 @@ const Joi = require('@hapi/joi');
 const schema = require('../schema');
 
 function validate(config) {
-  Joi.validate(config, schema, (err, value) => {
-    if (err) {
-      throw new Error(err.details[0].message);
-    }
-  });
+  const result = schema.validate(config);
+  if (result.error) {
+    throw new Error(result.error.details[0].message);
+  }
 }
 
 tape('tests for looking up hierarchies', function(test) {
@@ -22,7 +21,7 @@ tape('tests for looking up hierarchies', function(test) {
       }
     };
 
-    t.throws(validate.bind(null, config), /"datapath" is required/, 'missing datapath should throw');
+    t.throws(validate.bind(null, config), /"imports.whosonfirst.datapath" is required/, 'missing datapath should throw');
     t.end();
 
   });
@@ -52,7 +51,7 @@ tape('tests for looking up hierarchies', function(test) {
       }
     };
 
-    t.throws(validate.bind(null, config), /"spurious_key" is not allowed/);
+    t.throws(validate.bind(null, config), /"imports.whosonfirst.spurious_key" is not allowed/);
     t.end();
 
   });
@@ -67,7 +66,7 @@ tape('tests for looking up hierarchies', function(test) {
         }
       };
 
-      t.throws(validate.bind(null, config), /"datapath" must be a string/);
+      t.throws(validate.bind(null, config), /"imports.whosonfirst.datapath" must be a string/);
 
     });
 
@@ -86,7 +85,7 @@ tape('tests for looking up hierarchies', function(test) {
         }
       };
 
-      t.throws(validate.bind(null, config), /"importVenues" must be a boolean/);
+      t.throws(validate.bind(null, config), /"imports.whosonfirst.importVenues" must be a boolean/);
     });
 
     t.end();
@@ -104,7 +103,7 @@ tape('tests for looking up hierarchies', function(test) {
         }
       };
 
-      t.throws(validate.bind(null, config), /"importPostalcodes" must be a boolean/);
+      t.throws(validate.bind(null, config), /"imports.whosonfirst.importPostalcodes" must be a boolean/);
     });
 
     t.end();
@@ -122,7 +121,7 @@ tape('tests for looking up hierarchies', function(test) {
         }
       };
 
-      t.throws(validate.bind(null, config), /"missingFilesAreFatal" must be a boolean/);
+      t.throws(validate.bind(null, config), /"imports.whosonfirst.missingFilesAreFatal" must be a boolean/);
     });
 
     t.end();
@@ -251,7 +250,7 @@ tape('battery of importPlace tests', test => {
       }
     };
 
-    const validated = Joi.validate(config, schema);
+    const validated = schema.validate(config);
 
     t.equals(validated.value.imports.whosonfirst.importPlace, 123);
     t.end();
@@ -268,7 +267,7 @@ tape('battery of importPlace tests', test => {
       }
     };
 
-    const validated = Joi.validate(config, schema);
+    const validated = schema.validate(config);
 
     t.deepEquals(validated.value.imports.whosonfirst.importPlace, [123,456]);
     t.end();
@@ -285,7 +284,7 @@ tape('battery of importPlace tests', test => {
       }
     };
 
-    const validated = Joi.validate(config, schema);
+    const validated = schema.validate(config);
 
     t.equals(validated.value.imports.whosonfirst.importPlace, 123);
     t.end();
@@ -302,7 +301,7 @@ tape('battery of importPlace tests', test => {
       }
     };
 
-    const validated = Joi.validate(config, schema);
+    const validated = schema.validate(config);
 
     t.deepEquals(validated.value.imports.whosonfirst.importPlace, [123, 456]);
     t.end();
@@ -320,11 +319,10 @@ tape('battery of importPlace tests', test => {
         }
       };
 
-      const result = Joi.validate(config, schema);
+      const validated = schema.validate(config);
 
-      t.equals(result.error.details.length, 2);
-      t.equals(result.error.details[0].message, '"importPlace" must be a number');
-      t.equals(result.error.details[1].message, '"importPlace" must be an array');
+      t.equals(validated.error.details.length, 1);
+      t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace" must be one of [number, array]');
 
     });
 
@@ -343,11 +341,10 @@ tape('battery of importPlace tests', test => {
         }
       };
 
-      const result = Joi.validate(config, schema);
+      const validated = schema.validate(config);
 
-      t.equals(result.error.details.length, 2);
-      t.equals(result.error.details[0].message, '"importPlace" must be a number');
-      t.equals(result.error.details[1].message, '"0" must be a number');
+      t.equals(validated.error.details.length, 1);
+      t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace[0]" must be a number');
 
     });
 
@@ -365,11 +362,10 @@ tape('battery of importPlace tests', test => {
       }
     };
 
-    const result = Joi.validate(config, schema);
+    const validated = schema.validate(config);
 
-    t.equals(result.error.details.length, 2);
-    t.equals(result.error.details[0].message, '"importPlace" must be an integer');
-    t.equals(result.error.details[1].message, '"importPlace" must be an array');
+    t.equals(validated.error.details.length, 1);
+    t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace" must be an integer');
     t.end();
 
   });
@@ -384,11 +380,10 @@ tape('battery of importPlace tests', test => {
       }
     };
 
-    const result = Joi.validate(config, schema);
+    const validated = schema.validate(config);
 
-    t.equals(result.error.details.length, 2);
-    t.equals(result.error.details[0].message, '"importPlace" must be a number');
-    t.equals(result.error.details[1].message, '"0" must be an integer');
+    t.equals(validated.error.details.length, 1);
+    t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace[0]" must be an integer');
     t.end();
 
   });
