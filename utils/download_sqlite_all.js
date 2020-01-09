@@ -26,6 +26,8 @@ function download(callback) {
     const content = JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
        // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
+      // country-specific SQLite bundles are broken, filter them out for now
+      .filter(e => !e.name.match(/admin-..-/))
       // Postalcodes only when importPostalcodes is ture and without --admin-only arg
       .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
         (config.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only'))
