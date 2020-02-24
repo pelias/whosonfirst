@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
 const downloadFileSync = require('download-file-sync');
+const commandExistsSync = require('command-exists').sync;
 
 const config = require('pelias-config').generate(require('../schema'));
 
@@ -50,9 +51,20 @@ function download(callback) {
   const generateCommand = (sqlite, directory) => {
     let extract;
     if (/\.db\.bz2$/.test(sqlite.name_compressed)) {
-      extract = `bunzip2`;
+	  //Check if we have lbzip2 installed
+      if ( commandExistsSync('lbzip2') ) { 
+		extract = `lbzip2`;
+		} else {
+		extract = `bunzip2`;
+	  };
     } else if(/\.db\.tar\.bz2$/.test(sqlite.name_compressed)) {
-      extract = `tar -xjO`;
+	  //Check if we have lbzip2 installed
+	  if ( commandExistsSync('lbzip2') ) { 
+	    //Aim tar to use lbzip2
+		extract = `tar -xO --use-compress-program=lbzip2`;
+		} else {
+		extract = `tar -xjO`;
+	  };
     } else {
       throw new Error('What is this extension ?!?');
     }
