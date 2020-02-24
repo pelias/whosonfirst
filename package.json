@@ -29,6 +29,7 @@
     "async": "^3.0.1",
     "better-sqlite3": "^5.0.0",
     "combined-stream": "^1.0.5",
+    "command-exists": "^1.2.8",
     "csv-stream": "^0.2.0",
     "download-file-sync": "^1.0.4",
     "fs-extra": "^8.0.0",
