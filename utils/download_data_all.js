@@ -2,27 +2,26 @@ const child_process = require('child_process');
 const async = require('async');
 const fs = require('fs-extra');
 const os = require('os');
-const url = require('url');
 const path = require('path');
 const commandExistsSync = require('command-exists').sync;
 
 const bundles = require('../src/bundleList');
-const config = require( 'pelias-config' ).generate(require('../schema'));
+const config = require('pelias-config').generate(require('../schema'));
 
 const wofDataHost = config.get('imports.whosonfirst.dataHost') || 'https://dist.whosonfirst.org';
 
 function download(callback) {
-  //ensure required directory structure exists
+  // ensure required directory structure exists
   fs.ensureDirSync(path.join(config.imports.whosonfirst.datapath, 'meta'));
 
   // download one bundle for every other CPU (tar and bzip2 can both max out one core)
   // (the maximum is configurable, to keep things from getting too intense, and defaults to 4)
-  //lower this number to make the downloader more CPU friendly
-  //raise this number to (possibly) make it faster
+  // lower this number to make the downloader more CPU friendly
+  // raise this number to (possibly) make it faster
   const maxSimultaneousDownloads = config.get('imports.whosonfirst.maxDownloads') || 4;
   const cpuCount = os.cpus().length;
   const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
-  
+
   // generate a shell command that does the following:
   // 1.) use curl to download the bundle, piping directly to tar (this avoids the
   //     need for intermediate storage of the archive file)
@@ -30,16 +29,17 @@ function download(callback) {
   //     the README file is ignored (it just would get overridden by subsequent bundles)
   // 3.) move the meta file to the meta files directory
   function generateCommand(bundle, directory) {
-	let extract;
-	//Check if we have lbzip2 installed
-	if (commandExistsSync('lbzip2')) {
-			extract = `tar -x --use-compress-program=lbzip2`;
-		} else {
-			extract = `tar -xj`;
-		};
-		
-    const csvFilename = bundle.replace(/-\d{8}T\d{6}-/, '-latest-') // support timestamped downloads
-                              .replace('.tar.bz2', '.csv');
+    let extract;
+    // check if we have lbzip2 installed
+    if (commandExistsSync('lbzip2')) {
+      extract = `tar -x --use-compress-program=lbzip2`;
+    } else {
+      extract = `tar -xj`;
+    }
+
+    const csvFilename = bundle
+      .replace(/-\d{8}T\d{6}-/, '-latest-') // support timestamped downloads
+      .replace('.tar.bz2', '.csv');
 
     return `curl -s ${wofDataHost}/bundles/${bundle} | ${extract} --strip-components=1 --exclude=README.txt -C ` +
       `${directory} && mv ${path.join(directory, csvFilename)} ${path.join(directory, 'meta')}`;

@@ -26,13 +26,13 @@ REMOTE_PATH="${REMOTE}/${DB_FILENAME}.bz2"
 info() { echo -e "\e[33m[$1]\t\e[0m $2" >&2; }
 err() { echo -e "\e[31m[$1]\t\e[0m \e[91m$2\e[0m" >&2; }
 
-#Check if we have lbzip2 (https://lbzip2.org/) installed
+# Check if we have lbzip2 (https://lbzip2.org/) installed
 decompress_utility() {
-    if hash lbzip2 2>/dev/null; then
-        lbzip2 -d -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
-    else
-        bunzip2 -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
-    fi
+  if hash lbzip2 2>/dev/null; then
+    lbzip2 -d -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
+  else
+    bunzip2 -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
+  fi
 }
 extract_file() {
   info 'whosonfirst-sqlite-decompress' "${LOCAL_BZ2_PATH}"

@@ -25,7 +25,7 @@ function download(callback) {
   const generateSQLites = () => {
     const files = {};
     const content = JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
-       // Only latest compressed files
+      // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
       // Postalcodes only when importPostalcodes is ture and without --admin-only arg
       .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
@@ -51,20 +51,19 @@ function download(callback) {
   const generateCommand = (sqlite, directory) => {
     let extract;
     if (/\.db\.bz2$/.test(sqlite.name_compressed)) {
-	  //Check if we have lbzip2 installed
-      if ( commandExistsSync('lbzip2') ) { 
-		extract = `lbzip2`;
-		} else {
-		extract = `bunzip2`;
-	  };
-    } else if(/\.db\.tar\.bz2$/.test(sqlite.name_compressed)) {
-	  //Check if we have lbzip2 installed
-	  if ( commandExistsSync('lbzip2') ) { 
-	    //Aim tar to use lbzip2
-		extract = `tar -xO --use-compress-program=lbzip2`;
-		} else {
-		extract = `tar -xjO`;
-	  };
+      // Check if we have lbzip2 installed
+      if (commandExistsSync('lbzip2')) {
+        extract = 'lbzip';
+      } else {
+        extract = 'bunzip';
+      }
+    } else if (/\.db\.tar\.bz2$/.test(sqlite.name_compressed)) {
+      // Check if we have lbzip2 installed
+      if (commandExistsSync('lbzip2')) {
+        extract = 'tar -xO --use-compress-program=lbzip';
+      } else {
+        extract = 'tar -xj';
+      }
     } else {
       throw new Error('What is this extension ?!?');
     }
