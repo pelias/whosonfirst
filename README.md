@@ -88,7 +88,7 @@ The maximum number of files to download simultaneously. Higher values can be fas
 ### `imports.whosonfirst.dataHost`
 
 * Required: no
-* Default: `https://dist.whosonfirst.org/`
+* Default: `https://dist.whosonfirst.org`
 
 The location to download Who's on First data from. Changing this can be useful to use custom data, pin data to a specific date, etc.
 

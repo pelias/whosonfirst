@@ -20,8 +20,7 @@ DB_FILENAME="$1"
 LOCAL_DB_PATH="$2"
 LOCAL_BZ2_PATH="$2.bz2"
 LOCAL_TS_PATH="${LOCAL_DB_PATH}.timestamp"
-REMOTE='https://dist.whosonfirst.org/sqlite'
-REMOTE_PATH="${REMOTE}/${DB_FILENAME}.bz2"
+REMOTE_PATH="$3/sqlite/${DB_FILENAME}.bz2"
 
 info() { echo -e "\e[33m[$1]\t\e[0m $2" >&2; }
 err() { echo -e "\e[31m[$1]\t\e[0m \e[91m$2\e[0m" >&2; }

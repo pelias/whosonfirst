@@ -11,6 +11,7 @@ function download(options, callback){
 
   // load configuration variables
   const config = require('pelias-config').generate(require('../schema')).imports.whosonfirst;
+  const wofDataHost = config.dataHost || 'https://dist.whosonfirst.org';
   const sqliteDir = path.join(config.datapath, 'sqlite');
   fs.ensureDirSync(sqliteDir);
 
@@ -21,7 +22,7 @@ function download(options, callback){
       // build shell command
       const options = { cwd: __dirname };
       const cmd = './sqlite_download.sh';
-      const args = [ filename, path.join( sqliteDir, filename ) ];
+      const args = [ filename, path.join( sqliteDir, filename ), wofDataHost ];
       const child = child_process.spawn(cmd, args, options);
 
       // handle stdio
@@ -48,10 +49,12 @@ function download(options, callback){
   });
 
   // download one database for every other CPU (tar and bzip2 can both max out one core)
-  // (but not more than 4, to keep things from getting too intense)
+  // (the maximum is configurable, to keep things from getting too intense, and defaults to 4)
   // lower this number to make the downloader more CPU friendly
   // raise this number to (possibly) make it faster
-  const simultaneousDownloads = Math.max(4, Math.min(1, os.cpus().length / 2));
+  const maxSimultaneousDownloads = config.maxDownloads || 4;
+  const cpuCount = os.cpus().length;
+  const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
 
   // download all files
   async.parallelLimit(downloadFunctions, simultaneousDownloads, callback);
