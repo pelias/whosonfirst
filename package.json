@@ -27,7 +27,7 @@
   "dependencies": {
     "@hapi/joi": "^16.1.8",
     "async": "^3.0.1",
-    "better-sqlite3": "^5.0.0",
+    "better-sqlite3": "^6.0.0",
     "combined-stream": "^1.0.5",
     "command-exists": "^1.2.8",
     "csv-stream": "^0.2.0",
