@@ -53,14 +53,14 @@ function download(callback) {
     if (/\.db\.bz2$/.test(sqlite.name_compressed)) {
       // Check if we have lbzip2 installed
       if (commandExistsSync('lbzip2')) {
-        extract = 'lbzip';
+        extract = 'lbzip2';
       } else {
         extract = 'bunzip';
       }
     } else if (/\.db\.tar\.bz2$/.test(sqlite.name_compressed)) {
       // Check if we have lbzip2 installed
       if (commandExistsSync('lbzip2')) {
-        extract = 'tar -xO --use-compress-program=lbzip';
+        extract = 'tar -xO --use-compress-program=lbzip2';
       } else {
         extract = 'tar -xj';
       }
