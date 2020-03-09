@@ -8,7 +8,8 @@ const commandExistsSync = require('command-exists').sync;
 
 const config = require('pelias-config').generate(require('../schema'));
 
-const wofDataHost = config.get('imports.whosonfirst.dataHost') || 'https://dist.whosonfirst.org';
+const wofDataHost = config.get('imports.whosonfirst.dataHost') || 'https://data.geocode.earth/wof/dist';
+const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-latest/;
 
 function download(callback) {
   //ensure required directory structure exists
@@ -21,12 +22,24 @@ function download(callback) {
   const maxSimultaneousDownloads = config.get('imports.whosonfirst.maxDownloads') || 4;
   const cpuCount = os.cpus().length;
   const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
+  const countryFilter = () => {
+    const countries = Array.isArray(config.imports.whosonfirst.countries) ?
+    config.imports.whosonfirst.countries : [config.imports.whosonfirst.countries];
+    return (e) => {
+      if (countries.length === 0) {
+        return COMBINED_REGEX.test(e.name_compressed);
+      }
+      return countries.some(c => e.name_compressed.indexOf(`-${c}-latest`) >= 0);
+    };
+  };
 
   const generateSQLites = () => {
     const files = {};
     const content = JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
       // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
+      // Only wanted countries
+      .filter(countryFilter())
       // Postalcodes only when importPostalcodes is ture and without --admin-only arg
       .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
         (config.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only'))
