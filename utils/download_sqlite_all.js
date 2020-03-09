@@ -8,7 +8,11 @@ const commandExistsSync = require('command-exists').sync;
 
 const config = require('pelias-config').generate(require('../schema'));
 
-const wofDataHost = config.get('imports.whosonfirst.dataHost') || 'https://dist.whosonfirst.org';
+const DATA_GEOCODE_EARTH_URL = 'https://data.geocode.earth/wof/dist';
+const DATA_WOF_URL = 'https://dist.whosonfirst.org';
+const wofDataHost = config.get('imports.whosonfirst.dataHost') || DATA_WOF_URL;
+const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-latest/;
+const CONTRY_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-[a-z]{2}-latest/;
 
 function download(callback) {
   //ensure required directory structure exists
@@ -21,18 +25,43 @@ function download(callback) {
   const maxSimultaneousDownloads = config.get('imports.whosonfirst.maxDownloads') || 4;
   const cpuCount = os.cpus().length;
   const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
+  const countryFilter = () => {
+    const countries = Array.isArray(config.imports.whosonfirst.countries) ?
+    config.imports.whosonfirst.countries : [config.imports.whosonfirst.countries];
+    return (e) => {
+      if (countries.length === 0) {
+        // This is specific to geocode earth
+        return COMBINED_REGEX.test(e.name_compressed) || wofDataHost !== DATA_GEOCODE_EARTH_URL;
+      }
+      return countries.some(c => e.name_compressed.indexOf(`-${c}-latest`) >= 0);
+    };
+  };
 
-  const generateSQLites = () => {
+  const importVenues = () => {
+    return config.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only';
+  };
+
+  const venueFilter = (venuesOnly) => {
+    return (e) => {
+      if (venuesOnly) {
+        return e.name_compressed.indexOf('venue') >= 0;
+      }
+      return e.name_compressed.indexOf('venue') < 0 || importVenues();
+    };
+  };
+
+  const generateSQLites = (url, venuesOnly) => {
     const files = {};
-    const content = JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
+    const content = JSON.parse(downloadFileSync(`${url}/sqlite/inventory.json`))
       // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
+      // Only wanted countries
+      .filter(countryFilter())
       // Postalcodes only when importPostalcodes is ture and without --admin-only arg
       .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
         (config.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only'))
       // Venues only when importVenues is true and without --admin-only arg
-      .filter(e => e.name_compressed.indexOf('venue') < 0 ||
-        (config.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only'))
+      .filter(venueFilter(venuesOnly))
       // We don't need constituency and intersection ?
       .filter(e => e.name_compressed.indexOf('constituency') < 0 && e.name_compressed.indexOf('intersection') < 0)
       // Remove duplicates based on name, we can have differents name_compressed
@@ -44,6 +73,13 @@ function download(callback) {
         } else if (!files[e.name]) {
           files[e.name] = e;
         }
+        // Remove old combined database when per country exists and are newer
+        if (CONTRY_REGEX.test(files[e.name].name) &&
+            files['whosonfirst-data-latest.db'] &&
+            new Date(files[e.name].last_modified) > new Date(files['whosonfirst-data-latest.db'].last_modified)) {
+            delete files['whosonfirst-data-latest.db'];
+        }
+        e.downloadUrl = `${url}/sqlite/${e.name_compressed}`;
       });
     return Object.values(files);
   };
@@ -68,10 +104,15 @@ function download(callback) {
       throw new Error('What is this extension ?!?');
     }
 
-    return `curl -s ${wofDataHost}/sqlite/${sqlite.name_compressed} | ${extract} > ${path.join(directory, 'sqlite', sqlite.name)}`;
+    return `curl -s ${sqlite.downloadUrl} | ${extract} > ${path.join(directory, 'sqlite', sqlite.name)}`;
   };
 
-  const downloadFunctions = generateSQLites().map(function (sqlite) {
+  // All SQLites to download, if Venues are activated, we add some download from WOF.
+  const generatedSQLites = generateSQLites(wofDataHost).concat(
+    wofDataHost === DATA_GEOCODE_EARTH_URL && importVenues() ? generateSQLites(DATA_WOF_URL, true) : []
+  );
+
+  const downloadFunctions = generatedSQLites.map(function (sqlite) {
     return function downloadABundle(callback) {
       const cmd = generateCommand(sqlite, config.imports.whosonfirst.datapath);
       console.log('Downloading ' + sqlite.name_compressed);

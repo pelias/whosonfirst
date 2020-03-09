@@ -15,6 +15,10 @@ const Joi = require('@hapi/joi');
 module.exports = Joi.object().keys({
   imports: Joi.object().required().keys({
     whosonfirst: Joi.object().required().keys({
+      countries: Joi.alternatives().try(
+        Joi.string(),
+        Joi.array().items(Joi.string()).default([])
+      ).default([]),
       dataHost: Joi.string(),
       datapath: Joi.string().required(),
       importPlace: [
