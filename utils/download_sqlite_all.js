@@ -55,7 +55,7 @@ function download(callback) {
       if (commandExistsSync('lbzip2')) {
         extract = 'lbzip2';
       } else {
-        extract = 'bunzip';
+        extract = 'bunzip2';
       }
     } else if (/\.db\.tar\.bz2$/.test(sqlite.name_compressed)) {
       // Check if we have lbzip2 installed
