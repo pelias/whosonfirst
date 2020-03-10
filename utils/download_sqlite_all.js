@@ -8,7 +8,9 @@ const commandExistsSync = require('command-exists').sync;
 
 const config = require('pelias-config').generate(require('../schema'));
 
-const wofDataHost = config.get('imports.whosonfirst.dataHost') || 'https://data.geocode.earth/wof/dist';
+const DATA_GEOCODE_EARTH_URL = 'https://data.geocode.earth/wof/dist';
+const DATA_WOF_URL = 'https://dist.whosonfirst.org';
+const wofDataHost = config.get('imports.whosonfirst.dataHost') || DATA_GEOCODE_EARTH_URL;
 const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-latest/;
 
 function download(callback) {
@@ -33,9 +35,22 @@ function download(callback) {
     };
   };
 
-  const generateSQLites = () => {
+  const importVenues = () => {
+    return config.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only';
+  };
+
+  const venueFilter = (venuesOnly) => {
+    return (e) => {
+      if (venuesOnly) {
+        return e.name_compressed.indexOf('venue') >= 0;
+      }
+      return e.name_compressed.indexOf('venue') < 0 || importVenues();
+    };
+  };
+
+  const generateSQLites = (url, venuesOnly) => {
     const files = {};
-    const content = JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
+    const content = JSON.parse(downloadFileSync(`${url}/sqlite/inventory.json`))
       // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
       // Only wanted countries
@@ -44,8 +59,7 @@ function download(callback) {
       .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
         (config.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only'))
       // Venues only when importVenues is true and without --admin-only arg
-      .filter(e => e.name_compressed.indexOf('venue') < 0 ||
-        (config.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only'))
+      .filter(venueFilter(venuesOnly))
       // We don't need constituency and intersection ?
       .filter(e => e.name_compressed.indexOf('constituency') < 0 && e.name_compressed.indexOf('intersection') < 0)
       // Remove duplicates based on name, we can have differents name_compressed
@@ -57,6 +71,7 @@ function download(callback) {
         } else if (!files[e.name]) {
           files[e.name] = e;
         }
+        e.downloadUrl = `${url}/sqlite/${e.name_compressed}`;
       });
     return Object.values(files);
   };
@@ -81,10 +96,15 @@ function download(callback) {
       throw new Error('What is this extension ?!?');
     }
 
-    return `curl -s ${wofDataHost}/sqlite/${sqlite.name_compressed} | ${extract} > ${path.join(directory, 'sqlite', sqlite.name)}`;
+    return `curl -s ${sqlite.downloadUrl} | ${extract} > ${path.join(directory, 'sqlite', sqlite.name)}`;
   };
 
-  const downloadFunctions = generateSQLites().map(function (sqlite) {
+  // All SQLites to download, if Venues are activated, we add some download from WOF.
+  const generatedSQLites = generateSQLites(wofDataHost).concat(
+    wofDataHost === DATA_GEOCODE_EARTH_URL && importVenues() ? generateSQLites(DATA_WOF_URL, true) : []
+  );
+
+  const downloadFunctions = generatedSQLites.map(function (sqlite) {
     return function downloadABundle(callback) {
       const cmd = generateCommand(sqlite, config.imports.whosonfirst.datapath);
       console.log('Downloading ' + sqlite.name_compressed);
