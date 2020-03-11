@@ -10,8 +10,9 @@ const config = require('pelias-config').generate(require('../schema'));
 
 const DATA_GEOCODE_EARTH_URL = 'https://data.geocode.earth/wof/dist';
 const DATA_WOF_URL = 'https://dist.whosonfirst.org';
-const wofDataHost = config.get('imports.whosonfirst.dataHost') || DATA_GEOCODE_EARTH_URL;
+const wofDataHost = config.get('imports.whosonfirst.dataHost') || DATA_WOF_URL;
 const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-latest/;
+const CONTRY_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-[a-z]{2}-latest/;
 
 function download(callback) {
   //ensure required directory structure exists
@@ -29,7 +30,8 @@ function download(callback) {
     config.imports.whosonfirst.countries : [config.imports.whosonfirst.countries];
     return (e) => {
       if (countries.length === 0) {
-        return COMBINED_REGEX.test(e.name_compressed);
+        // This is specific to geocode earth
+        return COMBINED_REGEX.test(e.name_compressed) || wofDataHost !== DATA_GEOCODE_EARTH_URL;
       }
       return countries.some(c => e.name_compressed.indexOf(`-${c}-latest`) >= 0);
     };
@@ -70,6 +72,12 @@ function download(callback) {
           files[e.name] = e;
         } else if (!files[e.name]) {
           files[e.name] = e;
+        }
+        // Remove old combined database when per country exists and are newer
+        if (CONTRY_REGEX.test(files[e.name].name) &&
+            files['whosonfirst-data-latest.db'] &&
+            new Date(files[e.name].last_modified) > new Date(files['whosonfirst-data-latest.db'].last_modified)) {
+            delete files['whosonfirst-data-latest.db'];
         }
         e.downloadUrl = `${url}/sqlite/${e.name_compressed}`;
       });
