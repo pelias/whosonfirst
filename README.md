@@ -67,8 +67,6 @@ It is currently [not recommended to import venues](https://github.com/pelias/who
 
 Set to true to enable importing postalcode records. There are over 3 million postal code records.
 
-Setting this option to `true` is well tested and [may become the default in the future](https://github.com/pelias/config/issues/61).
-
 ### `imports.whosonfirst.missingFilesAreFatal`
 
 * Required: no
