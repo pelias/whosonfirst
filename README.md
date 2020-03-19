@@ -63,7 +63,7 @@ It is currently [not recommended to import venues](https://github.com/pelias/who
 ### `imports.whosonfirst.importPostalcodes`
 
 * Required: no
-* Default: `false`
+* Default: `true`
 
 Set to true to enable importing postalcode records. There are over 3 million postal code records.
 

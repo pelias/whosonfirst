@@ -107,7 +107,8 @@ tape('bundlesList tests', (test) => {
         return peliasConfig.generateCustom({
           imports: {
             whosonfirst: {
-              datapath: 'foo'
+              datapath: 'foo',
+              importPostalcodes: false
             }
           }
         });
