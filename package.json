@@ -32,7 +32,7 @@
     "command-exists": "^1.2.8",
     "csv-stream": "^0.2.0",
     "download-file-sync": "^1.0.4",
-    "fs-extra": "^8.0.0",
+    "fs-extra": "^9.0.0",
     "iso3166-1": "^0.5.0",
     "klaw-sync": "^6.0.0",
     "lodash": "^4.5.1",
