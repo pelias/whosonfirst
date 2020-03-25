@@ -26,9 +26,11 @@ tape('functional', function(test) {
         t.ok(dbRecords[101772677]);
         t.deepEqual(recordOrder, ['85633147', '1108826387', '85683431', '404227861', '102068587', '404414453', '101772677']);
         t.deepEqual(dbRecords[101772677].parent, {
-          country: ['France'],
+          country: ['France', 'Frankreich','Französische Republik','French',
+                    'French Republic','Furansu','Gallía','République Française',
+                    'Francia','Frankrijk'],
           country_id: ['85633147'],
-          country_a: ['FRA'],
+          country_a: ['FRA',null],
           county: ['Roquemaure'],
           county_id: ['102068587'],
           county_a: [null],
@@ -38,15 +40,17 @@ tape('functional', function(test) {
           locality: ['Tavel'],
           locality_id: ['101772677'],
           locality_a: [null],
-          macrocounty: ['Arrondissement of Nimes'],
+          macrocounty: ['Arrondissement of Nimes','Arrondissement Nîmes',
+                        'arrondissement of Nîmes','arrondissement de Nîmes',
+                        'arrondissement di Nîmes','Distrito de Nîmes'],
           macrocounty_id: ['404227861'],
           macrocounty_a: [null],
-          macroregion: ['Occitanie'],
+          macroregion: ['Occitanie', 'Okzitanien', 'Occitania'],
           macroregion_id: ['1108826387'],
           macroregion_a: [null],
-          region: ['département des Gard'],
+          region: ['département des Gard','Département Gard','Département du Gard'],
           region_id: ['85683431'],
-          region_a: ['GA']
+          region_a: ['GA',null]
         }, 'correct parent hierarchy for Tavel');
         temp.cleanupSync();
         t.end();

@@ -53,7 +53,15 @@ function assignField(hierarchyElement, wofDoc) {
       }
 
       break;
+    default:
+      return;
   }
+
+  _.values(hierarchyElement.name_langs).forEach(names => {
+    names.forEach(name => {
+      wofDoc.addParent(hierarchyElement.place_type, name, hierarchyElement.id.toString());
+    });
+  });
 
 }
 

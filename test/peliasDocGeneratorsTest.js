@@ -703,6 +703,9 @@ tape('create', function(test) {
         .setNameAlias('fr', 'Pays Du Soleil Levant')
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
         .addParent('country', 'Japan', '1', 'JPN')
+        .addParent('country', 'Nihon', '1')
+        .addParent('country', 'Japon', '1')
+        .addParent('country', 'Pays Du Soleil Levant', '1')
         .setPopularity(25000)
     ];
 
