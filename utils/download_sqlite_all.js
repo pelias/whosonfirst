@@ -51,9 +51,9 @@ function download(callback) {
   const generateCommand = (sqlite, directory) => {
     let extract;
     if (/\.db\.bz2$/.test(sqlite.name_compressed)) {
-      // Check if we have lbzip2 installed
-      if (commandExistsSync('lbzip2')) {
-        extract = 'lbzip2';
+      // Check if we have lbunzip2 installed
+      if (commandExistsSync('lbunzip2')) {
+        extract = 'lbunzip2';
       } else {
         extract = 'bunzip2';
       }
