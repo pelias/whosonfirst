@@ -28,8 +28,8 @@ err() { echo -e "\e[31m[$1]\t\e[0m \e[91m$2\e[0m" >&2; }
 
 # Check if we have lbzip2 (https://lbzip2.org/) installed
 decompress_utility() {
-  if hash lbzip2 2>/dev/null; then
-    lbzip2 -d -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
+  if hash lbunzip2 2>/dev/null; then
+    lbunzip2 -d -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
   else
     bunzip2 -f "${LOCAL_BZ2_PATH}" > "${LOCAL_DB_PATH}"
   fi
