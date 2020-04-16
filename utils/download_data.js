@@ -1,53 +1,47 @@
 
 const config = require( 'pelias-config' ).generate(require('../schema')).imports.whosonfirst;
 
+let isoCodePlaces = null;
+
 function on_done() {
   console.log('All done!');
 }
 
 if( config.importPlace ) {
+  const countryIsoCodeRegex = /^((US|us)-){0,1}([A-z]{2})$/;
+  isoCodePlaces = Array.isArray(config.importPlace) ? config.importPlace: [config.importPlace];
+  isoCodePlaces = isoCodePlaces.filter(code => countryIsoCodeRegex.test(code)).map(code => code.toLowerCase());
+}
+
+console.log('isoCodePlaces');
+console.log(config);
+console.log(isoCodePlaces);
+
+
+if( isoCodePlaces !== null && isoCodePlaces.length > 0 ) {
   const download = require('./sqlite_download').download;
   const extract = require('./sqlite_extract_data').extract;
-  const findSubdivisions = require('./sqlite_extract_data').findSubdivisions;
-  const mainDataDB = 'whosonfirst-data-latest.db';
 
-  // download main sqlite database file
-  download({ databases: [ mainDataDB ] }, () => {
+  let databases = [];
+  isoCodePlaces.forEach( country => {
 
-    // enumerate additional sqlite databases required
-    let databases = [];
-    const subdivisions = findSubdivisions( mainDataDB );
-    subdivisions.forEach( subdivision => {
-      let parts = subdivision.split('-');
-      if( 'xx' === parts[0] ){ return; } // ignore 'xx' unspecified subdivisions
-      if( parts.length > 1 ){
-        if( true === config.importVenues ){
-          if( 'us' === parts[0] ){
-            databases.push(`whosonfirst-data-venue-${subdivision}-latest.db`);
-          } else {
-            databases.push(`whosonfirst-data-venue-${parts[0]}-latest.db`);
-          }
-        }
-        if( true === config.importIntersections ){
-          if( 'us' === parts[0] ){
-            databases.push(`whosonfirst-data-intersection-${subdivision}-latest.db`);
-          } else {
-            databases.push(`whosonfirst-data-intersection-${parts[0]}-latest.db`);
-          }
-        }
+    if(country.includes('us')) {
+      if( true === config.importVenues ) {
+        databases.push(`whosonfirst-data-venue-${country}-latest.db`);
       }
-      else {
-        if( true === config.importPostalcodes ){
-          databases.push(`whosonfirst-data-postalcode-${subdivision}-latest.db`);
-        }
-        if( true === config.importConstituencies ){
-          databases.push(`whosonfirst-data-constituency-${subdivision}-latest.db`);
-        }
+      if( true === config.importIntersections ) {
+        databases.push(`whosonfirst-data-intersection-${country}-latest.db`);
       }
-    });
+    } else {
+      if( true === config.importPostalcodes ){
+        databases.push(`whosonfirst-data-postalcode-${country}-latest.db`);
+      }
+      if( true === config.importConstituencies ){
+        databases.push(`whosonfirst-data-constituency-${country}-latest.db`);
+      }
+    }
 
-    // dedupe array
-    databases = databases.filter((item, pos) => databases.indexOf(item) === pos);
+  });
 
     // download additonal database files
     download({ databases: databases }, () => {
@@ -56,10 +50,10 @@ if( config.importPlace ) {
       console.error('extracting data...');
       extract({
         unlink: true,
-        databases: [ mainDataDB ].concat( databases )
+        databases
       }, on_done);
     });
-  });
+
 }
 else {
   if ( config.sqlite ) {

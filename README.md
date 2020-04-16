@@ -44,11 +44,12 @@ Full path to where Who's on First data is located (note: the included [downloade
 * Required: no
 * Default: ``
 
-Set to a WOF ID or array of IDs to import data only for descendants of those records, rather than the entire planet.
+Set to a ISO Country CODE or array of CODEs to import data only for descendants of those records, rather than the entire planet. Example: `fr` or `['fr', 'ch']`
 
-You can use the [Who's on First Spelunker](https://spelunker.whosonfirst.org) or the `source_id` field from any WOF result of a Pelias query to determine these values.
+For United States you can provide CODE and SUBDIVISION combination. Example: `us-ca` or `['us-ca', 'us-il']`
 
-Specifying a value for `importPlace` will download the full planet SQLite database (27GB). Support for individual country downloads [may be added in the future](https://github.com/pelias/whosonfirst/issues/459)
+Check out available options here https://dist.whosonfirst.org/sqlite/.
+
 
 ### `imports.whosonfirst.importVenues`
 

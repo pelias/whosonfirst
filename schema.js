@@ -9,7 +9,7 @@ const Joi = require('@hapi/joi');
 // * imports.whosonfirst.importPostalcodes (boolean) (default: false)
 // * imports.whosonfirst.importConstituencies (boolean) (default: false)
 // * imports.whosonfirst.importIntersections (boolean) (default: false)
-// * imports.whosonfirst.importPlace (integer OR array[integer]) (default: none)
+// * imports.whosonfirst.importPlace (string OR array[string]) (default: none)
 // * imports.whosonfirst.missingFilesAreFatal (boolean) (default: false)
 
 module.exports = Joi.object().keys({
@@ -18,8 +18,8 @@ module.exports = Joi.object().keys({
       dataHost: Joi.string(),
       datapath: Joi.string().required(),
       importPlace: [
-        Joi.number().integer(),
-        Joi.array().items(Joi.number().integer())
+        Joi.string(),
+        Joi.array().items(Joi.string())
       ],
       importVenues: Joi.boolean().default(false).truthy('yes').falsy('no'),
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no'),
