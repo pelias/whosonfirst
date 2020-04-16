@@ -13,10 +13,6 @@ if( config.importPlace ) {
   isoCodePlaces = isoCodePlaces.filter(code => countryIsoCodeRegex.test(code)).map(code => code.toLowerCase());
 }
 
-console.log('isoCodePlaces');
-console.log(config);
-console.log(isoCodePlaces);
-
 
 if( isoCodePlaces !== null && isoCodePlaces.length > 0 ) {
   const download = require('./sqlite_download').download;
