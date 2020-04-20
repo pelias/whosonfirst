@@ -240,33 +240,81 @@ tape('tests for looking up hierarchies', function(test) {
 });
 
 tape('battery of importPlace tests', test => {
-
-
-  test.test('array of strings importPlace should be cast as number', t => {
+  test.test('string importPlace should be cast as number', t => {
     const config = {
       imports: {
         whosonfirst: {
           datapath: '/path/to/data',
-          importPlace: ['fr','ch']
+          importPlace: '123'
         }
       }
     };
 
     const validated = schema.validate(config);
 
-    t.deepEquals(validated.value.imports.whosonfirst.importPlace, ['fr','ch']);
+    t.equals(validated.value.imports.whosonfirst.importPlace, 123);
     t.end();
 
   });
 
+  test.test('array of strings importPlace should be cast as number', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: ['123','456']
+        }
+      }
+    };
 
-  test.test('non-string importPlace values should not validate', t => {
+    const validated = schema.validate(config);
+
+    t.deepEquals(validated.value.imports.whosonfirst.importPlace, [123,456]);
+    t.end();
+
+  });
+
+  test.test('non-string importPlace should remain as number', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: 123
+        }
+      }
+    };
+
+    const validated = schema.validate(config);
+
+    t.equals(validated.value.imports.whosonfirst.importPlace, 123);
+    t.end();
+
+  });
+
+  test.test('array of non-string importPlace should remain as number', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: [123, 456]
+        }
+      }
+    };
+
+    const validated = schema.validate(config);
+
+    t.deepEquals(validated.value.imports.whosonfirst.importPlace, [123, 456]);
+    t.end();
+
+  });
+
+  test.test('non-string/integer importPlace values should not validate', t => {
     [null, false, {}, 'string'].forEach((value) => {
       const config = {
         imports: {
           whosonfirst: {
             datapath: '/path/to/data',
-            importPlace: 1
+            importPlace: value
           }
         }
       };
@@ -274,7 +322,7 @@ tape('battery of importPlace tests', test => {
       const validated = schema.validate(config);
 
       t.equals(validated.error.details.length, 1);
-      t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace" must be one of [string, array]');
+      t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace" must be one of [number, array]');
 
     });
 
@@ -282,13 +330,13 @@ tape('battery of importPlace tests', test => {
 
   });
 
-  test.test('array of non-string importPlace values should not validate', t => {
+  test.test('arra of non-string/integer importPlace values should not validate', t => {
     [null, false, {}, 'string'].forEach((value) => {
       const config = {
         imports: {
           whosonfirst: {
             datapath: '/path/to/data',
-            importPlace: [1]
+            importPlace: [value]
           }
         }
       };
@@ -296,10 +344,46 @@ tape('battery of importPlace tests', test => {
       const validated = schema.validate(config);
 
       t.equals(validated.error.details.length, 1);
-      t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace[0]" must be a string');
+      t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace[0]" must be a number');
 
     });
 
+    t.end();
+
+  });
+
+  test.test('non-integer importPlace values should not validate', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: 17.3
+        }
+      }
+    };
+
+    const validated = schema.validate(config);
+
+    t.equals(validated.error.details.length, 1);
+    t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace" must be an integer');
+    t.end();
+
+  });
+
+  test.test('array of non-integer importPlace values should not validate', t => {
+    const config = {
+      imports: {
+        whosonfirst: {
+          datapath: '/path/to/data',
+          importPlace: [17.3, 18.2]
+        }
+      }
+    };
+
+    const validated = schema.validate(config);
+
+    t.equals(validated.error.details.length, 1);
+    t.equals(validated.error.details[0].message, '"imports.whosonfirst.importPlace[0]" must be an integer');
     t.end();
 
   });

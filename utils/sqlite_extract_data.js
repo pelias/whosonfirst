@@ -9,7 +9,8 @@ const wofIdToPath = require('../src/wofIdToPath');
 // sql statements
 const sql = {
   data: `SELECT spr.id, spr.placetype, geojson.body FROM geojson
-  JOIN spr ON geojson.id = spr.id;`,
+  JOIN spr ON geojson.id = spr.id
+  WHERE spr.id @placefilter;`,
   meta: `SELECT
     json_extract(body, '$.bbox[0]') || ',' ||
     json_extract(body, '$.bbox[1]') || ',' ||
@@ -48,13 +49,28 @@ const sql = {
     json_extract(body, '$.properties.wof:superseded_by[0]') AS superseded_by,
     json_extract(body, '$.properties.wof:supersedes[0]') AS supersedes,
     json_extract(body, '$.properties.wof:country') AS wof_country
-  FROM geojson;`,
+  FROM geojson
+  WHERE id @placefilter;`,
   subdiv: `SELECT DISTINCT LOWER( IFNULL(
     json_extract(body, '$.properties."wof:subdivision"'),
     json_extract(body, '$.properties."iso:country"')
   )) AS subdivision
   FROM geojson
-  WHERE subdivision != '';`
+  WHERE id @placefilter
+  AND subdivision != '';`,
+  placefilter: `IN (
+    SELECT DISTINCT id
+    FROM ancestors
+    WHERE id IN (@wofids)
+    UNION
+    SELECT DISTINCT id
+    FROM ancestors
+    WHERE ancestor_id IN (@wofids)
+    UNION
+    SELECT DISTINCT ancestor_id
+    FROM ancestors
+    WHERE id IN (@wofids)
+  )`
 };
 
 function extract(options, callback){
@@ -85,13 +101,25 @@ function extract(options, callback){
 
   // extract from a single db file
   function extractDB( dbpath ){
+    let targetWofIds = Array.isArray(config.importPlace) ? config.importPlace: [config.importPlace];
 
     // connect to sql db
     let db = new Sqlite3( dbpath, { readonly: true } );
 
+    // convert ids to integers and remove any which fail to convert
+    let cleanIds = targetWofIds.map(id => parseInt(id, 10)).filter(id => !isNaN(id));
+
+    // placefilter is used to select only records targeted by the 'importPlace' config option
+    // note: if no 'importPlace' ids are provided then we process all ids which aren't 0
+    let placefilter = (cleanIds.length > 0) ? sql.placefilter : '!= 0';
+
+    // note: we need to use replace instead of bound params in order to be able
+    // to query an array of values using IN.
+    let dataQuery = sql.data.replace(/@placefilter/g, placefilter).replace(/@wofids/g, cleanIds.join(','));
+    let metaQuery = sql.meta.replace(/@placefilter/g, placefilter).replace(/@wofids/g, cleanIds.join(','));
 
     // extract all data to disk
-    for( let row of db.prepare(sql.data).iterate() ){
+    for( let row of db.prepare(dataQuery).iterate() ){
       if( 'postalcode' === row.placetype && true !== config.importPostalcodes ){ return; }
       if( 'venue' === row.placetype && true !== config.importVenues ){ return; }
       if( 'constituency' === row.placetype && true !== config.importConstituencies ){ return; }
@@ -100,7 +128,7 @@ function extract(options, callback){
     }
 
     // write meta data to disk
-    for( let row of db.prepare(sql.meta).iterate() ){
+    for( let row of db.prepare(metaQuery).iterate() ){
       if( 'postalcode' === row.placetype && true !== config.importPostalcodes ){ return; }
       if( 'venue' === row.placetype && true !== config.importVenues ){ return; }
       if( 'constituency' === row.placetype && true !== config.importConstituencies ){ return; }
@@ -155,5 +183,30 @@ function extract(options, callback){
   }
 }
 
+// return all distinct subdivisions of the data
+function findSubdivisions( filename ){
+
+  // load configuration variables
+  const config = require('pelias-config').generate(require('../schema')).imports.whosonfirst;
+  const sqliteDir = path.join(config.datapath, 'sqlite');
+  let targetWofIds = Array.isArray(config.importPlace) ? config.importPlace: [config.importPlace];
+
+  // connect to sql db
+  let db = new Sqlite3( path.join( sqliteDir, filename ), { readonly: true } );
+
+  // convert ids to integers and remove any which fail to convert
+  let cleanIds = targetWofIds.map(id => parseInt(id, 10)).filter(id => !isNaN(id));
+
+  // placefilter is used to select only records targeted by the 'importPlace' config option
+  // note: if no 'importPlace' ids are provided then we process all ids which aren't 0
+  let placefilter = (cleanIds.length > 0) ? sql.placefilter : '!= 0';
+
+  // query db
+  // note: we need to use replace instead of using bound params in order to
+  // be able to query an array of values using IN.
+  let query = sql.subdiv.replace(/@placefilter/g, placefilter).replace(/@wofids/g, cleanIds.join(','));
+  return db.prepare(query).all().map( row => row.subdivision.toLowerCase());
+}
 
 module.exports.extract = extract;
+module.exports.findSubdivisions = findSubdivisions;
