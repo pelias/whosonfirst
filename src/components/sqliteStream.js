@@ -70,8 +70,27 @@ function findGeoJSONByPlacetype(placetypes) {
       AND
     spr.placetype IN ('${placetypes.join('\',\'')}')`;
 }
-
+function findGeoJSONByPlacetypeAndWOFId(placetypes, wofids) {
+  if(!Array.isArray(wofids)) {
+    wofids = [ wofids ];
+  }
+  wofids = wofids.map(id => parseInt(id, 10)).join(',');
+  return findGeoJSONByPlacetype(placetypes) + `
+      AND
+    spr.id IN (
+      SELECT DISTINCT id
+        FROM ancestors
+        WHERE id IN (${wofids})
+      UNION SELECT DISTINCT id
+        FROM ancestors
+        WHERE ancestor_id IN (${wofids})
+      UNION SELECT DISTINCT ancestor_id
+        FROM ancestors
+        WHERE id IN (${wofids})
+    )`;
+}
 
 module.exports = SQLiteStream;
 module.exports.findGeoJSON = findGeoJSON;
 module.exports.findGeoJSONByPlacetype = findGeoJSONByPlacetype;
+module.exports.findGeoJSONByPlacetypeAndWOFId = findGeoJSONByPlacetypeAndWOFId;

@@ -77,7 +77,10 @@ function createSQLiteRecordStream(dbPaths, importPlace) {
     getPlacetypes().forEach(placetype => {
       sqliteStream.append( (next) => {
         logger.debug( `Loading '${placetype}' of ${path.basename(dbPath)} database from ${path.dirname(dbPath)}` );
-        next(new SQLiteStream(dbPath, SQLiteStream.findGeoJSONByPlacetype(placetype)));
+        const sqliteStatement = importPlace ?
+          SQLiteStream.findGeoJSONByPlacetypeAndWOFId(placetype, importPlace) :
+          SQLiteStream.findGeoJSONByPlacetype(placetype);
+        next(new SQLiteStream(dbPath, sqliteStatement));
       });
     });
   });
