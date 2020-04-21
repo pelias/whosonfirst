@@ -39,6 +39,16 @@ The following configuration options are supported by this importer.
 
 Full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data)
 
+
+### `imports.whosonfirst.isoCountryCodes`
+
+* Required: no
+* Default: ``
+
+Set to a ISO Country CODE or array of CODEs to import data only for descendants of those records, rather than the entire planet. Example: `fr` or `['fr', 'ch']`
+
+Check out available options here https://geocode.earth/data/whosonfirst
+
 ### `imports.whosonfirst.importPlace`
 
 * Required: no
@@ -49,15 +59,6 @@ Set to a WOF ID or array of IDs to import data only for descendants of those rec
 You can use the [Who's on First Spelunker](https://spelunker.whosonfirst.org) or the `source_id` field from any WOF result of a Pelias query to determine these values.
 
 Specifying a value for `importPlace` will download the full planet SQLite database (27GB). Support for individual country downloads [may be added in the future](https://github.com/pelias/whosonfirst/issues/459)
-
-### `imports.whosonfirst.importVenues`
-
-* Required: no
-* Default: `false`
-
-Set to true to enable importing venue records. There are over 15 million venues so this option will add substantial download and disk usage requirements.
-
-It is currently [not recommended to import venues](https://github.com/pelias/whosonfirst/issues/94).
 
 
 ### `imports.whosonfirst.importPostalcodes`
@@ -86,25 +87,10 @@ The maximum number of files to download simultaneously. Higher values can be fas
 ### `imports.whosonfirst.dataHost`
 
 * Required: no
-* Default: `https://dist.whosonfirst.org/`
+* Default: `hhttps://data.geocode.earth/wof/dist/`
 
 The location to download Who's on First data from. Changing this can be useful to use custom data, pin data to a specific date, etc.
 
-### `imports.whosonfirst.sqlite`
-
-* Required: no
-* Default: `false`
-
-Set to `true` to use Who's on First SQLite databases instead of GeoJSON bundles.
-
-SQLite databases take up less space on disk and can be much more efficient to
-download and extract.
-
-This option may [become the default in the near future](https://github.com/pelias/whosonfirst/issues/460).
-
-However, both the Who's on First processes to generate
-these files and the Pelias code to use them is new and not yet considered
-production ready.
 
 ## Downloading the Data
 

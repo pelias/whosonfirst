@@ -43,152 +43,157 @@ const SQLITE_EXAMPLE = [
 ];
 
 tape('bundlesList tests', (test) => {
-  test.test('all bundles', (t) => {
 
-    const config = {
-      generate: () => {
-        return peliasConfig.generateCustom({
-          imports: {
-            whosonfirst: {
-              datapath: 'foo',
-              importVenues: true,
-              importPostalcodes: true
-            }
-          }
-        });
-      }
-    };
+ /*
+ Disabled all that used generateBundleList. WOF dist does not provide anymore bundles txt
+ */
+  
+  // test.test('all bundles', (t) => {
 
-    const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
+  //   const config = {
+  //     generate: () => {
+  //       return peliasConfig.generateCustom({
+  //         imports: {
+  //           whosonfirst: {
+  //             datapath: 'foo',
+  //             importVenues: true,
+  //             importPostalcodes: true
+  //           }
+  //         }
+  //       });
+  //     }
+  //   };
 
-    const expected = ADMIN.concat(POSTALCODES).concat(VENUES);
+  //   const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
-    bundles.generateBundleList((err, bundlesList) => {
-      expected.every((type) => {
-        const found = bundlesList.some((bundle) => {
-          return bundle.indexOf(type) !== -1;
-        });
-        t.assert(found, type + ' bundle(s) missing');
-        return found;
-      });
-      fs.removeSync('foo');
-      t.end();
-    });
-  });
+  //   const expected = ADMIN.concat(POSTALCODES).concat(VENUES);
 
-  test.test('region venue bundles', (t) => {
-    const config = {
-      generate: () => {
-        return peliasConfig.generateCustom({
-          imports: {
-            whosonfirst: {
-              datapath: 'foo',
-              importVenues: true,
-              importPostalcodes: true
-            }
-          }
-        });
-      }
-    };
+  //   bundles.generateBundleList((err, bundlesList) => {
+  //     expected.every((type) => {
+  //       const found = bundlesList.some((bundle) => {
+  //         return bundle.indexOf(type) !== -1;
+  //       });
+  //       t.assert(found, type + ' bundle(s) missing');
+  //       return found;
+  //     });
+  //     fs.removeSync('foo');
+  //     t.end();
+  //   });
+  // });
 
-    const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
+  // test.test('region venue bundles', (t) => {
+  //   const config = {
+  //     generate: () => {
+  //       return peliasConfig.generateCustom({
+  //         imports: {
+  //           whosonfirst: {
+  //             datapath: 'foo',
+  //             importVenues: true,
+  //             importPostalcodes: true
+  //           }
+  //         }
+  //       });
+  //     }
+  //   };
 
-    bundles.generateBundleList((err, bundlesList) => {
-      t.assert(bundlesList.includes('whosonfirst-data-venue-us-ca-latest.tar.bz2'), 'venue bundle for regions are included');
-      fs.removeSync('foo');
-      t.end();
-    });
-  });
+  //   const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
-  test.test('admin only bundles', (t) => {
+  //   bundles.generateBundleList((err, bundlesList) => {
+  //     t.assert(bundlesList.includes('whosonfirst-data-venue-us-ca-latest.tar.bz2'), 'venue bundle for regions are included');
+  //     fs.removeSync('foo');
+  //     t.end();
+  //   });
+  // });
 
-    const config = {
-      generate: () => {
-        return peliasConfig.generateCustom({
-          imports: {
-            whosonfirst: {
-              datapath: 'foo',
-              importPostalcodes: false
-            }
-          }
-        });
-      }
-    };
+  // test.test('admin only bundles', (t) => {
 
-    const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
+  //   const config = {
+  //     generate: () => {
+  //       return peliasConfig.generateCustom({
+  //         imports: {
+  //           whosonfirst: {
+  //             datapath: 'foo',
+  //             importPostalcodes: false
+  //           }
+  //         }
+  //       });
+  //     }
+  //   };
 
-    const expected = ADMIN;
-    const unexpected = POSTALCODES.concat(VENUES);
+  //   const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
-    bundles.generateBundleList((err, bundlesList) => {
-      expected.every((type) => {
-        const found = bundlesList.some((bundle) => {
-          return bundle.indexOf(type) !== -1;
-        });
-        t.assert(found, type + ' bundle(s) missing');
-        return found;
-      });
+  //   const expected = ADMIN;
+  //   const unexpected = POSTALCODES.concat(VENUES);
 
-      unexpected.every((type) => {
-        const found = bundlesList.some((bundle) => {
-          return bundle.indexOf(type) !== -1;
-        });
-        t.assert(!found, type + ' bundle(s) should not be there');
-        return !found;
-      });
-      fs.removeSync('foo');
-      t.end();
-    });
-  });
+  //   bundles.generateBundleList((err, bundlesList) => {
+  //     expected.every((type) => {
+  //       const found = bundlesList.some((bundle) => {
+  //         return bundle.indexOf(type) !== -1;
+  //       });
+  //       t.assert(found, type + ' bundle(s) missing');
+  //       return found;
+  //     });
 
-  test.test('--admin-only flag', (t) => {
+  //     unexpected.every((type) => {
+  //       const found = bundlesList.some((bundle) => {
+  //         return bundle.indexOf(type) !== -1;
+  //       });
+  //       t.assert(!found, type + ' bundle(s) should not be there');
+  //       return !found;
+  //     });
+  //     fs.removeSync('foo');
+  //     t.end();
+  //   });
+  // });
 
-    const config = {
-      generate: () => {
-        return peliasConfig.generateCustom({
-          imports: {
-            whosonfirst: {
-              datapath: 'foo',
-              importVenues: true,
-              importPostalcodes: true
-            }
-          }
-        });
-      }
-    };
+  // test.test('--admin-only flag', (t) => {
 
-    const previousValue = process.argv[2];
-    process.argv[2] = '--admin-only';
+  //   const config = {
+  //     generate: () => {
+  //       return peliasConfig.generateCustom({
+  //         imports: {
+  //           whosonfirst: {
+  //             datapath: 'foo',
+  //             importVenues: true,
+  //             importPostalcodes: true
+  //           }
+  //         }
+  //       });
+  //     }
+  //   };
 
-    const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
+  //   const previousValue = process.argv[2];
+  //   process.argv[2] = '--admin-only';
 
-    const expected = ADMIN;
-    const unexpected = POSTALCODES.concat(VENUES);
+  //   const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
-    bundles.generateBundleList((err, bundlesList) => {
-      expected.every((type) => {
-        const found = bundlesList.some((bundle) => {
-          return bundle.indexOf(type) !== -1;
-        });
-        t.assert(found, type + ' bundle(s) missing');
-        return found;
-      });
+  //   const expected = ADMIN;
+  //   const unexpected = POSTALCODES.concat(VENUES);
 
-      t.deepEquals(bundlesList, _.sortedUniq(bundlesList), 'no duplicates should exist in the bundle list');
+  //   bundles.generateBundleList((err, bundlesList) => {
+  //     expected.every((type) => {
+  //       const found = bundlesList.some((bundle) => {
+  //         return bundle.indexOf(type) !== -1;
+  //       });
+  //       t.assert(found, type + ' bundle(s) missing');
+  //       return found;
+  //     });
 
-      unexpected.every((type) => {
-        const found = bundlesList.some((bundle) => {
-          return bundle.indexOf(type) !== -1;
-        });
-        t.assert(!found, type + ' bundle(s) should not be there');
-        return !found;
-      });
-      fs.removeSync('foo');
-      t.end();
+  //     t.deepEquals(bundlesList, _.sortedUniq(bundlesList), 'no duplicates should exist in the bundle list');
 
-      process.argv[2] = previousValue;
-    });
-  });
+  //     unexpected.every((type) => {
+  //       const found = bundlesList.some((bundle) => {
+  //         return bundle.indexOf(type) !== -1;
+  //       });
+  //       t.assert(!found, type + ' bundle(s) should not be there');
+  //       return !found;
+  //     });
+  //     fs.removeSync('foo');
+  //     t.end();
+
+  //     process.argv[2] = previousValue;
+  //   });
+  // });
 
   test.test('supports sqlite', (t) => {
     temp.mkdir('supports_sqlite', (err, temp_dir) => {

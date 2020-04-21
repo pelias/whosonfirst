@@ -14,13 +14,13 @@ IFS=$'\n\t'
 #  eg. '/tmp/whosonfirst-data-postalcode-ad-latest.db'
 
 # you can find a list of available bundles at:
-# https://dist.whosonfirst.org/sqlite/
+# https://geocode.earth/data/whosonfirst
 
 DB_FILENAME="$1"
 LOCAL_DB_PATH="$2"
 LOCAL_BZ2_PATH="$2.bz2"
 LOCAL_TS_PATH="${LOCAL_DB_PATH}.timestamp"
-REMOTE='https://dist.whosonfirst.org/sqlite'
+REMOTE='https://data.geocode.earth/wof/dist/sqlite'
 REMOTE_PATH="${REMOTE}/${DB_FILENAME}.bz2"
 
 info() { echo -e "\e[33m[$1]\t\e[0m $2" >&2; }

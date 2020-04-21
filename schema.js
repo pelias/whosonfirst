@@ -17,6 +17,10 @@ module.exports = Joi.object().keys({
     whosonfirst: Joi.object().required().keys({
       dataHost: Joi.string(),
       datapath: Joi.string().required(),
+      isoCountryCodes: [
+        Joi.string(),
+        Joi.array().items(Joi.string())
+      ],
       importPlace: [
         Joi.number().integer(),
         Joi.array().items(Joi.number().integer())
