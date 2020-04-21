@@ -6,11 +6,11 @@ const config = require('pelias-config').generate(require('../schema')).imports.w
 if (config.sqlite) {
   const filters = ` id = 1 OR name = ''
     OR is_deprecated != 0 OR is_superseded != 0
-    OR (spr.latitude != 0 AND spr.longitude != 0)` +
+    OR (spr.latitude != 0 AND spr.longitude != 0)
+    OR placetype = 'venue'
+    OR placetype = 'intersection'` +
     (config.importPostalcodes ? '' : ` OR placetype = 'postalcode' `) +
-    (config.importVenues ? '' : ` OR placetype = 'venue' `) +
-    (config.importConstituencies ? '' : ` OR placetype = 'constituency' `) +
-    (config.importIntersections ? '' : ` OR placetype = 'intersection' `);
+    (config.importConstituencies ? '' : ` OR placetype = 'constituency' `);
   generateBundleList((e, dbList) => {
     if (e) {
       console.error(e);
