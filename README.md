@@ -39,6 +39,15 @@ The following configuration options are supported by this importer.
 
 Full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data)
 
+### `imports.whosonfirst.countries`
+
+* Required: no
+* Default: ``
+
+Set countries sqlites to download. Geocode Earth provides two types of SQLite extracts:
+- [combined](https://geocode.earth/data/whosonfirst/combined): databases of the whole planet for `Administrative Boundaries`, `Postal Code` and `Constituencies`
+- [single country](https://geocode.earth/data/whosonfirst): per country databases for `Administrative Boundaries`, `Postal Code` and `Constituencies`
+
 ### `imports.whosonfirst.importPlace`
 
 * Required: no
@@ -67,15 +76,6 @@ It is currently [not recommended to import venues](https://github.com/pelias/who
 
 Set to true to enable importing postalcode records. There are over 3 million postal code records.
 
-### `imports.whosonfirst.missingFilesAreFatal`
-
-* Required: no
-* Default: `false`
-
-Set to `true` for missing files from [Who's on First bundles](https://dist.whosonfirst.org/bundles/) to stop the import process.
-
-This flag is useful if you consider it vital that all Who's on First data is successfully imported, and can be helpful to guard against incomplete downloads or other types of failure.
-
 ### `imports.whosonfirst.maxDownloads`
 
 * Required: no
@@ -86,25 +86,21 @@ The maximum number of files to download simultaneously. Higher values can be fas
 ### `imports.whosonfirst.dataHost`
 
 * Required: no
-* Default: `https://dist.whosonfirst.org/`
+* Default: `https://data.geocode.earth/wof/dist`
 
 The location to download Who's on First data from. Changing this can be useful to use custom data, pin data to a specific date, etc.
 
 ### `imports.whosonfirst.sqlite`
 
 * Required: no
-* Default: `false`
+* Default: `true`
 
 Set to `true` to use Who's on First SQLite databases instead of GeoJSON bundles.
 
 SQLite databases take up less space on disk and can be much more efficient to
 download and extract.
 
-This option may [become the default in the near future](https://github.com/pelias/whosonfirst/issues/460).
-
-However, both the Who's on First processes to generate
-these files and the Pelias code to use them is new and not yet considered
-production ready.
+This option [is the default](https://github.com/pelias/whosonfirst/issues/460).
 
 ## Downloading the Data
 

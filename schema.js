@@ -31,7 +31,7 @@ module.exports = Joi.object().keys({
       importIntersections: Joi.boolean().default(false).truthy('yes').falsy('no'),
       missingFilesAreFatal: Joi.boolean().default(false).truthy('yes').falsy('no'),
       maxDownloads: Joi.number().integer(),
-      sqlite: Joi.boolean().default(false).truthy('yes').falsy('no')
+      sqlite: Joi.boolean().default(true).truthy('yes').falsy('no')
     }).unknown(false)
   }).unknown(true)
 }).unknown(true);
