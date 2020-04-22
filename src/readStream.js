@@ -50,7 +50,7 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
   const wofRoot = wofConfig.datapath;
 
   if (wofConfig.sqlite !== true) {
-    throw new Error('Bundles are no more supported!');
+    throw new Error('Bundles are no longer supported!');
   }
 
   return createSQLiteRecordStream(getSqliteFilePaths(wofRoot, types), wofConfig.importPlace)

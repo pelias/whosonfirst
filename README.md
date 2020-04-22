@@ -39,12 +39,12 @@ The following configuration options are supported by this importer.
 
 Full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data)
 
-### `imports.whosonfirst.countries`
+### `imports.whosonfirst.countryCode`
 
 * Required: no
 * Default: ``
 
-Set countries sqlites to download. Geocode Earth provides two types of SQLite extracts:
+Set sqlite country codes to download. Geocode Earth provides two types of SQLite extracts:
 - [combined](https://geocode.earth/data/whosonfirst/combined): databases of the whole planet for `Administrative Boundaries`, `Postal Code` and `Constituencies`
 - [single country](https://geocode.earth/data/whosonfirst): per country databases for `Administrative Boundaries`, `Postal Code` and `Constituencies`
 
@@ -58,16 +58,6 @@ Set to a WOF ID or array of IDs to import data only for descendants of those rec
 You can use the [Who's on First Spelunker](https://spelunker.whosonfirst.org) or the `source_id` field from any WOF result of a Pelias query to determine these values.
 
 Specifying a value for `importPlace` will download the full planet SQLite database (27GB). Support for individual country downloads [may be added in the future](https://github.com/pelias/whosonfirst/issues/459)
-
-### `imports.whosonfirst.importVenues`
-
-* Required: no
-* Default: `false`
-
-Set to true to enable importing venue records. There are over 15 million venues so this option will add substantial download and disk usage requirements.
-
-It is currently [not recommended to import venues](https://github.com/pelias/whosonfirst/issues/94).
-
 
 ### `imports.whosonfirst.importPostalcodes`
 
@@ -165,9 +155,6 @@ Other types may be included in the future.
 
 This project exposes a number of node streams for dealing with Who's on First data and metadata files:
 
-- `metadataStream`: streams rows from a Who's on First metadata file
-- `parseMetaFiles`: CSV parse stream configured for metadata file contents
-- `loadJSON`: parallel stream that asynchronously loads GeoJSON files
 - `recordHasIdAndProperties`: rejects Who's on First records missing id or properties
 - `isActiveRecord`: rejects records that are superseded, deprecated, or otherwise inactive
 - `isNotNullIslandRelated`: rejects [Null Island](https://spelunker.whosonfirst.org/id/1) and other records that intersect it (currently just postal codes at 0/0)

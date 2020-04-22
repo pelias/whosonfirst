@@ -34,20 +34,10 @@ const postalcodeRoles = [
   'postalcode'
 ];
 
-const venueRoles = [
-  'venue'
-];
-
 const SQLITE_REGEX = /whosonfirst-data-[a-z0-9-]+\.db$/;
 
 function getPlacetypes() {
   let roles = hierarchyRoles;
-
-  // admin-only env var should override the config setting since the hierarchy bundles are useful
-  // on their own to allow other importers to start when using admin lookup
-  if (peliasConfig.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only') {
-    roles = roles.concat(venueRoles);
-  }
 
   if (peliasConfig.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only') {
     roles = roles.concat(postalcodeRoles);
@@ -72,7 +62,7 @@ function getList(callback) {
   if (peliasConfig.imports.whosonfirst.sqlite) {
     return getDBList(callback);
   }
-  callback('Bundles no more supported');
+  callback('Bundles are no longer supported!');
 }
 
 module.exports.getPlacetypes = getPlacetypes;

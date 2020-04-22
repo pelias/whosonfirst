@@ -31,10 +31,6 @@ const POSTALCODES = [
   'postalcode'
 ];
 
-const VENUES = [
-  'venue'
-];
-
 const SQLITE_EXAMPLE = [
   'whosonfirst-data-constituency-us-ct-1481486175.db',
   'whosonfirst-data-latest.db',

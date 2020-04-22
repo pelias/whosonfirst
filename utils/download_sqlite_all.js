@@ -10,8 +10,8 @@ const config = require('pelias-config').generate(require('../schema'));
 
 const DATA_GEOCODE_EARTH_URL = 'https://data.geocode.earth/wof/dist';
 const wofDataHost = config.get('imports.whosonfirst.dataHost') || DATA_GEOCODE_EARTH_URL;
-const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-latest/;
-const COUNTRY_REGEX = /^whosonfirst-data-(admin|postalcode|venue)-[a-z]{2}-latest/;
+const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode)-latest/;
+const COUNTRY_REGEX = /^whosonfirst-data-(admin|postalcode)-[a-z]{2}-latest/;
 
 function on_done() {
   console.log('All done!');
@@ -29,8 +29,8 @@ function download(callback) {
   const cpuCount = os.cpus().length;
   const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
   const countryFilter = () => {
-    const countries = Array.isArray(config.imports.whosonfirst.countries) ?
-    config.imports.whosonfirst.countries : [config.imports.whosonfirst.countries];
+    const countries = Array.isArray(config.imports.whosonfirst.countryCode) ?
+    config.imports.whosonfirst.countryCode : [config.imports.whosonfirst.countryCode];
     return (e) => {
       if (countries.length === 0) {
         // This is specific to geocode earth, it will select global sqlites
@@ -41,17 +41,9 @@ function download(callback) {
     };
   };
 
-  const importVenues = () => {
-    return config.imports.whosonfirst.importVenues && process.argv[2] !== '--admin-only';
-  };
-
-  if (wofDataHost === DATA_GEOCODE_EARTH_URL && importVenues()) {
-    throw new Error('Venues are unavailable on geocode.earth. Please remove this option.');
-  }
-
   const generateSQLites = () => {
     const files = {};
-    const content = JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
+    JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
       // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
       // Only wanted countries
@@ -59,10 +51,9 @@ function download(callback) {
       // Postalcodes only when importPostalcodes is ture and without --admin-only arg
       .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
         (config.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only'))
-      // Venues only when importVenues is true and without --admin-only arg
-      .filter(e => e.name_compressed.indexOf('venue') < 0 || importVenues())
-      // We don't need constituency and intersection ?
-      .filter(e => e.name_compressed.indexOf('constituency') < 0 && e.name_compressed.indexOf('intersection') < 0)
+      // We don't need constituency and intersection and venue
+      .filter(e => e.name_compressed.indexOf('constituency') < 0 &&
+        e.name_compressed.indexOf('intersection') < 0 && e.name_compressed.indexOf('venue') < 0)
       // Remove duplicates based on name, we can have differents name_compressed
       // (for example whosonfirst-data-latest.db.bz2 and whosonfirst-data-latest.db.tar.bz2)
       // but with the same name... We will take the newer version.
