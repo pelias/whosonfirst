@@ -1,5 +1,4 @@
 const tape = require('tape');
-const fs = require('fs-extra');
 const path = require('path');
 const temp = require('temp').track();
 const proxyquire = require('proxyquire').noCallThru();

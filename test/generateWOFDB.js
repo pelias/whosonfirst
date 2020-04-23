@@ -1,10 +1,10 @@
 const _ = require('lodash');
 const path = require('path');
-const fs = require('fs-extra');
+const fs = require('fs');
 const Sqlite3 = require('better-sqlite3');
 
 module.exports = (dbPath, entries) => {
-  fs.ensureDirSync(path.dirname(dbPath));
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const db = new Sqlite3(dbPath)
     .exec(`
           CREATE TABLE geojson (

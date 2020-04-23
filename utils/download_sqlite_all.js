@@ -1,6 +1,6 @@
 const child_process = require('child_process');
 const async = require('async');
-const fs = require('fs-extra');
+const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const downloadFileSync = require('download-file-sync');
@@ -26,7 +26,7 @@ function getCountriesToDownload() {
 
 function download(callback) {
   //ensure required directory structure exists
-  fs.ensureDirSync(path.join(config.imports.whosonfirst.datapath, 'sqlite'));
+  fs.mkdirSync(path.join(config.imports.whosonfirst.datapath, 'sqlite'), { recursive: true });
 
   // download one bundle for every other CPU (tar and bzip2 can both max out one core)
   // (the maximum is configurable, to keep things from getting too intense, and defaults to 4)

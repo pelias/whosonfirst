@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 
@@ -49,7 +49,7 @@ function getPlacetypes() {
 function getDBList(callback) {
   const databasesPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'sqlite');
   //ensure required directory structure exists
-  fs.ensureDirSync(databasesPath);
+  fs.mkdirSync(databasesPath, { recursive: true });
   const dbList = fs.readdirSync(databasesPath).filter(d => SQLITE_REGEX.test(d));
 
   if (_.isEmpty(dbList)) {
