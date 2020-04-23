@@ -10,5 +10,6 @@ require ('./importStreamTest.js');
 require ('./peliasDocGeneratorsTest.js');
 require ('./readStreamTest.js');
 require ('./schema.js');
+require ('./module.js');
 require ('./bundleList.js');
 require('./functional.js');
