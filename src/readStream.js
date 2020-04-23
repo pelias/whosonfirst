@@ -1,29 +1,16 @@
-var combinedStream = require('combined-stream');
-var fs = require('fs');
-var through2 = require('through2');
-var path = require('path');
+const combinedStream = require('combined-stream');
+const through2 = require('through2');
+const path = require('path');
 
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
 const getPlacetypes = require('./bundleList').getPlacetypes;
-const parseMetaFiles = require('./components/parseMetaFiles');
-const isNotNullIslandRelated = require('./components/isNotNullIslandRelated');
-const loadJSON = require('./components/loadJSON');
 const recordHasIdAndProperties = require('./components/recordHasIdAndProperties');
 const isActiveRecord = require('./components/isActiveRecord');
 const extractFields = require('./components/extractFields');
 const recordHasName = require('./components/recordHasName');
 const SQLiteStream = require('./components/sqliteStream');
 const toJSONStream = require('./components/toJSONStream');
-
-/*
- * Convert a base directory and list of types into a list of meta file paths
- */
-function getMetaFilePaths(wofRoot, bundles) {
-  return bundles.map((bundle) => {
-    return path.join(wofRoot, 'meta', bundle);
-  });
-}
 
 /*
  * Convert a base directory and list of databases names into a list of sqlite file paths
@@ -35,44 +22,11 @@ function getSqliteFilePaths(wofRoot, databases) {
 }
 
 /*
- * Given the path to a meta CSV file, return a stream of the individual records
- * within that CSV file.
- */
-function createOneMetaRecordStream(metaFilePath) {
-  // All of these arguments are optional.
-  const options = {
-    escapeChar : '"', // default is an empty string
-    enclosedChar : '"' // default is an empty string
-  };
-
-  return fs.createReadStream(metaFilePath)
-    .pipe(parseMetaFiles.create());
-}
-
-/*
- * given a list of meta file paths, create a combined stream that reads all the
- * records via the csv parser
- */
-function createMetaRecordStream(metaFilePaths, types) {
-  const metaRecordStream = combinedStream.create();
-
-  metaFilePaths.forEach((metaFilePath) => {
-    metaRecordStream.append( (next) => {
-      logger.info( `Loading ${path.basename(metaFilePath)} records from ${path.dirname(metaFilePath)}` );
-      next(createOneMetaRecordStream(metaFilePath));
-    });
-  });
-
-  return metaRecordStream;
-}
-
-/*
  * given a list of databases file paths, create a combined stream that reads all the
  * records via the SQLite reader stream
  */
 function createSQLiteRecordStream(dbPaths, importPlace) {
   const sqliteStream = combinedStream.create();
-
   dbPaths.forEach((dbPath) => {
     getPlacetypes().forEach(placetype => {
       sqliteStream.append( (next) => {
@@ -89,24 +43,14 @@ function createSQLiteRecordStream(dbPaths, importPlace) {
 }
 
 /*
-  This function creates a stream that processes files in `meta/`:
-  CSV parses them, extracts the required fields, stores only admin records for
-  later, and passes all records on for further processing
+  This function creates a stream that processes files in `sqlite/`:
+  It will load all geojson in all sqlite in the folder
 */
 function createReadStream(wofConfig, types, wofAdminRecords) {
   const wofRoot = wofConfig.datapath;
-  const metaFilePaths = getMetaFilePaths(wofRoot, types);
 
-  // Select correct stream between meta and SQLite based on config and do specialized stuff
-  const stream = wofConfig.sqlite === true ?
-    createSQLiteRecordStream(getSqliteFilePaths(wofRoot, types), wofConfig.importPlace)
-      .pipe(toJSONStream.create()) :
-    createMetaRecordStream(metaFilePaths, types)
-      .pipe(isNotNullIslandRelated.create())
-      .pipe(loadJSON.create(wofRoot, wofConfig.missingFilesAreFatal));
-
-  // All the pipeline is the same for both meta and SQLite streams
-  return stream
+  return createSQLiteRecordStream(getSqliteFilePaths(wofRoot, types), wofConfig.importPlace)
+  .pipe(toJSONStream.create())
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
   .pipe(extractFields.create())

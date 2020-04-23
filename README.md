@@ -39,6 +39,15 @@ The following configuration options are supported by this importer.
 
 Full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data)
 
+### `imports.whosonfirst.countryCode`
+
+* Required: no
+* Default: ``
+
+Set sqlite country codes to download. Geocode Earth provides two types of SQLite extracts:
+- [combined](https://geocode.earth/data/whosonfirst/combined): databases of the whole planet for `Administrative Boundaries`, `Postal Code` and `Constituencies`
+- [single country](https://geocode.earth/data/whosonfirst): per country databases for `Administrative Boundaries`, `Postal Code` and `Constituencies`
+
 ### `imports.whosonfirst.importPlace`
 
 * Required: no
@@ -50,31 +59,12 @@ You can use the [Who's on First Spelunker](https://spelunker.whosonfirst.org) or
 
 Specifying a value for `importPlace` will download the full planet SQLite database (27GB). Support for individual country downloads [may be added in the future](https://github.com/pelias/whosonfirst/issues/459)
 
-### `imports.whosonfirst.importVenues`
-
-* Required: no
-* Default: `false`
-
-Set to true to enable importing venue records. There are over 15 million venues so this option will add substantial download and disk usage requirements.
-
-It is currently [not recommended to import venues](https://github.com/pelias/whosonfirst/issues/94).
-
-
 ### `imports.whosonfirst.importPostalcodes`
 
 * Required: no
 * Default: `true`
 
 Set to true to enable importing postalcode records. There are over 3 million postal code records.
-
-### `imports.whosonfirst.missingFilesAreFatal`
-
-* Required: no
-* Default: `false`
-
-Set to `true` for missing files from [Who's on First bundles](https://dist.whosonfirst.org/bundles/) to stop the import process.
-
-This flag is useful if you consider it vital that all Who's on First data is successfully imported, and can be helpful to guard against incomplete downloads or other types of failure.
 
 ### `imports.whosonfirst.maxDownloads`
 
@@ -86,25 +76,21 @@ The maximum number of files to download simultaneously. Higher values can be fas
 ### `imports.whosonfirst.dataHost`
 
 * Required: no
-* Default: `https://dist.whosonfirst.org/`
+* Default: `https://data.geocode.earth/wof/dist`
 
 The location to download Who's on First data from. Changing this can be useful to use custom data, pin data to a specific date, etc.
 
 ### `imports.whosonfirst.sqlite`
 
 * Required: no
-* Default: `false`
+* Default: `true`
 
 Set to `true` to use Who's on First SQLite databases instead of GeoJSON bundles.
 
 SQLite databases take up less space on disk and can be much more efficient to
 download and extract.
 
-This option may [become the default in the near future](https://github.com/pelias/whosonfirst/issues/460).
-
-However, both the Who's on First processes to generate
-these files and the Pelias code to use them is new and not yet considered
-production ready.
+This option [is the default](https://github.com/pelias/whosonfirst/issues/460).
 
 ## Downloading the Data
 
@@ -169,9 +155,6 @@ Other types may be included in the future.
 
 This project exposes a number of node streams for dealing with Who's on First data and metadata files:
 
-- `metadataStream`: streams rows from a Who's on First metadata file
-- `parseMetaFiles`: CSV parse stream configured for metadata file contents
-- `loadJSON`: parallel stream that asynchronously loads GeoJSON files
 - `recordHasIdAndProperties`: rejects Who's on First records missing id or properties
 - `isActiveRecord`: rejects records that are superseded, deprecated, or otherwise inactive
 - `isNotNullIslandRelated`: rejects [Null Island](https://spelunker.whosonfirst.org/id/1) and other records that intersect it (currently just postal codes at 0/0)

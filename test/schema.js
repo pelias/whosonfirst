@@ -16,7 +16,7 @@ tape('tests for looking up hierarchies', function(test) {
     var config = {
       imports: {
         whosonfirst: {
-          importVenues: true
+          importPostalcodes: true
         }
       }
     };
@@ -26,7 +26,7 @@ tape('tests for looking up hierarchies', function(test) {
 
   });
 
-  test.test('missing importVenues, importPostalcodes, and missingFilesAreFatal should not throw error', function(t) {
+  test.test('missing importPostalcodes, and missingFilesAreFatal should not throw error', function(t) {
     var config = {
       imports: {
         whosonfirst: {
@@ -45,7 +45,7 @@ tape('tests for looking up hierarchies', function(test) {
       imports: {
         whosonfirst: {
           datapath: '/path/to/data',
-          importVenues: true,
+          importPostalcodes: true,
           spurious_key: 'value'
         }
       }
@@ -74,18 +74,18 @@ tape('tests for looking up hierarchies', function(test) {
 
   });
 
-  test.test('non-boolean importVenues should throw error', function(t) {
+  test.test('non-boolean sqlite should throw error', function(t) {
     [null, 17, {}, [], 'string'].forEach((value) => {
       var config = {
         imports: {
           whosonfirst: {
             datapath: '/path/to/data',
-            importVenues: value
+            sqlite: value
           }
         }
       };
 
-      t.throws(validate.bind(null, config), /"imports.whosonfirst.importVenues" must be a boolean/);
+      t.throws(validate.bind(null, config), /"imports.whosonfirst.sqlite" must be a boolean/);
     });
 
     t.end();
@@ -110,31 +110,31 @@ tape('tests for looking up hierarchies', function(test) {
 
   });
 
-  test.test('non-boolean missingFilesAreFatal should throw error', function(t) {
-    [null, 17, {}, [], 'string'].forEach((value) => {
+  test.test('non-string/array countryCode should throw error', function(t) {
+    [null, 17, {}, true].forEach((value) => {
       var config = {
         imports: {
           whosonfirst: {
             datapath: '/path/to/data',
-            missingFilesAreFatal: value
+            countryCode: value
           }
         }
       };
 
-      t.throws(validate.bind(null, config), /"imports.whosonfirst.missingFilesAreFatal" must be a boolean/);
+      t.throws(validate.bind(null, config), `"imports.whosonfirst.countryCode" must be one of [string, array]`);
     });
 
     t.end();
 
   });
 
-  test.test('case-insensitive \'yes\' and true should be valid importVenues values', function(t) {
+  test.test('case-insensitive \'yes\' and true should be valid sqlite values', function(t) {
     [true, 'YeS', 'yEs'].forEach((value) => {
       var config = {
         imports: {
           whosonfirst: {
             datapath: '/path/to/data',
-            importVenues: value
+            sqlite: value
           }
         }
       };
@@ -146,13 +146,13 @@ tape('tests for looking up hierarchies', function(test) {
 
   });
 
-  test.test('case-insensitive \'no\' and false should be valid importVenues values', function(t) {
+  test.test('case-insensitive \'no\' and false should be valid sqlite values', function(t) {
     [false, 'nO', 'No'].forEach((value) => {
       var config = {
         imports: {
           whosonfirst: {
             datapath: '/path/to/data',
-            importVenues: value
+            sqlite: value
           }
         }
       };
@@ -200,41 +200,6 @@ tape('tests for looking up hierarchies', function(test) {
 
   });
 
-  test.test('case-insensitive \'yes\' and true should be valid missingFilesAreFatal values', function(t) {
-    [true, 'YeS', 'yEs'].forEach((value) => {
-      var config = {
-        imports: {
-          whosonfirst: {
-            datapath: '/path/to/data',
-            missingFilesAreFatal: value
-          }
-        }
-      };
-
-      t.doesNotThrow(validate.bind(null, config));
-    });
-
-    t.end();
-
-  });
-
-  test.test('case-insensitive \'no\' and false should be valid missingFilesAreFatal values', function(t) {
-    [false, 'nO', 'No'].forEach((value) => {
-      var config = {
-        imports: {
-          whosonfirst: {
-            datapath: '/path/to/data',
-            missingFilesAreFatal: value
-          }
-        }
-      };
-
-      t.doesNotThrow(validate.bind(null, config));
-    });
-
-    t.end();
-
-  });
   test.end();
 
 });
