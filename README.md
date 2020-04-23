@@ -19,7 +19,11 @@ See [Pelias software requirements](https://github.com/pelias/documentation/blob/
 
 ## Quickstart Usage
 
-To install the required Node.js module dependencies, download data for the entire planet (20GB+) and execute the importer, run:
+It's **strongly recommended** that you set at least the `countryCode` parameter
+in `pelias.json` before importing, to reduce the amount of data downloaded.
+
+To install the required Node.js module dependencies, download data for the entire planet (25GB+) and execute the importer, run:
+
 
 ```bash
 npm install
@@ -27,10 +31,20 @@ npm run download
 npm start
 ```
 
+
 ## Configuration
 
 This importer is configured using the [`pelias-config`](https://github.com/pelias/config) module.
 The following configuration options are supported by this importer.
+
+### `imports.whosonfirst.countryCode`
+
+* Required: no (but **recommended**)
+* Default: ``
+
+Use `countryCode` to configure which country-specific download files to use, saving significant disk space and bandwidth. Can be set to either a single two digit [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) country code, or an array of multiple country codes.
+
+For all valid download options, see the [Geocode Earth Who's on First data downloads](https://geocode.earth/data/whosonfirst).
 
 ### `imports.whosonfirst.datapath`
 
@@ -38,15 +52,6 @@ The following configuration options are supported by this importer.
 * Default: ``
 
 Full path to where Who's on First data is located (note: the included [downloader script](#downloading-the-data) will automatically place the WOF data here, and is the recommended way to obtain WOF data)
-
-### `imports.whosonfirst.countryCode`
-
-* Required: no
-* Default: ``
-
-Set sqlite country codes to download. Geocode Earth provides two types of SQLite extracts:
-- [combined](https://geocode.earth/data/whosonfirst/combined): databases of the whole planet for `Administrative Boundaries`, `Postal Code` and `Constituencies`
-- [single country](https://geocode.earth/data/whosonfirst): per country databases for `Administrative Boundaries`, `Postal Code` and `Constituencies`
 
 ### `imports.whosonfirst.importPlace`
 
@@ -56,8 +61,6 @@ Set sqlite country codes to download. Geocode Earth provides two types of SQLite
 Set to a WOF ID or array of IDs to import data only for descendants of those records, rather than the entire planet.
 
 You can use the [Who's on First Spelunker](https://spelunker.whosonfirst.org) or the `source_id` field from any WOF result of a Pelias query to determine these values.
-
-Specifying a value for `importPlace` will download the full planet SQLite database (27GB). Support for individual country downloads [may be added in the future](https://github.com/pelias/whosonfirst/issues/459)
 
 ### `imports.whosonfirst.importPostalcodes`
 
@@ -80,21 +83,9 @@ The maximum number of files to download simultaneously. Higher values can be fas
 
 The location to download Who's on First data from. Changing this can be useful to use custom data, pin data to a specific date, etc.
 
-### `imports.whosonfirst.sqlite`
-
-* Required: no
-* Default: `true`
-
-Set to `true` to use Who's on First SQLite databases instead of GeoJSON bundles.
-
-SQLite databases take up less space on disk and can be much more efficient to
-download and extract.
-
-This option [is the default](https://github.com/pelias/whosonfirst/issues/460).
-
 ## Downloading the Data
 
-The `download` script will download the required bundles/sqlite databases into the datapath configured in `imports.whosonfirst.datapath`.
+The `download` script will download the required SQLite databases into the datapath configured in `imports.whosonfirst.datapath`.
 
 To install the required node module dependencies and run the download script:
 
@@ -104,27 +95,16 @@ npm run download
 
 ## or
 
-npm run download -- --admin-only # to only download hierarchy data, without venues or postalcodes
+npm run download -- --admin-only # to only download hierarchy data, without postalcodes
 ```
 
-**Note:** The download script will always download data for the entire planet. Support for downloading data for specific countries is [a possible future enhancement](https://github.com/pelias/whosonfirst/issues/459).
+## Placetypes
 
-When using `imports.whosonfirst.importPlace`, a new SQLite database will only be downloaded if new data is available. Otherwise, the existing download will be reused.
+This importer supports most of the major [placetypes in the Who's on First project](https://github.com/whosonfirst/whosonfirst-placetypes)
 
-**Warning**: Who's on First data is _big_. Just the hierarchy data is tens of GB, and the full dataset is over 100GB on disk.
-Additionally, Who's on First uses one file per record. In addition to lots of disk space,
-you need lots of free [inodes](https://en.wikipedia.org/wiki/Inode). On
-Linux/Mac,  `df -ih` can show you how many free inodes you have.
+Primarily it supports hierarchy data to represent things like cities, countries, counties, boroughs, etc.
 
-Expect to use a few million inodes for Who's on First. You probably don't want to store multiple copies of the Who's on First data due to its disk requirements.
-
-## Types
-
-There are two major categories of Who's on First data supported: hierarchy (or admin) data, and venues.
-
-Hierarchy data represents things like cities, countries, counties, boroughs, etc.
-
-Venues represent individual places like the Statue of Liberty, a gas station, etc. Venues are subdivided by country, and sometimes regions within a country.
+Additionally this importer can bring in postal code data.
 
 Currently, the supported hierarchy types are:
 
@@ -144,19 +124,17 @@ Currently, the supported hierarchy types are:
 - neighbourhood
 - ocean
 - region
-- postalcodes (optional, see configuration)
 
 Other types may be included in the future.
 
-[The Who's on First documentation](https://github.com/whosonfirst/whosonfirst-placetypes) has a description of all the types supported by Who's on First.
-
-
 ### In Other Projects
 
-This project exposes a number of node streams for dealing with Who's on First data and metadata files:
+This project exposes a collection of Node.js functionality for dealing with Who's on First data and metadata files:
 
-- `recordHasIdAndProperties`: rejects Who's on First records missing id or properties
 - `isActiveRecord`: rejects records that are superseded, deprecated, or otherwise inactive
 - `isNotNullIslandRelated`: rejects [Null Island](https://spelunker.whosonfirst.org/id/1) and other records that intersect it (currently just postal codes at 0/0)
+- `recordHasIdAndProperties`: rejects Who's on First records missing id or properties
 - `recordHasName`: rejects records without names
 - `conformsTo`: filter Who's on First records on a predicate (see lodash's [conformsTo](https://lodash.com/docs/4.17.4#conformsTo) for more information)
+- `SQLiteStream`: provides a Node.js Stream of Who's on First records from a SQLite database
+- `toJSONStream`: a Node.js stream to convert SQLite records to JSON

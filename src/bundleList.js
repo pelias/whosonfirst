@@ -8,8 +8,6 @@ const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
 // lowest level order. See https://github.com/whosonfirst/whosonfirst-placetypes
 // for info on what each bundle type means
 //
-// venue bundle data has to be imported only after all hierarchy bundles are done
-//
 // downloading can be done in any order, but the same order might as well be used
 const hierarchyRoles = [
   'ocean',
