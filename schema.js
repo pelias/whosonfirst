@@ -25,7 +25,6 @@ module.exports = Joi.object().keys({
         Joi.number().integer(),
         Joi.array().items(Joi.number().integer())
       ],
-      importVenues: Joi.boolean().default(false).truthy('yes').falsy('no'),
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no'),
       importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no'),
       maxDownloads: Joi.number().integer(),
