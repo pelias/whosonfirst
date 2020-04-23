@@ -1,6 +1,6 @@
 const tape = require('tape');
 const proxyquire = require('proxyquire');
-const fs = require('fs-extra');
+const fs = require('fs');
 const _ = require('lodash');
 const path = require('path');
 const peliasConfig = require('pelias-config');
@@ -42,6 +42,7 @@ tape('bundlesList tests', (test) => {
 
   test.test('supports sqlite', (t) => {
     temp.mkdir('supports_sqlite', (err, temp_dir) => {
+      fs.mkdirSync(path.join(temp_dir, 'sqlite'), { recursive: true });
       const config = {
         generate: () => {
           return peliasConfig.generateCustom({
@@ -56,7 +57,7 @@ tape('bundlesList tests', (test) => {
       };
       SQLITE_EXAMPLE
         .concat(['ignore_me.csv', 'README.md'])
-        .forEach(e => fs.createFileSync(path.join(temp_dir, 'sqlite', e), ''));
+        .forEach(e => fs.writeFileSync(path.join(temp_dir, 'sqlite', e), ''));
 
       const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
 
