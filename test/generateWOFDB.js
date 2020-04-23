@@ -8,10 +8,13 @@ module.exports = (dbPath, entries) => {
   const db = new Sqlite3(dbPath)
     .exec(`
           CREATE TABLE geojson (
-            id INTEGER NOT NULL PRIMARY KEY,
+            id INTEGER NOT NULL,
             body TEXT,
+            source TEXT,
+            is_alt BOOLEAN DEFAULT 0,
             lastmodified INTEGER
           )`)
+    .exec(`CREATE UNIQUE INDEX IF NOT EXISTS geojson_by_id ON geojson (id, source)`)
     .exec(`
           CREATE TABLE spr (
             id INTEGER NOT NULL PRIMARY KEY,
