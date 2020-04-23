@@ -17,6 +17,13 @@ function on_done() {
   console.log('All done!');
 }
 
+function getCountriesToDownload() {
+  const countries = Array.isArray(config.imports.whosonfirst.countryCode) ?
+    config.imports.whosonfirst.countryCode : [config.imports.whosonfirst.countryCode];
+
+  return countries.map((c) => { return c.toLowerCase(); });
+}
+
 function download(callback) {
   //ensure required directory structure exists
   fs.ensureDirSync(path.join(config.imports.whosonfirst.datapath, 'sqlite'));
@@ -29,8 +36,7 @@ function download(callback) {
   const cpuCount = os.cpus().length;
   const simultaneousDownloads = Math.max(maxSimultaneousDownloads, Math.min(1, cpuCount / 2));
   const countryFilter = () => {
-    const countries = Array.isArray(config.imports.whosonfirst.countryCode) ?
-    config.imports.whosonfirst.countryCode : [config.imports.whosonfirst.countryCode];
+    const countries = getCountriesToDownload();
     return (e) => {
       if (countries.length === 0) {
         // This is specific to geocode earth, it will select global sqlites
