@@ -27,10 +27,11 @@ class SQLiteStream extends Readable {
  */
 function findGeoJSON() {
   return `
-SELECT geojson.id, geojson.body
-  FROM geojson JOIN spr
-  ON geojson.id = spr.id
+  SELECT geojson.id, geojson.body
+  FROM geojson
+  JOIN spr ON geojson.id = spr.id
   WHERE geojson.id != 1
+  AND geojson.is_alt != 1
   AND spr.is_deprecated = 0
   AND spr.is_superseded = 0
   AND NOT TRIM( IFNULL(spr.name, '') ) = ''

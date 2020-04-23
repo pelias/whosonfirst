@@ -73,4 +73,12 @@ tape('SQLiteStream', (test) => {
         'Should format correctly array of strings');
     t.end();
   });
+
+  test.test('Should ignore alt geometries', t => {
+    const msg = 'Should ignore alt geometries';
+    t.ok(SQLiteStream.findGeoJSON().includes('geojson.is_alt != 1'), msg);
+    t.ok(SQLiteStream.findGeoJSONByPlacetype().includes('geojson.is_alt != 1'), msg);
+    t.ok(SQLiteStream.findGeoJSONByPlacetypeAndWOFId().includes('geojson.is_alt != 1'), msg);
+    t.end();
+  });
 });
