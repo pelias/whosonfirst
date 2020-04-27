@@ -5,6 +5,7 @@ const os = require('os');
 const path = require('path');
 const downloadFileSync = require('download-file-sync');
 const commandExistsSync = require('command-exists').sync;
+const logger = require('pelias-logger').get('whosonfirst');
 
 const config = require('pelias-config').generate(require('../schema'));
 
@@ -14,7 +15,7 @@ const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode)-latest/;
 const COUNTRY_REGEX = /^whosonfirst-data-(admin|postalcode)-[a-z]{2}-latest/;
 
 function on_done() {
-  console.log('All done!');
+  logger.info('All done!');
 }
 
 function getCountriesToDownload() {
@@ -99,12 +100,12 @@ function download(callback) {
   const downloadFunctions = generateSQLites().map(function (sqlite) {
     return function downloadABundle(callback) {
       const cmd = generateCommand(sqlite, config.imports.whosonfirst.datapath);
-      console.log('Downloading ' + sqlite.name_compressed);
+      logger.info('Downloading ' + sqlite.name_compressed);
       child_process.exec(cmd, function commandCallback(error, stdout, stderr) {
-        console.log('done downloading ' + sqlite.name_compressed);
+        logger.info('done downloading ' + sqlite.name_compressed);
         if (error) {
-          console.error('error downloading ' + sqlite.name_compressed + error);
-          console.log(stderr);
+          logger.error('error downloading ' + sqlite.name_compressed + error);
+          logger.info(stderr);
         }
         callback();
       });
