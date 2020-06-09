@@ -88,7 +88,9 @@ function setupDocument(record, hierarchy) {
     else {
       if (record.name_aliases.length) {
         record.name_aliases.forEach(alias => {
-          wofDoc.setNameAlias('default', alias);
+          if (alias !== record.name) {
+            wofDoc.setNameAlias('default', alias);
+          }
         });
       }
       if (record.name_langs) {
