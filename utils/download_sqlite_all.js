@@ -50,13 +50,23 @@ function download(callback) {
 
   const generateSQLites = () => {
     const files = {};
-    JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
+    const countryFilteredWofFiles = JSON.parse(downloadFileSync(`${wofDataHost}/sqlite/inventory.json`))
       // Only latest compressed files
       .filter(e => e.name_compressed.indexOf('latest') >= 0)
       // Only wanted countries
-      .filter(countryFilter())
-      // Postalcodes only when importPostalcodes is ture and without --admin-only arg
-      .filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
+      .filter(countryFilter());
+
+    if (countryFilteredWofFiles.length === 0) {
+      logger.error('No files to download after country filtering, are you sure your country restrict is correct?');
+      logger.error('Country restrict: ' + getCountriesToDownload());
+    } else if (countryFilteredWofFiles.filter(f => f.name.includes('-admin')).length !== countryFilteredWofFiles.length) {
+      logger.error('Found fewer files to download than country restricts specified, are you sure your country restrict is correct?');
+      logger.error('Country restrict: ' + getCountriesToDownload());
+      logger.error('Files to download: ' + countryFilteredWofFiles.map(f => f.name));
+    }
+    
+    // Postalcodes only when importPostalcodes is ture and without --admin-only arg
+    countryFilteredWofFiles.filter(e => e.name_compressed.indexOf('postalcode') < 0 ||
         (config.imports.whosonfirst.importPostalcodes && process.argv[2] !== '--admin-only'))
       // We don't need constituency and intersection and venue
       .filter(e => e.name_compressed.indexOf('constituency') < 0 &&
