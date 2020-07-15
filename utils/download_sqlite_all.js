@@ -59,6 +59,7 @@ function download(callback) {
     if (countryFilteredWofFiles.length === 0) {
       logger.error('No files to download after country filtering, are you sure your country restrict is correct?');
       logger.error('Country restrict: ' + getCountriesToDownload());
+      process.exit(1);
     } else if (countryFilteredWofFiles.filter(f => f.name.includes('-admin')).length !== countryFilteredWofFiles.length) {
       logger.error('Found fewer files to download than country restricts specified, are you sure your country restrict is correct?');
       logger.error('Country restrict: ' + getCountriesToDownload());
