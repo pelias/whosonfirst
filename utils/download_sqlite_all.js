@@ -14,6 +14,10 @@ const wofDataHost = config.get('imports.whosonfirst.dataHost') || DATA_GEOCODE_E
 const COMBINED_REGEX = /^whosonfirst-data-(admin|postalcode)-latest/;
 const COUNTRY_REGEX = /^whosonfirst-data-(admin|postalcode)-[a-z]{2}-latest/;
 
+// generate a User Agent string to identify downloads as originating from Pelias tools
+const pkg = require('../package.json');
+const agent = `${pkg.name}/${pkg.version}`;
+
 function on_done() {
   logger.info('All done!');
 }
@@ -94,7 +98,12 @@ function download(callback) {
       throw new Error('What is this extension ?!?');
     }
 
-    return `curl -s ${wofDataHost}/sqlite/${sqlite.name_compressed} | ${extract} > ${path.join(directory, 'sqlite', sqlite.name)}`;
+    return [
+      `curl -sA '${agent}'`,
+      `${wofDataHost}/sqlite/${sqlite.name_compressed}`,
+      '|', extract,
+      '>', path.join(directory, 'sqlite', sqlite.name)
+    ].join(' ');
   };
 
   const downloadFunctions = generateSQLites().map(function (sqlite) {
