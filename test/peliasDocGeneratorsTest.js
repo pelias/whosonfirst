@@ -11,13 +11,13 @@ function test_stream(input, testedStream, callback) {
 }
 
 tape('create', function(test) {
-  test.test('non-country place_types should be returned as Document with that place_type', function(t) {
-    var place_types = ['neighbourhood', 'locality', 'borough', 'localadmin',
-                        'county', 'macrocounty', 'region', 'macroregion',
-                        'dependency', 'postalcode', 'ocean', 'marinearea',
-                        'continent', 'empire'];
+  const place_types = ['neighbourhood', 'locality', 'borough', 'localadmin',
+    'county', 'macrocounty', 'region', 'macroregion',
+    'dependency', 'postalcode', 'ocean', 'marinearea',
+    'continent', 'empire'];
 
-    place_types.forEach(function(place_type) {
+  place_types.forEach(function(place_type) {
+    test.test(`non-country place_type (${place_type}) should be returned as Document with that place_type`, function(t) {
       var wofRecords = {
         1: {
           id: 1,
@@ -61,12 +61,9 @@ tape('create', function(test) {
 
       test_stream(input, docGenerator, function(err, actual) {
         t.deepEqual(actual, expected, 'should have returned true');
+        t.end();
       });
-
     });
-
-    t.end();
-
   });
 
   test.test('region should honor abbreviations when available', function(t) {
@@ -107,9 +104,9 @@ tape('create', function(test) {
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
     });
 
-    t.end();
 
   });
 
@@ -151,10 +148,8 @@ tape('create', function(test) {
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
     });
-
-    t.end();
-
   });
 
   test.test('dependency with abbreviation known as iso3 should use iso3 as abbreviation', function(t) {
@@ -195,10 +190,8 @@ tape('create', function(test) {
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
     });
-
-    t.end();
-
   });
 
   test.test('country with abbreviation known as iso3 should use iso3 as abbreviation', function(t) {
@@ -239,9 +232,9 @@ tape('create', function(test) {
 
     test_stream(input, docGenerator, function(err, actual) {
       t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
     });
 
-    t.end();
 
   });
 
