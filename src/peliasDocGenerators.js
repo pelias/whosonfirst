@@ -71,7 +71,14 @@ function addMultiLangAliases(wofDoc, name_langs) {
 
 // method that extracts the logic for Document creation.  `hierarchy` is optional
 function setupDocument(record, hierarchy) {
-  var wofDoc = new Document( 'whosonfirst', record.place_type, record.id );
+  logger.debug(`Loading '${record.place_type}' with id ${record.id} and name '${record.name}'`);
+  var wofDoc = new Document('whosonfirst', record.place_type, record.id);
+
+  if (global.geo_shape_polygon === true) {
+    if (record.shape) {
+      wofDoc.setPolygon(record.shape);
+    }
+  }
 
   if (record.name) {
     wofDoc.setName('default', record.name);

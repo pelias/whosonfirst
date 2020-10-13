@@ -1,3 +1,5 @@
+require ('./global_const');
+
 var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
 var readStreamModule = require('./src/readStream');
 var importStream = require('./src/importStream');
@@ -7,6 +9,8 @@ var hierarchyFinder = require('./src/hierarchyFinder');
 var bundles = require('./src/bundleList');
 
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
+
+logger.info(`The importer is being run with polygon data ${global.geo_shape_polygon}`);
 
 // a cache of only admin records, to be used to fill the hierarchy
 // of other, lower admin records as well as venues

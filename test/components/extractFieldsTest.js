@@ -14,10 +14,10 @@ var extractFields = require('../../src/components/extractFields');
  * Callback signature should be something like function callback(error, result)
  */
 function test_stream(input, testedStream, callback) {
-    var input_stream = event_stream.readArray(input);
-    var destination_stream = event_stream.writeArray(callback);
+  var input_stream = event_stream.readArray(input);
+  var destination_stream = event_stream.writeArray(callback);
 
-    input_stream.pipe(testedStream).pipe(destination_stream);
+  input_stream.pipe(testedStream).pipe(destination_stream);
 }
 
 tape('readStreamComponents', function(test) {
@@ -73,6 +73,10 @@ tape('readStreamComponents', function(test) {
       }
     ];
 
+    if (global.geo_shape_polygon === true) {
+      expected[0].shape = undefined;
+    }
+
     test_stream(input, extractFields.create(), function(err, actual) {
       t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
       t.end();
@@ -105,6 +109,10 @@ tape('readStreamComponents', function(test) {
       }
     ];
 
+    if (global.geo_shape_polygon === true) {
+      expected[0].shape = undefined;
+    }
+
     test_stream(input, extractFields.create(), function(err, actual) {
       t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
       t.end();
@@ -127,7 +135,7 @@ tape('readStreamComponents', function(test) {
       }
     ];
 
-    const expected = [
+    var expected = [
       {
         id: 12345,
         name: 'name 1',
@@ -147,6 +155,10 @@ tape('readStreamComponents', function(test) {
         ]
       }
     ];
+
+    if (global.geo_shape_polygon === true) {
+      expected[0].shape = undefined;
+    }
 
     test_stream(input, extractFields.create(), function(err, actual) {
       t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');

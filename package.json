@@ -8,11 +8,14 @@
   "main": "index.js",
   "scripts": {
     "start": "./bin/start",
+    "start-debug": "node --inspect ./import.js",
+    "import": "node --max_old_space_size=8192 ./import.js",
     "download": "./bin/download",
     "test": "./bin/units",
     "lint": "jshint .",
     "validate": "npm ls",
-    "travis": "npm run test"
+    "travis": "npm run test",
+    "download-debug": "node --inspect ./utils/download_sqlite_all.js"
   },
   "repository": {
     "type": "git",
@@ -46,12 +49,14 @@
   "devDependencies": {
     "event-stream": "^4.0.0",
     "jshint": "^2.5.6",
+    "nodemon": "^2.0.4",
     "pelias-mock-logger": "^1.1.0",
     "precommit-hook": "^3.0.0",
     "proxyquire": "^2.0.0",
     "tap-dot": "^2.0.0",
     "tape": "^4.2.2",
-    "temp": "^0.9.0"
+    "temp": "^0.9.0",
+    "winston": "^3.3.3"
   },
   "pre-commit": [
     "lint",

@@ -32,40 +32,40 @@ tape('readStream', (test) => {
 
       generateWOFDB(path.join(temp_dir, 'sqlite', 'whosonfirst-data-admin-xx-latest.db'), [
         {
-        id: 123,
-        properties: {
-          'wof:name': 'name 1',
-          'wof:placetype': 'region',
-          'geom:latitude': 12.121212,
-          'geom:longitude': 21.212121,
-          'wof:abbreviation': 'XY',
-          'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
-          'gn:population': 98765,
-          'misc:photo_sum': 87654
+          id: 123,
+          properties: {
+            'wof:name': 'name 1',
+            'wof:placetype': 'region',
+            'geom:latitude': 12.121212,
+            'geom:longitude': 21.212121,
+            'wof:abbreviation': 'XY',
+            'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
+            'gn:population': 98765,
+            'misc:photo_sum': 87654
+          }
+        },
+        {
+          id: 456,
+          properties: {
+            'wof:name': 'name 2',
+            'wof:placetype': 'localadmin',
+            'geom:latitude': 13.131313,
+            'geom:longitude': 31.313131,
+            'wof:abbreviation': 'XY',
+            'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
+          }
+        },
+        {
+          id: 789,
+          properties: {
+            'wof:name': 'name 3',
+            'wof:placetype': 'place type 3',
+            'geom:latitude': 14.141414,
+            'geom:longitude': 41.414141,
+            'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
+          }
         }
-      },
-      {
-        id: 456,
-        properties: {
-          'wof:name': 'name 2',
-          'wof:placetype': 'localadmin',
-          'geom:latitude': 13.131313,
-          'geom:longitude': 31.313131,
-          'wof:abbreviation': 'XY',
-          'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
-        }
-      },
-      {
-        id: 789,
-        properties: {
-          'wof:name': 'name 3',
-          'wof:placetype': 'place type 3',
-          'geom:latitude': 14.141414,
-          'geom:longitude': 41.414141,
-          'geom:bbox': '-24.539906,34.815009,69.033946,81.85871'
-        }
-      }
-    ]);
+      ]);
 
       const wofConfig = {
         datapath: temp_dir,
@@ -79,7 +79,7 @@ tape('readStream', (test) => {
       stream.on('finish', _ => {
         temp.cleanupSync();
 
-        t.deepEquals(wofAdminRecords, {
+        var expected = {
           '123': {
             id: 123,
             name: 'name 1',
@@ -112,7 +112,14 @@ tape('readStream', (test) => {
               { 'localadmin_id': 456 }
             ]
           }
-        });
+        };
+
+        if (global.geo_shape_polygon === true) {
+          expected['123'].shape = undefined;
+          expected['456'].shape = undefined;
+        }
+
+        t.deepEquals(wofAdminRecords, expected);
 
         const xyMessages = logger.getDebugMessages().filter(m => m.indexOf('whosonfirst-data-admin-xy-latest.db') >= 0);
         const xxMessages = logger.getDebugMessages().filter(m => m.indexOf('whosonfirst-data-admin-xx-latest.db') >= 0);
@@ -174,30 +181,37 @@ tape('readStream', (test) => {
           }
         }
       ]);
+
+      const expected = {
+        '421302191': {
+          id: 421302191,
+          name: 'name 421302191',
+          name_aliases: [],
+          name_langs: {},
+          abbreviation: undefined,
+          place_type: 'region',
+          lat: 45.240295,
+          lon: 3.916216,
+          bounding_box: undefined,
+          population: undefined,
+          popularity: undefined,
+          hierarchies: [ { 'region_id': 421302191 } ]
+        }
+      };
+
+      if (global.geo_shape_polygon === true) {
+        expected['421302191'].shape = undefined;
+      }
+
       const records = {};
       readStream
-        .create({datapath: temp_dir, sqlite: true}, ['whosonfirst-data-latest.db'], records)
-        .on('finish', (err) => {
-          t.notOk(err);
-          t.deepEquals(records, {
-            '421302191': {
-              id: 421302191,
-              name: 'name 421302191',
-              name_aliases: [],
-              name_langs: {},
-              abbreviation: undefined,
-              place_type: 'region',
-              lat: 45.240295,
-              lon: 3.916216,
-              bounding_box: undefined,
-              population: undefined,
-              popularity: undefined,
-              hierarchies: [ { 'region_id': 421302191 } ]
-            }
+          .create({datapath: temp_dir, sqlite: true}, ['whosonfirst-data-latest.db'], records)
+          .on('finish', (err) => {
+            t.notOk(err);
+            t.deepEquals(records, expected);
+            t.deepEqual(logger.getDebugMessages().length, 17);
+            t.end();
           });
-          t.deepEqual(logger.getDebugMessages().length, 17);
-          t.end();
-        });
     });
   });
   test.end();

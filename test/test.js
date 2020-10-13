@@ -1,3 +1,4 @@
+require ('../global_const');
 require ('./components/conformsTo.js');
 require ('./components/extractFieldsTest.js');
 require ('./components/isActiveRecordTest.js');

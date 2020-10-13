@@ -188,20 +188,42 @@ function getHierarchies(id, properties) {
 module.exports.create = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
     const default_names = getName(json_object.properties);
-    var record = {
-      id: json_object.id,
-      name: default_names,
-      name_aliases: getNameAliases(json_object.properties),
-      name_langs: getMultiLangNames(default_names, json_object.properties),
-      abbreviation: getAbbreviation(json_object.properties),
-      place_type: json_object.properties['wof:placetype'],
-      lat: getLat(json_object.properties),
-      lon: getLon(json_object.properties),
-      bounding_box: getBoundingBox(json_object.properties),
-      population: getPopulation(json_object.properties),
-      popularity: json_object.properties['misc:photo_sum'],
-      hierarchies: getHierarchies(json_object.id, json_object.properties)
-    };
+    var record;
+
+    if (global.geo_shape_polygon === true) {
+      record = {
+        id: json_object.id,
+        name: default_names,
+        name_aliases: getNameAliases(json_object.properties),
+        name_langs: getMultiLangNames(default_names, json_object.properties),
+        abbreviation: getAbbreviation(json_object.properties),
+        place_type: json_object.properties['wof:placetype'],
+        lat: getLat(json_object.properties),
+        lon: getLon(json_object.properties),
+        bounding_box: getBoundingBox(json_object.properties),
+        population: getPopulation(json_object.properties),
+        popularity: json_object.properties['misc:photo_sum'],
+        hierarchies: getHierarchies(json_object.id, json_object.properties),
+        shape : json_object.geometry
+      };
+
+    }else{
+      record = {
+        id: json_object.id,
+        name: default_names,
+        name_aliases: getNameAliases(json_object.properties),
+        name_langs: getMultiLangNames(default_names, json_object.properties),
+        abbreviation: getAbbreviation(json_object.properties),
+        place_type: json_object.properties['wof:placetype'],
+        lat: getLat(json_object.properties),
+        lon: getLon(json_object.properties),
+        bounding_box: getBoundingBox(json_object.properties),
+        population: getPopulation(json_object.properties),
+        popularity: json_object.properties['misc:photo_sum'],
+        hierarchies: getHierarchies(json_object.id, json_object.properties)
+      };
+
+    }
 
     // use the QS altname if US county and available
     if (isUsCounty(record, json_object.properties['wof:country'], json_object.properties['qs:a2_alt'])) {
