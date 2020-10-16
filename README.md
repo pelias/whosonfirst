@@ -24,8 +24,6 @@ We think open data, open source, and open strategy win over proprietary solution
 
 # Pelias Who's on First Data Importer
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/whosonfirst.svg)](https://greenkeeper.io/)
-
 ## Overview
 
 pelias-whosonfirst is a tool used for importing data from the [Who's On First](https://whosonfirst.org/) project from local files into a Pelias ElasticSearch store.
