@@ -141,7 +141,6 @@ function getMultiLangNames(defaultName, properties) {
       return {
         key: key.substring(key.indexOf(':') + 1, key.indexOf(':') + 4), // get the iso part of the key name:iso_x_preferred
         value: properties[key]
-                .filter(name => !defaultName || defaultName.indexOf(name) < 0) // remove duplicate elements found in default name
       };
     }) //
     .filter(({ key, value }) => value.length > 0 && iso639[key]) // filter correct iso 3 keys

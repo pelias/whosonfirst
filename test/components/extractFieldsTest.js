@@ -999,7 +999,7 @@ tape('name alias tests', (test) => {
 });
 
 tape('multi-lang index test', (test) => {
-  test.test('all elements in default language should not be in other indexes', function (t) {
+  test.test('all elements in default language should be in other indexes also', function (t) {
     var input = [{
       id: 54321,
       properties: {
@@ -1012,8 +1012,8 @@ tape('multi-lang index test', (test) => {
 
     const expected_name_langs = {
       'en': ['preferredENG1'],
-      'fr': ['preferredFRA1', 'preferredFRA2'],
-      'es': ['variantSPA1', 'variantSPA2']
+      'fr': ['default1','preferredFRA1', 'preferredFRA2'],
+      'es': ['default2','variantSPA1', 'variantSPA2']
     };
 
     test_stream(input, extractFields.create(), function (err, actual) {
