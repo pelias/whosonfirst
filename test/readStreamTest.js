@@ -117,7 +117,7 @@ tape('readStream', (test) => {
         const xyMessages = logger.getDebugMessages().filter(m => m.indexOf('whosonfirst-data-admin-xy-latest.db') >= 0);
         const xxMessages = logger.getDebugMessages().filter(m => m.indexOf('whosonfirst-data-admin-xx-latest.db') >= 0);
 
-        t.deepEquals(xyMessages.length, 17);
+        t.deepEquals(xyMessages.length, 16);
         t.deepEquals(xyMessages.length, xxMessages.length);
         t.end();
       });
@@ -195,7 +195,7 @@ tape('readStream', (test) => {
               hierarchies: [ { 'region_id': 421302191 } ]
             }
           });
-          t.deepEqual(logger.getDebugMessages().length, 17);
+          t.deepEqual(logger.getDebugMessages().length, 16);
           t.end();
         });
     });
