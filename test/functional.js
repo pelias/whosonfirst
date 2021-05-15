@@ -29,24 +29,31 @@ tape('functional', function(test) {
           country: ['France'],
           country_id: ['85633147'],
           country_a: ['FRA'],
+          country_source: [null],
           county: ['Roquemaure'],
           county_id: ['102068587'],
           county_a: [null],
+          county_source: [null],
           localadmin: ['Tavel'],
           localadmin_id: ['404414453'],
           localadmin_a: [null],
+          localadmin_source: [null],
           locality: ['Tavel'],
           locality_id: ['101772677'],
           locality_a: [null],
+          locality_source: [null],
           macrocounty: ['Arrondissement of Nimes'],
           macrocounty_id: ['404227861'],
           macrocounty_a: [null],
+          macrocounty_source: [null],
           macroregion: ['Occitanie'],
           macroregion_id: ['1108826387'],
           macroregion_a: [null],
+          macroregion_source: [null],
           region: ['département des Gard'],
           region_id: ['85683431'],
-          region_a: ['GA']
+          region_a: ['GA'],
+          region_source: [null]
         }, 'correct parent hierarchy for Tavel');
         temp.cleanupSync();
         t.end();

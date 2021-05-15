@@ -37,7 +37,7 @@
     "pelias-config": "^4.10.0",
     "pelias-dbclient": "^2.13.0",
     "pelias-logger": "^1.2.1",
-    "pelias-model": "^8.0.0",
+    "pelias-model": "^9.1.0",
     "through2": "^3.0.0",
     "through2-filter": "^3.0.0",
     "through2-map": "^3.0.0",
