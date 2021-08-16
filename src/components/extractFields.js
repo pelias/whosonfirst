@@ -179,6 +179,22 @@ function getHierarchies(id, properties) {
 
 }
 
+// https://github.com/whosonfirst/whosonfirst-properties/blob/main/properties/wof/concordances.json
+function getConcordances(properties) {
+  let concordances = {};
+
+  // validate types, map 'wof:concordances'
+  let con = _.get(properties, 'wof:concordances');
+  if (_.isPlainObject(con)) {
+    _.each(con, (v, k) => {
+      if (!_.isString(k) || !(_.isString(v) || _.isInteger(v))) { return; }
+      concordances[k.trim()] = _.isString(v) ? v.trim() : v;
+    });
+  }
+
+  return concordances;
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -200,7 +216,8 @@ module.exports.create = function map_fields_stream() {
       bounding_box: getBoundingBox(json_object.properties),
       population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum'],
-      hierarchies: getHierarchies(json_object.id, json_object.properties)
+      hierarchies: getHierarchies(json_object.id, json_object.properties),
+      concordances: getConcordances(json_object.properties)
     };
 
     // use the QS altname if US county and available

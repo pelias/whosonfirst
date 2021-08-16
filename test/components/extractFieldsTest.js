@@ -69,7 +69,8 @@ tape('readStreamComponents', function(test) {
           {
             'country_id': 23456
           }
-        ]
+        ],
+        concordances: {}
       }
     ];
 
@@ -101,7 +102,8 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: undefined,
         bounding_box: undefined,
-        hierarchies: []
+        hierarchies: [],
+        concordances: {}
       }
     ];
 
@@ -144,7 +146,8 @@ tape('readStreamComponents', function(test) {
           {
             'place type 1_id': 12345
           }
-        ]
+        ],
+        concordances: {}
       }
     ];
 
@@ -1076,6 +1079,88 @@ tape('multi-lang index test', (test) => {
 
     test_stream(input, extractFields.create(), function (err, actual) {
       t.deepEqual(actual[0].name_langs, expected_name_langs, 'should not have duplicates');
+      t.end();
+    });
+  });
+
+  test.end();
+});
+
+tape('concordances', (test) => {
+  test.test('missing concordances', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {}
+    }];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].concordances, {}, 'no-op');
+      t.end();
+    });
+  });
+
+  test.test('empty concordances', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {
+        'wof:concordances': {}
+      }
+    }];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].concordances, {}, 'no-op');
+      t.end();
+    });
+  });
+
+  test.test('wrong type concordances', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {
+        'wof:concordances': 'string'
+      }
+    }];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].concordances, {}, 'no-op');
+      t.end();
+    });
+  });
+
+  test.test('map valid concordances', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {
+        'wof:concordances': {
+          'alpha': 'bar',
+          'beta': 2,
+          'gamma': null,
+          'delta': undefined,
+          'epsilon': [{ 'foo': 'bar' }],
+          'zeta': [ 'foo', 'bar' ],
+          'eta': 2.2
+        }
+      }
+    }];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].concordances, { alpha: 'bar', beta: 2 }, 'mapped valid values');
+      t.end();
+    });
+  });
+
+  test.test('trim concordances', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {
+        'wof:concordances': {
+          ' alpha ': ' bar '
+        }
+      }
+    }];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].concordances, { alpha: 'bar' }, 'trim keys/values');
       t.end();
     });
   });
