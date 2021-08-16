@@ -142,6 +142,11 @@ function setupDocument(record, hierarchy) {
     assignField(record, wofDoc);
   }
 
+  // store the concordances in the addendum (where available)
+  if (_.isPlainObject(record.concordances) && !_.isEmpty(record.concordances)) {
+    wofDoc.setAddendum('concordances', record.concordances);
+  }
+
   return wofDoc;
 
 }

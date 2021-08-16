@@ -723,6 +723,51 @@ tape('create', function(test) {
 
   });
 
+  test.test('addendum.concordances empty by default', function (t) {
+    const input = {
+      id: 1,
+      name: 'Example',
+      name_aliases: [],
+      lat: 12.121212,
+      lon: 21.212121,
+      place_type: 'country'
+    };
+
+    test_stream([input], peliasDocGenerators.create(() => [[input]]), function (err, actual) {
+      t.false(err);
+      t.false(
+        actual[0].getAddendum('concordances'),
+        'addendum.concordances not set'
+      );
+      t.end();
+    });
+  });
+
+  test.test('addendum.concordances should be set where available', function (t) {
+    const input = {
+      id: 1,
+      name: 'Example',
+      name_aliases: [],
+      lat: 12.121212,
+      lon: 21.212121,
+      place_type: 'country',
+      concordances: {
+        'alpha': 'alpha',
+        'beta': 100
+      }
+    };
+
+    test_stream([input], peliasDocGenerators.create(() => [[input]]), function (err, actual) {
+      t.false(err);
+      t.deepEqual(
+        actual[0].getAddendum('concordances'),
+        input.concordances,
+        'addendum.concordances correctly set'
+      );
+      t.end();
+    });
+  });
+
   test.end();
 
 });
