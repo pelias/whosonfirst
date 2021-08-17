@@ -196,9 +196,13 @@ function getConcordances(properties) {
 
   // map other concordances which may exist with the 'qs_pg' prefix
   // but only when not present in 'wof:concordances'.
-  _.each(['gn_id', 'qs_id'], (k) => {
+  // note: take care with underscore vs. colon delimiters
+  _.each({
+    'qs_pg:gn_id': 'gn:id',
+    'qs_pg:qs_id': 'qs:id'
+  }, (k, prop) => {
     if (!_.has(concordances, k)) {
-      let v = _.get(properties, `qs_pg:${k}`);
+      let v = _.get(properties, prop);
       if (!_.isString(v) && !_.isInteger(v)) { return; }
       if (_.isString(v)) { v = v.trim(); }
       if (_.isInteger(v) && v < 1) { return; }

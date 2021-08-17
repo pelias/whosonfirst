@@ -1177,7 +1177,7 @@ tape('concordances', (test) => {
     }];
 
     test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual[0].concordances, { gn_id: 'bar', qs_id: 100 }, 'map qs_pg props');
+      t.deepEqual(actual[0].concordances, { 'gn:id': 'bar', 'qs:id': 100 }, 'map qs_pg props');
       t.end();
     });
   });
@@ -1188,13 +1188,13 @@ tape('concordances', (test) => {
       properties: {
         'qs_pg:qs_id': 100,
         'wof:concordances': {
-          'qs_id': 200
+          'qs:id': 200
         }
       }
     }];
 
     test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual[0].concordances, { qs_id: 200 }, 'prefer wof:concordances');
+      t.deepEqual(actual[0].concordances, { 'qs:id': 200 }, 'prefer wof:concordances');
       t.end();
     });
   });
