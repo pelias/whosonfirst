@@ -188,7 +188,9 @@ function getConcordances(properties) {
   if (_.isPlainObject(con)) {
     _.each(con, (v, k) => {
       if (!_.isString(k) || !(_.isString(v) || _.isInteger(v))) { return; }
-      concordances[k.trim()] = _.isString(v) ? v.trim() : v;
+      if (_.isString(v)) { v = v.trim(); }
+      if (_.isInteger(v) && v < 1){ return; }
+      concordances[k.trim()] = v;
     });
   }
 
@@ -198,7 +200,9 @@ function getConcordances(properties) {
     if (!_.has(concordances, k)) {
       let v = _.get(properties, `qs_pg:${k}`);
       if (!_.isString(v) && !_.isInteger(v)) { return; }
-      concordances[k] = _.isString(v) ? v.trim() : v;
+      if (_.isString(v)) { v = v.trim(); }
+      if (_.isInteger(v) && v < 1) { return; }
+      concordances[k] = v;
     }
   });
 

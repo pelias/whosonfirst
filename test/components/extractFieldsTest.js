@@ -1138,7 +1138,8 @@ tape('concordances', (test) => {
           'delta': undefined,
           'epsilon': [{ 'foo': 'bar' }],
           'zeta': [ 'foo', 'bar' ],
-          'eta': 2.2
+          'eta': 2.2,
+          'theta': 0
         }
       }
     }];
