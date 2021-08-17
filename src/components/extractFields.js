@@ -192,6 +192,16 @@ function getConcordances(properties) {
     });
   }
 
+  // map other concordances which may exist with the 'qs_pg' prefix
+  // but only when not present in 'wof:concordances'.
+  _.each(['gn_id', 'qs_id'], (k) => {
+    if (!_.has(concordances, k)) {
+      let v = _.get(properties, `qs_pg:${k}`);
+      if (!_.isString(v) && !_.isInteger(v)) { return; }
+      concordances[k] = _.isString(v) ? v.trim() : v;
+    }
+  });
+
   return concordances;
 }
 

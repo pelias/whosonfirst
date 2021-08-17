@@ -1165,5 +1165,38 @@ tape('concordances', (test) => {
     });
   });
 
+  test.test('qs_pg prefixed concordances', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {
+        'qs_pg:gn_id': ' bar ',
+        'qs_pg:qs_id': 100,
+        'qs_pg:qs_nn': ' bat '
+      }
+    }];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].concordances, { gn_id: 'bar', qs_id: 100 }, 'map qs_pg props');
+      t.end();
+    });
+  });
+
+  test.test('qs_pg prefer wof:concordances', function (t) {
+    var input = [{
+      id: 54321,
+      properties: {
+        'qs_pg:qs_id': 100,
+        'wof:concordances': {
+          'qs_id': 200
+        }
+      }
+    }];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].concordances, { qs_id: 200 }, 'prefer wof:concordances');
+      t.end();
+    });
+  });
+
   test.end();
 });
