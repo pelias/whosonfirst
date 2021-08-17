@@ -94,7 +94,8 @@ tape('readStream', (test) => {
             popularity: 87654,
             hierarchies: [
               { 'region_id': 123 }
-            ]
+            ],
+            concordances: {}
           },
           '456': {
             id: 456,
@@ -110,7 +111,8 @@ tape('readStream', (test) => {
             popularity: undefined,
             hierarchies: [
               { 'localadmin_id': 456 }
-            ]
+            ],
+            concordances: {}
           }
         });
 
@@ -192,7 +194,8 @@ tape('readStream', (test) => {
               bounding_box: undefined,
               population: undefined,
               popularity: undefined,
-              hierarchies: [ { 'region_id': 421302191 } ]
+              hierarchies: [ { 'region_id': 421302191 } ],
+              concordances: {}
             }
           });
           t.deepEqual(logger.getDebugMessages().length, 17);
