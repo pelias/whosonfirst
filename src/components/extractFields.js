@@ -22,12 +22,11 @@ const population_hierarchy = [
 // note the '%s' is replaced by a language code
 const NAME_ALIAS_FIELDS = [
   'name:%s_x_preferred',
-  'name:%s_x_variant',
   'label:%s_x_preferred_longname',
   'label:%s_x_preferred'
 ];
 
-const WOF_NAMES_REGEX = /^(name|label):[a-z]{3}_x_(preferred|variant)$/;
+const WOF_NAMES_REGEX = /^(name|label):[a-z]{3}_x_preferred$/;
 
 // this function is used to verify that a US county QS altname is available
 function isUsCounty(base_record, wof_country, qs_a2_alt) {
