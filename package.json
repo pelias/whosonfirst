@@ -12,7 +12,7 @@
     "test": "./bin/units",
     "lint": "jshint .",
     "validate": "npm ls",
-    "travis": "npm run test"
+    "ci": "npm run test"
   },
   "repository": {
     "type": "git",
