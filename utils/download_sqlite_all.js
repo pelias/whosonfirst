@@ -44,8 +44,7 @@ function download(callback) {
     const countries = getCountriesToDownload();
     return (e) => {
       if (countries.length === 0) {
-        // This is specific to geocode earth, it will select global sqlites
-        return COMBINED_REGEX.test(e.name_compressed) || wofDataHost !== DATA_GEOCODE_EARTH_URL;
+        return COMBINED_REGEX.test(e.name_compressed);
       }
       // This will download sqlites with the selected country code
       return COUNTRY_REGEX.test(e.name_compressed) && countries.some(c => e.name_compressed.indexOf(`-${c}-latest`) >= 0);
