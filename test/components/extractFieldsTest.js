@@ -948,7 +948,7 @@ tape('name alias tests', (test) => {
       }
     }];
 
-    const expected_name_aliases = ['preferred1', 'preferred2', 'variant1', 'variant2', 'englabel1', 'englabel2'];
+    const expected_name_aliases = ['preferred1', 'preferred2', 'englabel1', 'englabel2'];
 
     test_stream(input, extractFields.create(), function (err, actual) {
       t.deepEqual(actual[0].name_aliases, expected_name_aliases, 'name aliases populated from preferred and variant fields');
@@ -974,7 +974,6 @@ tape('name alias tests', (test) => {
 
     const expected_name_aliases = [
       'preferred1', 'preferred2',
-      'variant1', 'variant2',
       'spalabel1', 'spalabel2',
       'fralabel1', 'fralabel2',
       'englabel1', 'englabel2'
@@ -1003,12 +1002,11 @@ tape('multi-lang index test', (test) => {
 
     const expected_name_langs = {
       'en': ['preferredENG1'],
-      'fr': ['preferredFRA1', 'preferredFRA2'],
-      'es': ['variantSPA1', 'variantSPA2']
+      'fr': ['preferredFRA1', 'preferredFRA2']
     };
 
     test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual[0].name_langs, expected_name_langs, 'name langs populated from fr preferred and SPA variant fields');
+      t.deepEqual(actual[0].name_langs, expected_name_langs, 'name langs populated from fr preferred fields');
       t.end();
     });
   });
