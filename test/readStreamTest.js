@@ -31,7 +31,7 @@ tape('readStream', (test) => {
       ]);
 
       generateWOFDB(path.join(temp_dir, 'sqlite', 'whosonfirst-data-admin-xx-latest.db'), [
-        {
+      {
         id: 123,
         properties: {
           'wof:name': 'name 1',
@@ -42,6 +42,10 @@ tape('readStream', (test) => {
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'gn:population': 98765,
           'misc:photo_sum': 87654
+        },
+        geometry: {
+          coordinates: [[[-72.122, 42.428], [-72.122, 42.409], [-72.091, 42.409], [-72.091, 42.428], [-72.122, 42.428]]],
+          type: 'Polygon'
         }
       },
       {
@@ -90,6 +94,7 @@ tape('readStream', (test) => {
             lon: 21.212121,
             abbreviation: 'XY',
             bounding_box: '-13.691314,49.909613,1.771169,60.847886',
+            geometry: {'coordinates':[[[-72.122,42.428],[-72.122,42.409],[-72.091,42.409],[-72.091,42.428],[-72.122,42.428]]],type:'Polygon'},
             population: 98765,
             popularity: 87654,
             hierarchies: [
@@ -107,6 +112,7 @@ tape('readStream', (test) => {
             lon: 31.313131,
             abbreviation: 'XY',
             bounding_box: '-24.539906,34.815009,69.033946,81.85871',
+            geometry: undefined,
             population: undefined,
             popularity: undefined,
             hierarchies: [
@@ -192,6 +198,7 @@ tape('readStream', (test) => {
               lat: 45.240295,
               lon: 3.916216,
               bounding_box: undefined,
+              geometry: undefined,
               population: undefined,
               popularity: undefined,
               hierarchies: [ { 'region_id': 421302191 } ],

@@ -69,6 +69,12 @@ function getBoundingBox(properties) {
   }
 }
 
+function getGeometry(json_object) {
+  if (json_object.hasOwnProperty('geometry')) {
+    return json_object['geometry']
+  }
+}
+
 // get an array of language codes spoken at this location
 function getLanguages(properties) {
   if (!Array.isArray(properties['wof:lang_x_official'])) {
@@ -231,6 +237,7 @@ module.exports.create = function map_fields_stream() {
       lat: getLat(json_object.properties),
       lon: getLon(json_object.properties),
       bounding_box: getBoundingBox(json_object.properties),
+      geometry: getGeometry(json_object),
       population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum'],
       hierarchies: getHierarchies(json_object.id, json_object.properties),

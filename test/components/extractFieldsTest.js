@@ -45,7 +45,12 @@ tape('readStreamComponents', function(test) {
           'misc:photo_sum': 87654,
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
-        }
+        },
+        geometry: {
+          coordinates: [[[-72.122,42.428],[-72.122,42.409],[-72.091,42.409],[-72.091,42.428],[-72.122,42.428]]],
+          type: 'Polygon'
+        },
+
       }
     ];
 
@@ -60,6 +65,7 @@ tape('readStreamComponents', function(test) {
         lon: 21.212121,
         popularity: 87654,
         population: undefined,
+        geometry: {'coordinates':[[[-72.122,42.428],[-72.122,42.409],[-72.091,42.409],[-72.091,42.428],[-72.122,42.428]]],'type':'Polygon'},
         abbreviation: 'XY',
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchies: [
@@ -102,6 +108,7 @@ tape('readStreamComponents', function(test) {
         popularity: undefined,
         abbreviation: undefined,
         bounding_box: undefined,
+        geometry: undefined,
         hierarchies: [],
         concordances: {}
       }
@@ -141,6 +148,7 @@ tape('readStreamComponents', function(test) {
         population: undefined,
         popularity: undefined,
         abbreviation: undefined,
+        geometry: undefined,
         bounding_box: '-13.691314,49.909613,1.771169,60.847886',
         hierarchies: [
           {
