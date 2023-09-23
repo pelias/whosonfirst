@@ -15,7 +15,7 @@ tape('functional', function(test) {
       const wofAdminRecords = {};
       const recordOrder = [];
       const dbRecords = {};
-      const readStream = readStreamModule.create({ datapath: temp_dir, sqlite: true }, ['whosonfirst-data-latest.db'], wofAdminRecords);
+      const readStream = readStreamModule.create({ datapath: temp_dir, sqlite: true, importShapes: true }, ['whosonfirst-data-latest.db'], wofAdminRecords);
       const documentGenerator = peliasDocGenerators.create(hierarchyFinder(wofAdminRecords));
       const dbClientStream = sink.obj(record => {
         recordOrder.push(record.data.source_id);

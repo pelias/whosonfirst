@@ -80,7 +80,7 @@ tape('readStreamComponents', function(test) {
       }
     ];
 
-    test_stream(input, extractFields.create(), function(err, actual) {
+    test_stream(input, extractFields.create({importShapes: true}), function(err, actual) {
       t.deepEqual(actual, expected, 'stream should contain only objects with id and properties');
       t.end();
     });

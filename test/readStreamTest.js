@@ -73,6 +73,7 @@ tape('readStream', (test) => {
 
       const wofConfig = {
         datapath: temp_dir,
+        importShapes: true,
         sqlite: true
       };
 
