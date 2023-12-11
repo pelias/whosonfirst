@@ -3,13 +3,14 @@ var importStream = require('../src/importStream');
 var sink = require('through2-sink');
 var Document = require('pelias-model').Document;
 var map_stream = require('through2-map');
-var event_stream = require('event-stream');
+const stream_mock = require('stream-mock');
+
 
 tape('importStream', function(test) {
   test.test('all wofRecords should be converted to Documents and sent to destination', function(t) {
     var docs = [];
 
-    var recordStream = event_stream.readArray([
+    var recordStream = new stream_mock.ObjectReadableMock([
       { id: 1, place_type: 'placetype 1' },
       { id: 2, place_type: 'placetype 2' },
       { id: 3, place_type: 'placetype 3' },

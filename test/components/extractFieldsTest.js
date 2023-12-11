@@ -1,5 +1,5 @@
 var tape = require('tape');
-var event_stream = require('event-stream');
+const stream_mock = require('stream-mock');
 
 var extractFields = require('../../src/components/extractFields');
 
@@ -14,10 +14,11 @@ var extractFields = require('../../src/components/extractFields');
  * Callback signature should be something like function callback(error, result)
  */
 function test_stream(input, testedStream, callback) {
-    var input_stream = event_stream.readArray(input);
-    var destination_stream = event_stream.writeArray(callback);
-
-    input_stream.pipe(testedStream).pipe(destination_stream);
+  const reader = new stream_mock.ObjectReadableMock(input);
+  const writer = new stream_mock.ObjectWritableMock();
+  writer.on('error', (e) => callback(e));
+  writer.on('finish', () => callback(null, writer.data));
+  reader.pipe(testedStream).pipe(writer);
 }
 
 tape('readStreamComponents', function(test) {
