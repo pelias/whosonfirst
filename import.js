@@ -1,3 +1,4 @@
+const _ = require('lodash');
 var peliasConfig = require( 'pelias-config' ).generate(require('./schema'));
 var readStreamModule = require('./src/readStream');
 var importStream = require('./src/importStream');
@@ -15,7 +16,7 @@ var wofAdminRecords = {};
 bundles.generateBundleList((err, bundlesToImport) => {
 
   if (err) {
-    throw new Error(err.message);
+    throw (_.isError(err) ? err : new Error(err));
   }
 
   // This can be either csv or db files, the read stream module will do the job
