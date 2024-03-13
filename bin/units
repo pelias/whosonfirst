@@ -2,4 +2,12 @@
 
 set -euo pipefail
 
+# ignore any user configuration in tests
+echo '{}' > /tmp/__pelias.json
+export PELIAS_CONFIG=/tmp/__pelias.json
+function cleanup {
+  rm -f /tmp/__pelias.json
+}
+trap cleanup EXIT
+
 node test/test.js | npx tap-dot
