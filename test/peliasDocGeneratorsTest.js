@@ -258,9 +258,9 @@ tape('create', function(test) {
 
     var expected = [
       new Document( 'whosonfirst', 'continent', '1' )
-        .setName('default', 'name 1')
-        .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .setBoundingBox({ upperLeft: { lat:31.313131, lon:12.121212 }, lowerRight: { lat:21.212121 , lon:13.131313 }})
+          .setName('default', 'name 1')
+          .setCentroid({ lat: 12.121212, lon: 21.212121 })
+          .setBoundingBox({ upperLeft: { lat:31.313131, lon:12.121212 }, lowerRight: { lat:21.212121 , lon:13.131313 }})
     ];
 
     // don't care about hierarchies in this test
@@ -279,29 +279,105 @@ tape('create', function(test) {
 
   test.test('wofRecord without bounding_box should have undefined bounding box in output', function(t) {
     var wofRecords = {
-     1: {
-       id: 1,
-      name: 'name 1',
-      name_aliases: [],
-       lat: 12.121212,
-       lon: 21.212121,
-       place_type: 'continent'
-     }
+      1: {
+        id: 1,
+        name: 'name 1',
+        name_aliases: [],
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'continent'
+      }
     };
 
     var input = [
-     wofRecords['1']
+      wofRecords['1']
     ];
 
     var expected = [
-     new Document( 'whosonfirst', 'continent', '1' )
-       .setName('default', 'name 1')
-       .setCentroid({ lat: 12.121212, lon: 21.212121 })
+      new Document( 'whosonfirst', 'continent', '1' )
+          .setName('default', 'name 1')
+          .setCentroid({ lat: 12.121212, lon: 21.212121 })
     ];
 
     // don't care about hierarchies in this test
     var hierarchies_finder = function() {
-     return [];
+      return [];
+    };
+
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
+    });
+
+  });
+
+  test.test('wofRecord with geometry should have shape in Document', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'name 1',
+        name_aliases: [],
+        lat: 12.121212,
+        lon: 21.212121,
+        bounding_box: '12.121212,21.212121,13.131313,31.313131',
+        geometry: {'coordinates':[[[-72.122,42.428],[-72.122,42.409],[-72.091,42.409],[-72.091,42.428],[-72.122,42.428]]],'type':'Polygon'},
+        place_type: 'continent'
+      }
+    };
+
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'continent', '1' )
+          .setName('default', 'name 1')
+          .setCentroid({ lat: 12.121212, lon: 21.212121 })
+          .setBoundingBox({ upperLeft: { lat:31.313131, lon:12.121212 }, lowerRight: { lat:21.212121 , lon:13.131313 }})
+          .setShape({coordinates:[[[-72.122,42.428],[-72.122,42.409],[-72.091,42.409],[-72.091,42.428],[-72.122,42.428]]],type:"Polygon"})
+    ];
+
+    // don't care about hierarchies in this test
+    var hierarchies_finder = function() {
+      return [];
+    };
+
+    var docGenerator = peliasDocGenerators.create(hierarchies_finder);
+
+    test_stream(input, docGenerator, function(err, actual) {
+      t.deepEqual(actual, expected, 'should have returned true');
+      t.end();
+    });
+
+  });
+
+  test.test('wofRecord without geometry should have undefined shape in output', function(t) {
+    var wofRecords = {
+      1: {
+        id: 1,
+        name: 'name 1',
+        name_aliases: [],
+        lat: 12.121212,
+        lon: 21.212121,
+        place_type: 'continent'
+      }
+    };
+
+    var input = [
+      wofRecords['1']
+    ];
+
+    var expected = [
+      new Document( 'whosonfirst', 'continent', '1' )
+          .setName('default', 'name 1')
+          .setCentroid({ lat: 12.121212, lon: 21.212121 })
+    ];
+
+    // don't care about hierarchies in this test
+    var hierarchies_finder = function() {
+      return [];
     };
 
     var docGenerator = peliasDocGenerators.create(hierarchies_finder);

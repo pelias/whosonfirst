@@ -69,6 +69,12 @@ function getBoundingBox(properties) {
   }
 }
 
+function getGeometry(json_object) {
+  if (json_object.hasOwnProperty('geometry')) {
+    return json_object['geometry']
+  }
+}
+
 // get an array of language codes spoken at this location
 function getLanguages(properties) {
   if (!Array.isArray(properties['wof:lang_x_official'])) {
@@ -218,7 +224,7 @@ function getConcordances(properties) {
   hierarchy-less object is added.  If there are multiple hierarchies for the
   record then a record for each hierarchy is pushed onto the stream.
 */
-module.exports.create = function map_fields_stream() {
+module.exports.create = function map_fields_stream(wofConfig) {
   return through2.obj(function(json_object, enc, callback) {
     const default_names = getName(json_object.properties);
     var record = {
@@ -231,6 +237,7 @@ module.exports.create = function map_fields_stream() {
       lat: getLat(json_object.properties),
       lon: getLon(json_object.properties),
       bounding_box: getBoundingBox(json_object.properties),
+      geometry: _.has(wofConfig, 'importShapes') && wofConfig.importShapes ? getGeometry(json_object) : undefined,
       population: getPopulation(json_object.properties),
       popularity: json_object.properties['misc:photo_sum'],
       hierarchies: getHierarchies(json_object.id, json_object.properties),
