@@ -6,7 +6,7 @@ FROM pelias/baseimage
 RUN apt-get update && apt-get install -y bzip2 lbzip2 unzip && rm -rf /var/lib/apt/lists/*
 
 # change working dir
-ENV WORKDIR /code/pelias/whosonfirst
+ENV WORKDIR=/code/pelias/whosonfirst
 WORKDIR ${WORKDIR}
 
 # copy package.json first to prevent npm install being rerun when only code changes
