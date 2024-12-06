@@ -212,6 +212,18 @@ function getConcordances(properties) {
   return concordances;
 }
 
+//Update the popularity value field due to https://github.com/whosonfirst-data/whosonfirst-data/pull/979
+function getPopularity(properties) {
+  if (!_.isEmpty(properties, 'qs:photo_sum')) {
+    return properties['qs:photo_sum'];
+  }
+  //Legacy support
+  if (!_.isEmpty(properties, 'misc:photo_sum')) {
+    return properties['misc:photo_sum'];
+  }
+  return undefined;
+}
+
 /*
   This function extracts the fields from the json_object that we're interested
   in for creating Pelias Document objects.  If there is no hierarchy then a
@@ -232,7 +244,7 @@ module.exports.create = function map_fields_stream() {
       lon: getLon(json_object.properties),
       bounding_box: getBoundingBox(json_object.properties),
       population: getPopulation(json_object.properties),
-      popularity: json_object.properties['misc:photo_sum'],
+      popularity: getPopularity(json_object.properties),
       hierarchies: getHierarchies(json_object.id, json_object.properties),
       concordances: getConcordances(json_object.properties)
     };

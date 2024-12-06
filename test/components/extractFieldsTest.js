@@ -43,7 +43,7 @@ tape('readStreamComponents', function(test) {
             }
           ],
           'wof:abbreviation': 'XY',
-          'misc:photo_sum': 87654,
+          'qs:photo_sum': 87654,
           ignoreField3: 'ignoreField3',
           ignoreField4: 'ignoreField4',
         }
@@ -182,7 +182,7 @@ tape('readStreamComponents', function(test) {
 
   });
 
-  test.test('misc:photo_sum not found should not include popularity', function(t) {
+  test.test('qs:photo_sum not found should not include popularity', function(t) {
     var input = [
       {
         id: 12345,
