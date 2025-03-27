@@ -579,7 +579,7 @@ tape('create', function(test) {
 
   });
 
-  test.test('a document should be created for each available hierarchy', function(t) {
+  test.test('a single document should be created when multiple hierarchies exist', function(t) {
     var wofRecords = {
       1: {
         id: 1,
@@ -619,11 +619,6 @@ tape('create', function(test) {
         .setCentroid({ lat: 12.121212, lon: 21.212121 })
         .addParent( 'neighbourhood', 'neighbourhood name', '1')
         .addParent( 'country', 'country name 1', '2'),
-      new Document( 'whosonfirst', 'neighbourhood', '1')
-        .setName('default', 'neighbourhood name')
-        .setCentroid({ lat: 12.121212, lon: 21.212121 })
-        .addParent( 'neighbourhood', 'neighbourhood name', '1')
-        .addParent( 'country', 'country name 2', '3')
     ];
 
     var hierarchies_finder = function() {
