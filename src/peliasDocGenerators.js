@@ -151,18 +151,16 @@ function setupDocument(record, hierarchy) {
 
 }
 
-module.exports.create = function(hierarchy_finder) {
-  return through2.obj(function(record, enc, next) {
-    // if there are no hierarchies, then just return the doc as-is
-    var hierarchies = hierarchy_finder(record);
+module.exports.create = (hierarchy_finder) => {
+  return through2.obj(function(record, _enc, next) {
+    const hierarchies = hierarchy_finder(record);
 
     try {
-      if (hierarchies && hierarchies.length > 0) {
-        hierarchies.forEach(function(hierarchy) {
-          this.push(setupDocument(record, hierarchy));
-        }, this);
-
+      if (Array.isArray(hierarchies) && hierarchies.length > 0) {
+        // only use the first hierarchy when multiple hierarchies exist
+        this.push(setupDocument(record, hierarchies[0]));
       } else {
+        // if there are no hierarchies, then just return the doc as-is
         this.push(setupDocument(record));
       }
     }
