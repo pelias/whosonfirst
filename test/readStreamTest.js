@@ -25,7 +25,7 @@ tape('readStream', (test) => {
             'wof:abbreviation': 'XY',
             'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
             'gn:population': 98765,
-            'misc:photo_sum': 87654
+            'qs:photo_sum': 87654
           }
         }
       ]);
@@ -41,7 +41,7 @@ tape('readStream', (test) => {
           'wof:abbreviation': 'XY',
           'geom:bbox': '-13.691314,49.909613,1.771169,60.847886',
           'gn:population': 98765,
-          'misc:photo_sum': 87654
+          'qs:photo_sum': 87654
         }
       },
       {
