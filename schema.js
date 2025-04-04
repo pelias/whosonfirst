@@ -9,6 +9,7 @@ const Joi = require('@hapi/joi');
 // * imports.whosonfirst.importPostalcodes (boolean) (default: false)
 // * imports.whosonfirst.importConstituencies (boolean) (default: false)
 // * imports.whosonfirst.importIntersections (boolean) (default: false)
+// * imports.whosonfirst.importShapes (boolean) (default: false)
 // * imports.whosonfirst.importPlace (integer OR array[integer]) (default: none)
 // * imports.whosonfirst.sqlite (boolean) (default: true)
 
@@ -27,6 +28,7 @@ module.exports = Joi.object().keys({
       ],
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no'),
       importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no'),
+      importShapes: Joi.boolean().default(false).truthy('yes').falsy('no'),
       maxDownloads: Joi.number().integer(),
       sqlite: Joi.boolean().default(true).truthy('yes').falsy('no')
     }).unknown(false)
