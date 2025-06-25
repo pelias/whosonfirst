@@ -1,6 +1,7 @@
 const combinedStream = require('combined-stream');
 const through2 = require('through2');
 const path = require('path');
+const fs = require('fs');
 
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
@@ -17,7 +18,10 @@ const toJSONStream = require('./components/toJSONStream');
  */
 function getSqliteFilePaths(wofRoot, databases) {
   return databases.map((database) => {
-    return path.join(wofRoot, 'sqlite', database);
+    if(fs.existsSync(path.join(wofRoot, 'sqlite'))) {
+      return path.join(wofRoot, 'sqlite', database);
+    }
+    return path.join(wofRoot, database);
   });
 }
 
