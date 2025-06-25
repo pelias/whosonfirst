@@ -1,5 +1,6 @@
 const Sqlite3 = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 const generateBundleList = require('../src/bundleList').generateBundleList;
 const config = require('pelias-config').generate(require('../schema')).imports.whosonfirst;
 
@@ -16,8 +17,12 @@ if (config.sqlite) {
       console.error(e);
       return;
     }
+    let sqlitePath = new Sqlite3(path.join(config.datapath));
+    if (fs.existsSync(path.join(config.datapath, 'sqlite'))) {
+      sqlitePath = new Sqlite3(path.join(config.datapath, 'sqlite'));
+    }
     dbList.forEach(datapath => {
-      const sqlite = new Sqlite3(path.join(config.datapath, 'sqlite', datapath));
+      const sqlite = new Sqlite3(path.join(sqlitePath, datapath));
       sqlite
         .exec('DROP TABLE IF EXISTS names;')
         .exec('DROP TABLE IF EXISTS concordances;')

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 
-const peliasConfig = require( 'pelias-config' ).generate(require('../schema'));
+const peliasConfig = require('pelias-config').generate(require('../schema'));
 
 // the importer depends on hierarchy bundles being imported in highest to
 // lowest level order. See https://github.com/whosonfirst/whosonfirst-placetypes
@@ -45,7 +45,12 @@ function getPlacetypes() {
 }
 
 function getDBList(callback) {
-  const databasesPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'sqlite');
+  //Allow to use the wof root directory instead of the sqlite subdirectory
+  let databasesPath = peliasConfig.imports.whosonfirst.datapath;
+  if (fs.existsSync(path.join(peliasConfig.imports.whosonfirst.datapath, 'sqlite'))) {
+    databasesPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'sqlite');
+  }
+  console.debug(databasesPath);
   //ensure required directory structure exists
   fs.mkdirSync(databasesPath, { recursive: true });
   const dbList = fs.readdirSync(databasesPath).filter(d => SQLITE_REGEX.test(d));
