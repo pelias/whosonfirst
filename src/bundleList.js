@@ -46,11 +46,10 @@ function getPlacetypes() {
 
 function getDBList(callback) {
   //Allow to use the wof root directory instead of the sqlite subdirectory
-  let databasesPath = peliasConfig.imports.whosonfirst.datapath;
-  if (fs.existsSync(path.join(peliasConfig.imports.whosonfirst.datapath, 'sqlite'))) {
-    databasesPath = path.join(peliasConfig.imports.whosonfirst.datapath, 'sqlite');
-  }
-  console.debug(databasesPath);
+  const dataPath = peliasConfig.imports.whosonfirst.datapath;
+  const sqlitePath = path.join(dataPath, 'sqlite');
+  const databasesPath = fs.existsSync(sqlitePath) ? sqlitePath : dataPath;
+
   //ensure required directory structure exists
   fs.mkdirSync(databasesPath, { recursive: true });
   const dbList = fs.readdirSync(databasesPath).filter(d => SQLITE_REGEX.test(d));
