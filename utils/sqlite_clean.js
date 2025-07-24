@@ -17,9 +17,9 @@ if (config.sqlite) {
       console.error(e);
       return;
     }
-    let sqlitePath = new Sqlite3(path.join(config.datapath));
+    let sqlitePath = path.join(config.datapath);
     if (fs.existsSync(path.join(config.datapath, 'sqlite'))) {
-      sqlitePath = new Sqlite3(path.join(config.datapath, 'sqlite'));
+      sqlitePath = path.join(config.datapath, 'sqlite');
     }
     dbList.forEach(datapath => {
       const sqlite = new Sqlite3(path.join(sqlitePath, datapath));
