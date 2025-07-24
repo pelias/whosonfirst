@@ -98,5 +98,36 @@ tape('bundlesList tests', (test) => {
       });
     });
   });
+  test.test('supports sqlite in root wof dir', (t) => {
+    temp.mkdir('supports_sqlite', (err, temp_dir) => {
+      fs.mkdirSync(temp_dir, { recursive: true });
+      const config = {
+        generate: () => {
+          return peliasConfig.generateCustom({
+            imports: {
+              whosonfirst: {
+                datapath: temp_dir,
+                sqlite: true
+              }
+            }
+          });
+        }
+      };
+      SQLITE_EXAMPLE
+        .concat(['ignore_me.csv', 'README.md'])
+        .forEach(e => fs.writeFileSync(path.join(temp_dir, e), ''));
+
+      const bundles = proxyquire('../src/bundleList', { 'pelias-config': config });
+
+      bundles.generateBundleList((e, bundlesList) => {
+        temp.cleanup((err) => {
+          t.notOk(err);
+          t.notOk(e);
+          t.deepEqual(bundlesList, SQLITE_EXAMPLE);
+          t.end();
+        });
+      });
+    });
+  });
   test.end();
 });
