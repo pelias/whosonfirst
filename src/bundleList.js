@@ -3,6 +3,7 @@ const path = require('path');
 const _ = require('lodash');
 
 const peliasConfig = require('pelias-config').generate(require('../schema'));
+const logger = require('pelias-logger').get('whosonfirst');
 
 // the importer depends on hierarchy bundles being imported in highest to
 // lowest level order. See https://github.com/whosonfirst/whosonfirst-placetypes
@@ -47,15 +48,25 @@ function getPlacetypes() {
 function getDBList(callback) {
   //Allow to use the wof root directory instead of the sqlite subdirectory
   const dataPath = peliasConfig.imports.whosonfirst.datapath;
-  const sqlitePath = path.join(dataPath, 'sqlite');
-  const databasesPath = fs.existsSync(sqlitePath) ? sqlitePath : dataPath;
+  const dataPathWithSQLite = path.join(dataPath, 'sqlite');
+  const sqlitePathExists = fs.existsSync(dataPathWithSQLite);
 
+  const dbList = [];
+  if (sqlitePathExists) {
+    //ensure required directory structure exists
+    fs.mkdirSync(dataPathWithSQLite, { recursive: true });
+    dbList.push(...fs.readdirSync(dataPathWithSQLite).filter(d => SQLITE_REGEX.test(d)));
+    if (_.isEmpty(dbList)) {
+      logger.info(`No database found in ${dataPathWithSQLite}, using only databases from ${dataPath}.
+                   You may want to delete the sqlite directory.`);
+    }
+  }
   //ensure required directory structure exists
-  fs.mkdirSync(databasesPath, { recursive: true });
-  const dbList = fs.readdirSync(databasesPath).filter(d => SQLITE_REGEX.test(d));
+  fs.mkdirSync(dataPath, { recursive: true });
+  dbList.push(...fs.readdirSync(dataPath).filter(d => SQLITE_REGEX.test(d)));
 
   if (_.isEmpty(dbList)) {
-    return callback(`No database found in ${databasesPath}`);
+    return callback(`No database found in ${dataPath} or ${dataPathWithSQLite}`);
   }
   callback(null, dbList);
 }
