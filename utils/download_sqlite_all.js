@@ -31,7 +31,7 @@ function getCountriesToDownload() {
 
 function download(callback) {
   //ensure required directory structure exists
-  fs.mkdirSync(path.join(config.imports.whosonfirst.datapath, 'sqlite'), { recursive: true });
+  fs.mkdirSync(path.join(config.imports.whosonfirst.datapath), { recursive: true });
 
   // download one bundle for every other CPU (tar and bzip2 can both max out one core)
   // (the maximum is configurable, to keep things from getting too intense, and defaults to 4)
@@ -96,12 +96,16 @@ function download(callback) {
     } else {
       throw new Error('What is this extension ?!?');
     }
-
+    //If we have a sqlite directory, we will download the sqlite files there to keep legacy compatibility
+    //and to avoid breaking existing installations.
+    if (fs.existsSync(path.join(directory, 'sqlite'))) {
+      directory = path.join(directory, 'sqlite');
+    }
     return [
       `curl -sA '${agent}'`,
       `${wofDataHost}/sqlite/${sqlite.name_compressed}`,
       '|', extract,
-      '>', path.join(directory, 'sqlite', sqlite.name)
+      '>', path.join(directory, sqlite.name)
     ].join(' ');
   };
 
