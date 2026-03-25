@@ -1,7 +1,7 @@
 
 const tape = require('tape');
 
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const schema = require('../schema');
 
 function validate(config) {

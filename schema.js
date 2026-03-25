@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 
 // Schema Configuration
 // required:
@@ -21,10 +21,10 @@ module.exports = Joi.object().keys({
       ).default([]),
       dataHost: Joi.string(),
       datapath: Joi.string().required(),
-      importPlace: [
+      importPlace: Joi.alternatives().try(
         Joi.number().integer(),
         Joi.array().items(Joi.number().integer())
-      ],
+      ),
       importPostalcodes: Joi.boolean().default(false).truthy('yes').falsy('no'),
       importConstituencies: Joi.boolean().default(false).truthy('yes').falsy('no'),
       maxDownloads: Joi.number().integer(),
