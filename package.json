@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/pelias/whosonfirst#readme",
   "dependencies": {
-    "@hapi/joi": "^16.1.8",
+    "joi": "^18.0.0",
     "async": "^3.0.1",
     "better-sqlite3": "^12.2.0",
     "combined-stream": "^1.0.5",
