@@ -329,7 +329,8 @@ tape('readStreamComponents', function(test) {
     });
   });
 
-  test.test('label:{lang}_x_preferred_longname should be used for name when both it and eng label are available', function (t) {
+  test.test('label:{lang}_x_preferred_longname is NOT used for name outside the qualifier-preferred ' +
+    'allowlist - wof:label wins instead (see getDefaultName.js)', function (t) {
     var input = [
       {
         id: 12345,
@@ -346,21 +347,22 @@ tape('readStreamComponents', function(test) {
       }
     ];
 
-    const expected_name = 'label:spa_x_preferred_longname value';
+    const expected_name = 'wof:label value';
     const expected_name_aliases = [
       'label:spa_x_preferred_longname value',
       'label:eng_x_preferred_longname value'
     ];
 
     test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual[0].name, expected_name, 'label:eng_x_preferred_longname is used for name');
-      t.deepEqual(actual[0].name_aliases, expected_name_aliases, 'all longnames used as name aliases');
+      t.deepEqual(actual[0].name, expected_name, 'wof:label is used for name, not any longname field');
+      t.deepEqual(actual[0].name_aliases, expected_name_aliases, 'longnames are still indexed as aliases though');
       t.end();
     });
 
   });
 
-  test.test('label:eng_x_preferred_longname should be used for name when official language label unavailable', function (t) {
+  test.test('label:eng_x_preferred_longname is NOT used for name outside the allowlist even when ' +
+    'no other official language label is available', function (t) {
     var input = [
       {
         id: 12345,
@@ -377,50 +379,23 @@ tape('readStreamComponents', function(test) {
     ];
 
     test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual[0].name, 'label:eng_x_preferred_longname value', 'label:eng_x_preferred_longname is used for name');
+      t.deepEqual(actual[0].name, 'wof:label value', 'wof:label is used for name, not the longname');
       t.end();
     });
 
   });
 
-  test.test('label:eng_x_preferred_longname when eng_x_preferred exists', function (t) {
+  test.test('label:eng_x_preferred_longname IS used for name inside the qualifier-preferred allowlist ' +
+    '(eg. US county)', function (t) {
     var input = [
       {
         id: 12345,
         properties: {
-          'wof:name': 'wof:name value',
-          'wof:label': 'wof:label value',
-          'label:eng_x_preferred_longname': ['label:eng_x_preferred_longname value'],
-          'label:eng_x_preferred': ['label:eng_x_preferred value'],
-          'geom:latitude': 12.121212,
-          'geom:longitude': 21.212121,
-          'lbl:bbox': ''
-        }
-      }
-    ];
-
-    const expected_name = 'label:eng_x_preferred_longname value';
-    const expected_name_aliases = [
-      'label:eng_x_preferred_longname value',
-      'label:eng_x_preferred value'
-    ];
-
-    test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual[0].name, expected_name, 'label:eng_x_preferred_longname is used for name');
-      t.deepEqual(actual[0].name_aliases, expected_name_aliases, 'label:eng_x_* values used for name aliases');
-      t.end();
-    });
-
-  });
-
-  test.test('label:eng_x_preferred should be used for name when both it and wof:label are available', function (t) {
-    var input = [
-      {
-        id: 12345,
-        properties: {
-          'wof:name': 'wof:name value',
-          'wof:label': 'wof:label value',
-          'label:eng_x_preferred': ['label:eng_x_preferred value'],
+          'iso:country': 'US',
+          'wof:placetype': 'county',
+          'wof:name': 'Kings',
+          'name:eng_x_preferred': ['Kings'],
+          'label:eng_x_preferred_longname': ['Kings County'],
           'geom:latitude': 12.121212,
           'geom:longitude': 21.212121,
           'lbl:bbox': ''
@@ -429,7 +404,104 @@ tape('readStreamComponents', function(test) {
     ];
 
     test_stream(input, extractFields.create(), function (err, actual) {
-      t.deepEqual(actual[0].name, 'label:eng_x_preferred value', 'label:eng_x_preferred is used for name');
+      t.deepEqual(actual[0].name, 'Kings County', 'longname is used for an allowlisted country/placetype');
+      t.end();
+    });
+
+  });
+
+  test.test('label:eng_x_preferred_longname IS used for name inside the qualifier-preferred allowlist ' +
+    'for a non-English-official-language country too (French county/canton, wofId 102068327)', function (t) {
+    var input = [
+      {
+        id: 102068327,
+        properties: {
+          'iso:country': 'FR',
+          'wof:placetype': 'county',
+          'wof:name': 'Montmarault',
+          'name:eng_x_preferred': ['Montmarault'],
+          'label:eng_x_preferred_longname': ['Montmarault Canton'],
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].name, 'Montmarault Canton',
+        'the english longname field is used even though French is not an English-speaking country');
+      t.end();
+    });
+
+  });
+
+  test.test('qs:a2_alt is used as a fallback inside the allowlist when no longname is available', function (t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'iso:country': 'US',
+          'wof:placetype': 'county',
+          'wof:name': 'Kings',
+          'qs:a2_alt': 'Kings County (from qs:a2_alt)',
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].name, 'Kings County (from qs:a2_alt)', 'qs:a2_alt is used when no longname is present');
+      t.end();
+    });
+
+  });
+
+  test.test('label:eng_x_preferred_longname wins over qs:a2_alt when both are available inside the allowlist',
+    function (t) {
+      var input = [
+        {
+          id: 12345,
+          properties: {
+            'iso:country': 'US',
+            'wof:placetype': 'county',
+            'wof:name': 'Kings',
+            'label:eng_x_preferred_longname': ['Kings County'],
+            'qs:a2_alt': 'a different qs:a2_alt value',
+            'geom:latitude': 12.121212,
+            'geom:longitude': 21.212121,
+            'lbl:bbox': ''
+          }
+        }
+      ];
+
+      test_stream(input, extractFields.create(), function (err, actual) {
+        t.deepEqual(actual[0].name, 'Kings County', 'longname takes priority over qs:a2_alt');
+        t.end();
+      });
+
+    });
+
+  test.test('label:eng_x_preferred (non-long) is NOT used for name - only wof:label/wof:name are ' +
+    'consulted for the shortname', function (t) {
+    var input = [
+      {
+        id: 12345,
+        properties: {
+          'wof:name': 'wof:name value',
+          'wof:label': 'wof:label value',
+          'label:eng_x_preferred': ['label:eng_x_preferred value'],
+          'geom:latitude': 12.121212,
+          'geom:longitude': 21.212121,
+          'lbl:bbox': ''
+        }
+      }
+    ];
+
+    test_stream(input, extractFields.create(), function (err, actual) {
+      t.deepEqual(actual[0].name, 'wof:label value', 'wof:label is used for name, not label:eng_x_preferred');
       t.end();
     });
 

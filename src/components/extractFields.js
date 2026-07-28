@@ -2,6 +2,7 @@ const through2 = require('through2');
 const _ = require('lodash');
 const util = require('util');
 const iso639 = require('../helpers/iso639');
+const getDefaultName = require('./getDefaultName');
 
 // hierarchy in importance-descending order of population fields
 const population_hierarchy = [
@@ -27,13 +28,6 @@ const NAME_ALIAS_FIELDS = [
 ];
 
 const WOF_NAMES_REGEX = /^(name|label):[a-z]{3}_x_preferred$/;
-
-// this function is used to verify that a US county QS altname is available
-function isUsCounty(base_record, wof_country, qs_a2_alt) {
-  return 'US' === wof_country &&
-          'county' === base_record.place_type &&
-          !_.isUndefined(qs_a2_alt);
-}
 
 // this function favors mz:population when available, falling back to other properties.
 // see: https://github.com/whosonfirst-data/whosonfirst-data/issues/240#issuecomment-294907374
@@ -89,30 +83,6 @@ function concatArrayFields(properties, fields){
   });
   // dedupe array
   return arr.filter((item, pos, self) => self.indexOf(item) === pos);
-}
-
-// note: 'wof:label' has been officially deprecated
-// see: https://github.com/whosonfirst-data/whosonfirst-data/issues/1540#issuecomment-481824475
-// see: https://github.com/whosonfirst-data/whosonfirst-data/issues/1540
-// see: https://github.com/whosonfirst-data/whosonfirst-data/pull/1548
-function getName(properties) {
-
-  // consider all official languages + english
-  let langs = getLanguages(properties);
-  if (!langs.includes('eng')) { langs.push('eng'); }
-
-  // find the most relevant label
-  let labelFields = langs.map(l => `label:${l}_x_preferred_longname`);
-  labelFields = labelFields.concat(langs.map(l => `label:${l}_x_preferred`));
-  let labels = concatArrayFields(properties, labelFields);
-  if( labels.length ){ return labels[0]; }
-
-  // fall back to the deprecated 'wof:label' property
-  if (properties.hasOwnProperty('wof:label')) {
-    return properties['wof:label'];
-  }
-  // use the 'wof:name' property
-  return properties['wof:name'];
 }
 
 function getNameAliases(properties) {
@@ -220,7 +190,7 @@ function getConcordances(properties) {
 */
 module.exports.create = function map_fields_stream() {
   return through2.obj(function(json_object, enc, callback) {
-    const default_names = getName(json_object.properties);
+    const default_names = getDefaultName(json_object.properties);
     var record = {
       id: json_object.id,
       name: default_names,
@@ -236,11 +206,6 @@ module.exports.create = function map_fields_stream() {
       hierarchies: getHierarchies(json_object.id, json_object.properties),
       concordances: getConcordances(json_object.properties)
     };
-
-    // use the QS altname if US county and available
-    if (isUsCounty(record, json_object.properties['wof:country'], json_object.properties['qs:a2_alt'])) {
-      record.name = json_object.properties['qs:a2_alt'];
-    }
 
     return callback(null, record);
 

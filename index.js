@@ -5,5 +5,6 @@ module.exports = {
   recordHasName: require('./src/components/recordHasName').create,
   conformsTo: require('./src/components/conformsTo').create,
   SQLiteStream: require('./src/components/sqliteStream'),
-  toJSONStream: require('./src/components/toJSONStream').create
+  toJSONStream: require('./src/components/toJSONStream').create,
+  getDefaultName: require('./src/components/getDefaultName')
 };
