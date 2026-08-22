@@ -118,6 +118,76 @@ tape('tests for looking up hierarchies', function(test) {
     t.end();
 
   });
+  test.test('a stale self-reference in wof:hierarchy should be overridden by the record itself ' +
+    '(eg. a record renamed/merged whose own wof:hierarchy still points at its deprecated ' +
+    'predecessor id - see whosonfirst:locality:1175610569 "Brussels")', function(t) {
+    // records are limited to just the fields needed to operate
+    var wofRecords = {
+      1: { // continent
+        name: 'name 1'
+      },
+      2: { // country
+        name: 'name 2'
+      },
+      // note: id 3 (the stale/deprecated predecessor) is intentionally absent
+      // from parentRecords, as deprecated records are filtered out upstream
+      4: { // the record itself
+        id: 4,
+        place_type: 'locality',
+        name: 'name 4',
+        hierarchies: [
+          {
+            continent_id: 1,
+            country_id: 2,
+            locality_id: 3 // stale: should have been 4 (self)
+          }
+        ]
+      }
+    };
+
+    var hierarchies = hierarchyFinder(wofRecords)(wofRecords['4']);
+
+    t.deepEqual(hierarchies, [
+      [
+        wofRecords['1'],
+        wofRecords['2'],
+        wofRecords['4']
+      ]
+    ]);
+    t.end();
+
+  });
+
+  test.test('a correct self-reference in wof:hierarchy should be left as-is', function(t) {
+    var wofRecords = {
+      1: {
+        name: 'name 1'
+      },
+      4: {
+        id: 4,
+        place_type: 'locality',
+        name: 'name 4',
+        hierarchies: [
+          {
+            continent_id: 1,
+            locality_id: 4
+          }
+        ]
+      }
+    };
+
+    var hierarchies = hierarchyFinder(wofRecords)(wofRecords['4']);
+
+    t.deepEqual(hierarchies, [
+      [
+        wofRecords['1'],
+        wofRecords['4']
+      ]
+    ]);
+    t.end();
+
+  });
+
   test.end();
 
 });

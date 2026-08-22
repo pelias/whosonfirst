@@ -26,7 +26,19 @@
 module.exports = (parentRecords) => {
   return (wofRecord) => {
     return wofRecord.hierarchies.map(hierarchy => {
-      return Object.values(hierarchy)
+      // ensure a self-reference exists for the record's own place_type,
+      // overriding whatever id (if any) wof:hierarchy has for it. WOF
+      // records are occasionally left pointing at a stale/deprecated
+      // predecessor id for their own layer (eg. a record renamed/merged
+      // without its own wof:hierarchy being regenerated) - since deprecated
+      // records are excluded from parentRecords, that stale id would
+      // otherwise silently resolve to nothing and drop the layer entirely.
+      // See pelias-spatial's equivalent fix in map/hierarchies.js.
+      const withSelf = wofRecord.place_type ?
+        { ...hierarchy, [`${wofRecord.place_type}_id`]: wofRecord.id } :
+        hierarchy;
+
+      return Object.values(withSelf)
         .map(parentId => parentRecords[parentId])
         .filter(Boolean)
         .filter(r => r.name);
