@@ -53,7 +53,7 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
   .pipe(toJSONStream.create())
   .pipe(recordHasIdAndProperties.create())
   .pipe(isActiveRecord.create())
-  .pipe(extractFields.create())
+  .pipe(extractFields.create(wofConfig))
   .pipe(recordHasName.create())
   .pipe(through2.obj(function(wofRecord, enc, callback) {
     // store admin records in memory to traverse the heirarchy
