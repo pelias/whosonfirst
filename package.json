@@ -27,7 +27,7 @@
   "dependencies": {
     "joi": "^18.0.0",
     "async": "^3.0.1",
-    "better-sqlite3": "^12.2.0",
+    "better-sqlite3": "13.0.3",
     "combined-stream": "^1.0.5",
     "command-exists": "^1.2.9",
     "download-file-sync": "^1.0.4",
@@ -61,5 +61,8 @@
   "release": {
     "branch": "master",
     "success": []
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": true
   }
 }
