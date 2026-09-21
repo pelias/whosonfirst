@@ -1,6 +1,7 @@
 const combinedStream = require('combined-stream');
 const through2 = require('through2');
 const path = require('path');
+const fs = require('fs');
 
 const logger = require( 'pelias-logger' ).get( 'whosonfirst' );
 
@@ -17,7 +18,11 @@ const toJSONStream = require('./components/toJSONStream');
  */
 function getSqliteFilePaths(wofRoot, databases) {
   return databases.map((database) => {
-    return path.join(wofRoot, 'sqlite', database);
+    //Check whether db file is in sqlite dircectory
+    if (fs.existsSync(path.join(wofRoot, 'sqlite', database))) {
+      return path.join(wofRoot, 'sqlite', database);
+    }
+    return path.join(wofRoot, database);
   });
 }
 
@@ -50,19 +55,19 @@ function createReadStream(wofConfig, types, wofAdminRecords) {
   const wofRoot = wofConfig.datapath;
 
   return createSQLiteRecordStream(getSqliteFilePaths(wofRoot, types), wofConfig.importPlace)
-  .pipe(toJSONStream.create())
-  .pipe(recordHasIdAndProperties.create())
-  .pipe(isActiveRecord.create())
-  .pipe(extractFields.create())
-  .pipe(recordHasName.create())
+    .pipe(toJSONStream.create())
+    .pipe(recordHasIdAndProperties.create())
+    .pipe(isActiveRecord.create())
+    .pipe(extractFields.create())
+    .pipe(recordHasName.create())
   .pipe(through2.obj(function(wofRecord, enc, callback) {
-    // store admin records in memory to traverse the heirarchy
-    if (wofRecord.place_type !== 'venue' && wofRecord.place_type !== 'postalcode') {
-      wofAdminRecords[wofRecord.id] = wofRecord;
-    }
+      // store admin records in memory to traverse the heirarchy
+      if (wofRecord.place_type !== 'venue' && wofRecord.place_type !== 'postalcode') {
+        wofAdminRecords[wofRecord.id] = wofRecord;
+      }
 
-    callback(null, wofRecord);
-  }));
+      callback(null, wofRecord);
+    }));
 }
 
 module.exports = {
