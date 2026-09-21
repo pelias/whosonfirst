@@ -100,6 +100,11 @@ function setupDocument(record, hierarchy) {
   }
   wofDoc.setCentroid({ lat: record.lat, lon: record.lon });
 
+  // only set shape if available
+  // TODO: test to ensure it is a JSON string, try/catch
+  if (record.geometry) {
+    wofDoc.setShape(record.geometry)
+  }
   // only set population if available
   if (record.population) {
     wofDoc.setPopulation(record.population);
